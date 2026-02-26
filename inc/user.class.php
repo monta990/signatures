@@ -10,7 +10,7 @@ class PluginSignaturesUser extends CommonGLPI {
    /**
     * Nombre del tipo
     */
-   public static function getTypeName($nb = 0) {
+   public static function getTypeName($nb = 0): string {
       return __('Email Signatures', 'signatures');
    }
 
@@ -75,15 +75,14 @@ class PluginSignaturesUser extends CommonGLPI {
       /* ===========================
        * Header
        * =========================== */
-      echo "
-      <div class='card-header pt-2 position-relative'>
-         <div class='ribbon ribbon-bookmark ribbon-top ribbon-start bg-blue s-1'>
-            <i class='fs-2x ti ti-mail'></i>
-         </div>
-         <h4 class='card-title ms-5 mb-0'>" .
-            __('Generar firma para correo', 'signatures') .
-         "</h4>
-      </div>";
+      echo "<div class='card-header pt-2 position-relative'>
+             <div class='ribbon ribbon-bookmark ribbon-top ribbon-start bg-blue s-1'>
+                <i class='fs-2x ti ti-mail'></i>
+             </div>
+             <h4 class='card-title ms-5 mb-0'>" .
+                __('Generar firma para correo', 'signatures') .
+             "</h4>
+          </div>";
 
       echo "<div class='card-body text-center'>";
 
@@ -91,21 +90,19 @@ class PluginSignaturesUser extends CommonGLPI {
        * Validación plantillas
        * =========================== */
       if (!$hasBase) {
-         echo "
-         <div class='alert alert-warning text-start'>
-            <i class='ti ti-alert-triangle me-2'></i>
-            <strong>" . __('No se encontraron las plantillas.', 'signatures') . "</strong><br>
-            " . __('Por favor valida que las plantillas existan en la configuración del complemento.', 'signatures') . "
-         </div>";
+         echo "<div class='alert alert-warning text-start'>
+                <i class='ti ti-alert-triangle me-2'></i>
+                <strong>" . __('No se encontraron las plantillas.', 'signatures') . "</strong><br>
+                " . __('Por favor valida que las plantillas existan en la configuración del complemento.', 'signatures') . "
+             </div>";
       }
 
-      echo "
-         <p class='text-muted mb-3'>" .
-            sprintf(
-               __('Generando firma para: %s', 'signatures'),
-               $user->getFriendlyName()
-            ) .
-         "</p>";
+      echo "<p class='text-muted mb-3'>" .
+                sprintf(
+                   __('Generando firma para: %s', 'signatures'),
+                   $user->getFriendlyName()
+                ) .
+             "</p>";
 
       /* ===========================
        * Formulario descarga
@@ -117,31 +114,29 @@ class PluginSignaturesUser extends CommonGLPI {
         $hasMobile = !empty($user->fields['mobile']);
         
         if ($hasMobile) {
-          echo "
-             <label class='form-check d-inline-flex align-items-center gap-2'>
-                <input type='checkbox'
-                       class='form-check-input'
-                       name='include_qr'
-                       value='1'
-                       checked >
-                " . __('Incluir (si el usuario tiene número celular) código QR para Whatsapp', 'signatures') . "
-             <i class='ti ti-brand-whatsapp me-2'></i></label>";
+          echo "<label class='form-check d-inline-flex align-items-center gap-2'>
+                    <input type='checkbox'
+                           class='form-check-input'
+                           name='include_qr'
+                           value='1'
+                           checked >
+                    " . __('Incluir código QR de WhatsApp', 'signatures') . "
+                 <i class='ti ti-brand-whatsapp me-2'></i></label>";
         } else {
            echo "<p class='text-muted'><i class='ti ti-info-circle me-1'></i>" . 
                 __('Este usuario no tiene número celular, el QR no estará disponible.', 'signatures') . 
                 "</p>";
         }
 
-      echo "
-         <div class='mt-4'>
-            <button type='submit'
-                    class='btn btn-primary'
-                    " . (!$hasBase ? 'disabled' : '') . ">
-               <i class='ti ti-download me-2'></i>
-               " . __('Descargar firma', 'signatures') . "
-            </button>
-         </div>
-      </form>";
+      echo "<div class='mt-4'>
+                <button type='submit'
+                        class='btn btn-primary'
+                        " . (!$hasBase ? 'disabled' : '') . ">
+                   <i class='ti ti-download me-2'></i>
+                   " . __('Descargar firma', 'signatures') . "
+                </button>
+             </div>
+          </form>";
 
       echo "</div></div>";
    }

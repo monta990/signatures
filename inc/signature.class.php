@@ -11,21 +11,21 @@ class PluginSignaturesSignature {
       $base2 = PluginSignaturesPaths::base2Path();
 
       if (!is_readable($base1) || !is_readable($base2)) {
-         $errors[] = __('Las plantillas no estan correctamente cargadas validalo en configuración del complemento', 'signatures');
+         $errors[] = __('Las plantillas no están correctamente cargadas validalo en configuración del complemento', 'signatures');
       }
 
       $font = PluginSignaturesPaths::getFontAvenirBlack();
       if (!is_readable($font)) {
-         $errors[] = sprintf(__('No se encontro la fuente TTF: %s', 'signatures'), $font);
+         $errors[] = sprintf(__('No se encontró la fuente TTF: %s', 'signatures'), $font);
       }
       
       $font2 = PluginSignaturesPaths::getFontAvenirRoman();
       if (!is_readable($font2)) {
-         $errors[] = sprintf(__('No se encontro la fuente TTF: %s', 'signatures'), $font2);
+         $errors[] = sprintf(__('No se encontró la fuente TTF: %s', 'signatures'), $font2);
       }
 
       if (!extension_loaded('gd')) {
-         $errors[] = __('Extensión GD de PHP es requirida', 'signatures');
+         $errors[] = __('Extensión GD de PHP es requerida', 'signatures');
       }
       
        if ($include_qr) {
@@ -46,7 +46,7 @@ class PluginSignaturesSignature {
    public static function generatePNG(User $user, bool $include_qr): string {
 
       $configsig = Config::getConfigurationValues('plugin_signatures');
-      $facebook = $configsig['facebook_page'];
+      $facebook = $configsig['facebook_page'] ?? '';
 
       /* ============================
        * CELULAR / EXT / OFICINA
@@ -64,10 +64,10 @@ class PluginSignaturesSignature {
       $extraPhone = '';
 
       if ($phone2 !== '') {
-         $extraLabel = __('Oficina:') . ' ';
+         $extraLabel = __('Oficina:', 'signatures') . ' ';
          $extraPhone = $phone2;
       } elseif ($phone !== '') {
-         $extraLabel = __('Ext:') . ' ';
+         $extraLabel = __('Ext:', 'signatures') . ' ';
          $extraPhone = $phone;
       }
 
@@ -82,7 +82,7 @@ class PluginSignaturesSignature {
 
       if (!$img) {
          throw new RuntimeException(
-            sprintf(__('No se puedo cargar la plantilla: %s', 'signatures'), $basefile)
+            sprintf(__('No se pudo cargar la plantilla: %s', 'signatures'), $basefile)
          );
       }
 
@@ -107,8 +107,8 @@ class PluginSignaturesSignature {
        * DATOS USUARIO
        * ============================ */
       $name = $user->getFriendlyName();
-      $titulo = __('No especificado');
-      $email  = __('No especificado');
+      $titulo = __('No especificado', 'signatures');
+      $email  = __('No especificado', 'signatures');
 
       $phone_entity = (string)$entity->getField('phonenumber');
       $web          = (string)$entity->getField('website');
@@ -198,7 +198,7 @@ class PluginSignaturesSignature {
          require_once GLPI_ROOT . '/vendor/tecnickcom/tcpdf/tcpdf_barcodes_2d.php';
 
          $mobile_clean = preg_replace('/\D+/', '', $mobile);
-         $wa_url = 'https://wa.me/' . trim($configsig['whatsapp_country_code']) . $mobile_clean;
+         $wa_url = 'https://wa.me/' . trim($configsig['whatsapp_country_code'] ?? '') . $mobile_clean;
 
          $barcode = new TCPDF2DBarcode($wa_url, 'QRCODE,M');
          $qr_png = $barcode->getBarcodePngData(3, 3, [0, 0, 0]);

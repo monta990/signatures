@@ -1,9 +1,10 @@
 <?php
+declare(strict_types=1);
 
 class PluginSignaturesPaths {
     
     /**
-    * Directorio físico del plugin si esta en plugins (legacy) o marketeplace glpi 10+)
+    * Directorio físico del plugin si esta en plugins (legacy) o marketplace glpi 10+)
     */
     public static function pluginDir(): string {
     

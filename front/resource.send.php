@@ -25,6 +25,7 @@ if (!is_readable($file)) {
    exit('No encontrado');
 }
 
+header('Cache-Control: private, max-age=3600');
 header('Content-Type: image/png');
 header('Content-Length: ' . filesize($file));
 readfile($file);

@@ -189,7 +189,6 @@ echo "<div class='form-text'>
 
 echo "</div>";
 
-/* ================= FIN FACEBOOK ================= */
 /* ================= CODIGO PAIS WP ================= */
 echo "<div class='mb-4'>";
 echo "<label class='form-label fw-bold'>
@@ -212,7 +211,7 @@ echo "<div class='form-text'>
       </div>";
 
 echo "</div>";
-/* ================= FINNCODIGO PAIS WP ================= */
+/* ================= FIN CODIGO PAIS WP ================= */
 
 echo "</div></div></div>";
 
