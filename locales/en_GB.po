@@ -1,0 +1,136 @@
+# Email Signatures plugin for GLPI - English (United Kingdom)
+# Copyright (C) 2025 Edwin Elias Alvarez
+# This file is distributed under the same license as the Email Signatures package.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Email Signatures 1.0.0\n"
+"Report-Msgid-Bugs-To: https://sontechs.com\n"
+"POT-Creation-Date: 2025-02-25 00:00+0000\n"
+"PO-Revision-Date: 2025-02-25 00:00+0000\n"
+"Last-Translator: Edwin Elias Alvarez <edwin@sontechs.com>\n"
+"Language-Team: English (United Kingdom)\n"
+"Language: en_GB\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#: inc/user.class.php
+msgid "Email Signatures"
+msgstr "Email Signatures"
+
+#: inc/user.class.php
+msgid "Firma de correo"
+msgstr "Email Signature"
+
+#: inc/user.class.php
+msgid "Generar firma para correo"
+msgstr "Generate Email Signature"
+
+#: inc/user.class.php
+msgid "No se encontraron las plantillas."
+msgstr "Templates not found."
+
+#: inc/user.class.php
+msgid "Por favor valida que las plantillas existan en la configuración del complemento."
+msgstr "Please check that the templates exist in the plugin configuration."
+
+#: inc/user.class.php
+#, php-format
+msgid "Generando firma para: %s"
+msgstr "Generating signature for: %s"
+
+#: inc/user.class.php
+msgid "Incluir código QR de WhatsApp"
+msgstr "Include WhatsApp QR Code"
+
+#: inc/user.class.php
+msgid "Este usuario no tiene número celular, el QR no estará disponible."
+msgstr "This user has no mobile number, QR code will not be available."
+
+#: inc/user.class.php
+msgid "Descargar firma"
+msgstr "Download Signature"
+
+#: inc/signature.class.php
+msgid "Las plantillas no están correctamente cargadas validalo en configuración del complemento"
+msgstr "Templates are not correctly loaded. Please check the plugin configuration."
+
+#: inc/signature.class.php
+#, php-format
+msgid "No se encontró la fuente TTF: %s"
+msgstr "TTF font not found: %s"
+
+#: inc/signature.class.php
+msgid "Extensión GD de PHP es requerida"
+msgstr "PHP GD extension is required"
+
+#: inc/signature.class.php
+msgid "El código de país para Whatsapp no está configurado. Defínelo en la configuración del complemento."
+msgstr "WhatsApp country code is not configured. Please set it in the plugin configuration."
+
+#: inc/signature.class.php
+#, php-format
+msgid "No se pudo cargar la plantilla: %s"
+msgstr "Could not load template: %s"
+
+#: inc/signature.class.php
+msgid "Entidad no válida"
+msgstr "Invalid entity"
+
+#: inc/signature.class.php
+msgid "No especificado"
+msgstr "Not specified"
+
+#: inc/signature.class.php
+msgid "Oficina:"
+msgstr "Office:"
+
+#: inc/signature.class.php
+msgid "Ext:"
+msgstr "Ext:"
+
+#: front/config.form.php
+msgid "Firma de Correo"
+msgstr "Email Signature"
+
+#: front/config.form.php
+msgid "Configuración de firma para correo"
+msgstr "Email Signature Configuration"
+
+#: front/config.form.php
+msgid "Plantilla con celular eliminada"
+msgstr "Template with mobile number deleted"
+
+#: front/config.form.php
+msgid "Plantilla sin celular eliminada"
+msgstr "Template without mobile number deleted"
+
+#: front/config.form.php
+msgid "Archivo demasiado grande (Máx. 300 KB)"
+msgstr "File too large (Max. 300 KB)"
+
+#: front/config.form.php
+msgid "Formato inválido, solo PNG"
+msgstr "Invalid format, PNG only"
+
+#: front/config.form.php
+msgid "Plantillas guardadas correctamente"
+msgstr "Templates saved successfully"
+
+#: front/config.form.php
+msgid "Actual"
+msgstr "Current"
+
+#: front/config.form.php
+msgid "Eliminar"
+msgstr "Delete"
+
+#: front/config.form.php
+msgid "Cargar nueva"
+msgstr "Upload new"
+
+#: front/config.form.php
+msgid "Guardar"
+msgstr "Save"
