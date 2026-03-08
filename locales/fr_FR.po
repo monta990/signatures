@@ -1,15 +1,15 @@
-# Email Signatures plugin for GLPI - Français (France)
+# Email Signatures plugin for GLPI - Français
 # Copyright (C) 2025 Edwin Elias Alvarez
 # This file is distributed under the same license as the Email Signatures package.
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Email Signatures 1.1.0\n"
+"Project-Id-Version: Email Signatures 1.1.5\n"
 "Report-Msgid-Bugs-To: https://sontechs.com\n"
-"POT-Creation-Date: 2026-03-07 00:00+0000\n"
-"PO-Revision-Date: 2026-03-07 00:00+0000\n"
+"POT-Creation-Date: 2026-03-08 00:00+0000\n"
+"PO-Revision-Date: 2026-03-08 00:00+0000\n"
 "Last-Translator: Edwin Elias Alvarez <edwin@sontechs.com>\n"
-"Language-Team: Français (France)\n"
+"Language-Team: Français\n"
 "Language: fr_FR\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -30,7 +30,7 @@ msgstr "Générer une signature de courriel"
 
 #: inc/user.class.php
 msgid "No se encontraron las plantillas."
-msgstr "Les modèles sont introuvables."
+msgstr "Modèles introuvables."
 
 #: inc/user.class.php
 msgid "Por favor valida que las plantillas existan en la configuración del complemento."
@@ -47,7 +47,7 @@ msgstr "L'envoi par courriel n'est pas disponible."
 
 #: inc/user.class.php
 msgid "Configura el asunto y cuerpo del correo en la configuración del complemento para habilitarlo."
-msgstr "Configurez l'objet et le corps du courriel dans la configuration du plugin pour l'activer."
+msgstr "Configurez l'objet et le corps du courriel dans les paramètres du plugin pour l'activer."
 
 #: inc/user.class.php
 msgid "Incluir código QR de WhatsApp"
@@ -55,7 +55,7 @@ msgstr "Inclure le code QR WhatsApp"
 
 #: inc/user.class.php
 msgid "Este usuario no tiene número celular, el QR no estará disponible."
-msgstr "Cet utilisateur n'a pas de numéro de portable, le code QR ne sera pas disponible."
+msgstr "Cet utilisateur n'a pas de numéro de mobile ; le code QR ne sera pas disponible."
 
 #: inc/user.class.php
 msgid "Descargar firma"
@@ -76,19 +76,19 @@ msgstr "Police TTF introuvable : %s"
 
 #: inc/signature.class.php
 msgid "Extensión GD de PHP es requerida"
-msgstr "L'extension GD de PHP est requise"
+msgstr "L'extension PHP GD est requise."
 
 #: inc/signature.class.php
 msgid "El código de país para Whatsapp no está configurado. Defínelo en la configuración del complemento."
-msgstr "Le code pays WhatsApp n'est pas configuré. Définissez-le dans la configuration du plugin."
+msgstr "Le code pays WhatsApp n'est pas configuré. Définissez-le dans les paramètres du plugin."
 
 #: inc/signature.class.php
 msgid "El asunto del correo no está configurado. Defínelo en la configuración del complemento."
-msgstr "L'objet du courriel n'est pas configuré. Définissez-le dans la configuration du plugin."
+msgstr "L'objet du courriel n'est pas configuré. Définissez-le dans les paramètres du plugin."
 
 #: inc/signature.class.php
 msgid "El cuerpo del correo no está configurado. Defínelo en la configuración del complemento."
-msgstr "Le corps du courriel n'est pas configuré. Définissez-le dans la configuration du plugin."
+msgstr "Le corps du courriel n'est pas configuré. Définissez-le dans les paramètres du plugin."
 
 #: inc/signature.class.php
 #, php-format
@@ -109,7 +109,7 @@ msgstr "Bureau :"
 
 #: inc/signature.class.php
 msgid "Ext:"
-msgstr "Poste :"
+msgstr "Ext :"
 
 #: front/send.php
 msgid "El usuario no tiene una dirección de correo configurada."
@@ -134,11 +134,11 @@ msgstr "Configuration de la signature de courriel"
 
 #: front/config.form.php
 msgid "Plantilla con celular eliminada"
-msgstr "Modèle avec portable supprimé"
+msgstr "Modèle avec mobile supprimé"
 
 #: front/config.form.php
 msgid "Plantilla sin celular eliminada"
-msgstr "Modèle sans portable supprimé"
+msgstr "Modèle sans mobile supprimé"
 
 #: front/config.form.php
 msgid "Archivo demasiado grande (Máx. 300 KB)"
@@ -146,7 +146,7 @@ msgstr "Fichier trop volumineux (Max. 300 Ko)"
 
 #: front/config.form.php
 msgid "Formato inválido, solo PNG"
-msgstr "Format invalide, PNG uniquement"
+msgstr "Format invalide, seuls les fichiers PNG sont acceptés"
 
 #: front/config.form.php
 msgid "Configuración guardada correctamente"
@@ -162,11 +162,39 @@ msgstr "Supprimer"
 
 #: front/config.form.php
 msgid "Cargar nueva"
-msgstr "Charger un nouveau"
+msgstr "Téléverser un nouveau"
 
 #: front/config.form.php
 msgid "Guardar"
 msgstr "Enregistrer"
+
+#: front/config.form.php
+msgid "Opciones del correo electrónico"
+msgstr "Options du courriel"
+
+#: front/config.form.php
+msgid "Variables disponibles"
+msgstr "Variables disponibles"
+
+#: front/config.form.php
+msgid "Usa **texto** para negrita"
+msgstr "Utilisez **texte** pour le gras"
+
+#: front/config.form.php
+msgid "Nombre completo del usuario"
+msgstr "Nom complet de l'utilisateur"
+
+#: front/config.form.php
+msgid "Nombre de la empresa (configurado en General)"
+msgstr "Nom de l'entreprise (configuré dans Général)"
+
+#: front/config.form.php
+msgid "Fecha del día en formato dd/mm/aaaa"
+msgstr "Date du jour au format jj/mm/aaaa"
+
+#: front/config.form.php
+msgid "Puedes usar las variables {nombre}, {empresa} y {fecha}."
+msgstr "Vous pouvez utiliser les variables {nombre}, {empresa} et {fecha}."
 
 #: front/config.form.php
 msgid "Asunto del correo"
@@ -174,11 +202,7 @@ msgstr "Objet du courriel"
 
 #: front/config.form.php
 msgid "Ej: Tu firma de correo corporativa"
-msgstr "Ex : Votre signature de courriel d'entreprise"
-
-#: front/config.form.php
-msgid "Título que verá el destinatario en su bandeja de entrada."
-msgstr "Titre que le destinataire verra dans sa boîte de réception."
+msgstr "Ex. : Votre signature de courriel d'entreprise"
 
 #: front/config.form.php
 msgid "Cuerpo del correo"
@@ -186,11 +210,7 @@ msgstr "Corps du courriel"
 
 #: front/config.form.php
 msgid "Ej: Adjunto encontrarás tu firma de correo corporativa. Guárdala y úsala en tu cliente de correo."
-msgstr "Ex : Vous trouverez ci-joint votre signature de courriel d'entreprise. Enregistrez-la et utilisez-la dans votre client de messagerie."
-
-#: front/config.form.php
-msgid "Texto principal del correo que acompaña a la firma adjunta."
-msgstr "Texte principal du courriel accompagnant la signature en pièce jointe."
+msgstr "Ex. : Ci-joint vous trouverez votre signature de courriel d'entreprise. Enregistrez-la et utilisez-la dans votre client de messagerie."
 
 #: front/config.form.php
 msgid "Pie del correo"
@@ -198,8 +218,34 @@ msgstr "Pied de courriel"
 
 #: front/config.form.php
 msgid "Ej: Este correo fue generado automáticamente por el sistema GLPI."
-msgstr "Ex : Ce courriel a été généré automatiquement par le système GLPI."
+msgstr "Ex. : Ce courriel a été généré automatiquement par le système GLPI."
 
-#: front/config.form.php
-msgid "Texto pequeño al final del correo. Puede usarse para avisos legales o notas adicionales."
-msgstr "Petit texte en bas du courriel. Peut être utilisé pour des avis légaux ou des notes supplémentaires."
+msgid "Enviar correo de prueba"
+msgstr "Envoyer un e-mail de test"
+
+msgid "El correo se enviará a la dirección registrada en tu perfil de GLPI."
+msgstr "L'e-mail sera envoyé à l'adresse enregistrée dans votre profil GLPI."
+
+msgid "Este es un correo de prueba enviado desde la configuración del plugin."
+msgstr "Ceci est un e-mail de test envoyé depuis la configuration du plugin."
+
+msgid "Correo de prueba enviado a %s."
+msgstr "E-mail de test envoyé à %s."
+
+msgid "No se pudo enviar el correo de prueba. Verifica la configuración de correo saliente en GLPI."
+msgstr "Impossible d'envoyer l'e-mail de test. Vérifiez la configuration du courrier sortant dans GLPI."
+
+msgid "Tu perfil de GLPI no tiene una dirección de correo configurada."
+msgstr "Votre profil GLPI n'a pas d'adresse e-mail configurée."
+
+msgid "No se pudo obtener el usuario actual."
+msgstr "Impossible de récupérer l'utilisateur actuel."
+
+msgid "Servidor de correo de GLPI no configurado"
+msgstr "Serveur de messagerie GLPI non configuré"
+
+msgid "Configure el asunto y cuerpo del correo primero"
+msgstr "Configurez d'abord l'objet et le corps de l'e-mail"
+
+msgid "Envía un correo de prueba a tu dirección registrada en GLPI"
+msgstr "Envoyer un e-mail de test à votre adresse enregistrée dans GLPI"

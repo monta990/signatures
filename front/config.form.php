@@ -235,10 +235,50 @@ echo "</div>";
 
 echo "</div></div>";
 
-/* ================= SECCIÓN: CONFIGURACIÓN DE CORREO ================= */
+/* ================= SECCIÓN: OPCIONES DE CORREO ================= */
 echo "<div class='card mt-3 rounded-0'>";
-signaturesRibbonSubHeader('ti-mail-forward', 'Configuración de envío de correo');
+signaturesRibbonSubHeader('ti-mail-forward', __('Opciones del correo electrónico', 'signatures'));
 echo "<div class='card-body'>";
+
+/* PANEL VARIABLES DISPONIBLES */
+echo "
+<div class='card mb-4 border-info rounded-1' style='background:#f0f8ff;'>
+  <div class='card-header py-1 d-flex align-items-center justify-content-between'
+       style='cursor:pointer;background:#e0f0ff;'
+       data-bs-toggle='collapse'
+       data-bs-target='#sigVarsPanel'
+       aria-expanded='false'>
+    <span class='fw-bold text-info'>
+      <i class='ti ti-variable me-1'></i>
+      " . __('Variables disponibles', 'signatures') . "
+      &nbsp;<code class='ms-2' style='font-size:0.82em;background:#c8e6fa;padding:1px 5px;border-radius:3px;'>
+        " . __('Usa **texto** para negrita', 'signatures') . "
+      </code>
+    </span>
+    <i class='ti ti-chevron-down text-info'></i>
+  </div>
+  <div class='collapse' id='sigVarsPanel'>
+    <div class='card-body py-2' style='font-size:0.9em;'>
+      <table class='table table-borderless table-sm mb-0'>
+        <tbody>
+          <tr>
+            <td><code style='background:#ddeeff;padding:2px 6px;border-radius:3px;'>{nombre}</code></td>
+            <td class='text-muted'>— " . __('Nombre completo del usuario', 'signatures') . "</td>
+          </tr>
+          <tr>
+            <td><code style='background:#ddeeff;padding:2px 6px;border-radius:3px;'>{empresa}</code></td>
+            <td class='text-muted'>— " . __('Nombre de la empresa (configurado en General)', 'signatures') . "</td>
+          </tr>
+          <tr>
+            <td><code style='background:#ddeeff;padding:2px 6px;border-radius:3px;'>{fecha}</code></td>
+            <td class='text-muted'>— " . __('Fecha del día en formato dd/mm/aaaa', 'signatures') . "</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+";
 
 /* ASUNTO */
 echo "<div class='mb-4'>";
@@ -252,7 +292,7 @@ echo "<input type='text'
              value='" . Html::cleanInputText($emailSubject) . "'
              placeholder='" . __('Ej: Tu firma de correo corporativa', 'signatures') . "'>";
 echo "<div class='form-text'>" .
-        __('Título que verá el destinatario en su bandeja de entrada.', 'signatures') .
+        __('Puedes usar las variables {nombre}, {empresa} y {fecha}.', 'signatures') .
      "</div>";
 echo "</div>";
 
@@ -269,7 +309,7 @@ echo "<textarea name='email_body'
                Html::cleanPostForTextArea($emailBody) .
      "</textarea>";
 echo "<div class='form-text'>" .
-        __('Texto principal del correo que acompaña a la firma adjunta.', 'signatures') .
+        __('Puedes usar las variables {nombre}, {empresa} y {fecha}.', 'signatures') .
      "</div>";
 echo "</div>";
 
@@ -286,9 +326,44 @@ echo "<textarea name='email_footer'
                Html::cleanPostForTextArea($emailFooter) .
      "</textarea>";
 echo "<div class='form-text'>" .
-        __('Texto pequeño al final del correo. Puede usarse para avisos legales o notas adicionales.', 'signatures') .
+        __('Puedes usar las variables {nombre}, {empresa} y {fecha}.', 'signatures') .
      "</div>";
 echo "</div>";
+
+/* ── Botón enviar correo de prueba ──────────────────────────────────── */
+$_testUrl     = Plugin::getWebDir('signatures') . '/front/send_test.php';
+$_coreCfg     = Config::getConfigurationValues('core');
+$_mailOk      = ($_coreCfg['use_notifications']    ?? 0) == 1
+             && ($_coreCfg['notifications_mailing'] ?? 0) == 1;
+$_hasConfig   = !empty(trim($emailSubject)) && !empty(trim($emailBody));
+$_btnDisabled = (!$_mailOk || !$_hasConfig);
+
+if (!$_mailOk) {
+   $_btnTooltip = __('Servidor de correo de GLPI no configurado', 'signatures');
+} elseif (!$_hasConfig) {
+   $_btnTooltip = __('Configure el asunto y cuerpo del correo primero', 'signatures');
+} else {
+   $_btnTooltip = __('Envía un correo de prueba a tu dirección registrada en GLPI', 'signatures');
+}
+
+$_btnTooltipEsc = htmlspecialchars($_btnTooltip, ENT_QUOTES, 'UTF-8');
+$_btnCls        = $_btnDisabled
+   ? "btn btn-warning disabled' aria-disabled='true' style='pointer-events:none;opacity:.65"
+   : "btn btn-warning";
+$_testCsrfToken = Session::getNewCSRFToken();
+
+echo "<div class='d-flex align-items-center gap-3 flex-wrap mt-3'>
+   <span data-bs-toggle='tooltip' title='{$_btnTooltipEsc}' class='d-inline-block'>
+      <button type='submit' form='sig-test-mail-form' class='{$_btnCls}'>
+         <i class='ti ti-send me-2'></i>"
+         . __('Enviar correo de prueba', 'signatures') .
+      "</button>
+   </span>
+   <span class='text-muted' style='font-size:0.85em;'>
+      <i class='ti ti-info-circle me-1'></i>"
+      . __('El correo se enviará a la dirección registrada en tu perfil de GLPI.', 'signatures') .
+   "</span>
+</div>";
 
 echo "</div></div>";
 
@@ -358,15 +433,22 @@ echo "</div></div></div>";
 
 echo "</div>"; // tab-content
 
-/* FOOTER */
-echo "<div class='card-footer text-end'>
-        <button type='submit' name='save' class='btn btn-primary'>
-          <i class='ti ti-device-floppy'></i> " . __('Guardar', 'signatures') . "
-        </button>
-      </div>";
-
+/* FOOTER — Guardar dentro del form principal */
+echo "<div class='card-footer text-end'>";
+echo "<button type='submit' name='save' class='btn btn-primary'>"
+   . "<i class='ti ti-device-floppy me-1'></i>"
+   . __('Guardar', 'signatures')
+   . "</button>";
 echo "</div>";
-echo "</form>";
+
+echo "</div>"; // fin .card
+echo "</form>"; // cierre del form principal
+
+// Form oculto del correo de prueba — FUERA del form principal (evita anidamiento HTML inválido)
+// El <button form='sig-test-mail-form'> declarado dentro del tab-general se asocia a este form via HTML5.
+echo "<form id='sig-test-mail-form' method='post' action='" . htmlspecialchars($_testUrl, ENT_QUOTES, 'UTF-8') . "' style='display:none;'>
+   <input type='hidden' name='_glpi_csrf_token' value='{$_testCsrfToken}'>
+</form>";
 
 /* ========================== JS PREVIEW ========================== */
 echo <<<HTML

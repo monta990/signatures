@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Email Signatures 1.1.0\n"
+"Project-Id-Version: Email Signatures 1.1.5\n"
 "Report-Msgid-Bugs-To: https://sontechs.com\n"
-"POT-Creation-Date: 2026-03-07 00:00+0000\n"
-"PO-Revision-Date: 2026-03-07 00:00+0000\n"
+"POT-Creation-Date: 2026-03-08 00:00+0000\n"
+"PO-Revision-Date: 2026-03-08 00:00+0000\n"
 "Last-Translator: Edwin Elias Alvarez <edwin@sontechs.com>\n"
 "Language-Team: Español (México)\n"
 "Language: es_MX\n"
@@ -169,16 +169,40 @@ msgid "Guardar"
 msgstr "Guardar"
 
 #: front/config.form.php
+msgid "Opciones del correo electrónico"
+msgstr "Opciones del correo electrónico"
+
+#: front/config.form.php
+msgid "Variables disponibles"
+msgstr "Variables disponibles"
+
+#: front/config.form.php
+msgid "Usa **texto** para negrita"
+msgstr "Usa **texto** para negrita"
+
+#: front/config.form.php
+msgid "Nombre completo del usuario"
+msgstr "Nombre completo del usuario"
+
+#: front/config.form.php
+msgid "Nombre de la empresa (configurado en General)"
+msgstr "Nombre de la empresa (configurado en General)"
+
+#: front/config.form.php
+msgid "Fecha del día en formato dd/mm/aaaa"
+msgstr "Fecha del día en formato dd/mm/aaaa"
+
+#: front/config.form.php
+msgid "Puedes usar las variables {nombre}, {empresa} y {fecha}."
+msgstr "Puedes usar las variables {nombre}, {empresa} y {fecha}."
+
+#: front/config.form.php
 msgid "Asunto del correo"
 msgstr "Asunto del correo"
 
 #: front/config.form.php
 msgid "Ej: Tu firma de correo corporativa"
 msgstr "Ej: Tu firma de correo corporativa"
-
-#: front/config.form.php
-msgid "Título que verá el destinatario en su bandeja de entrada."
-msgstr "Título que verá el destinatario en su bandeja de entrada."
 
 #: front/config.form.php
 msgid "Cuerpo del correo"
@@ -189,10 +213,6 @@ msgid "Ej: Adjunto encontrarás tu firma de correo corporativa. Guárdala y úsa
 msgstr "Ej: Adjunto encontrarás tu firma de correo corporativa. Guárdala y úsala en tu cliente de correo."
 
 #: front/config.form.php
-msgid "Texto principal del correo que acompaña a la firma adjunta."
-msgstr "Texto principal del correo que acompaña a la firma adjunta."
-
-#: front/config.form.php
 msgid "Pie del correo"
 msgstr "Pie del correo"
 
@@ -200,6 +220,32 @@ msgstr "Pie del correo"
 msgid "Ej: Este correo fue generado automáticamente por el sistema GLPI."
 msgstr "Ej: Este correo fue generado automáticamente por el sistema GLPI."
 
-#: front/config.form.php
-msgid "Texto pequeño al final del correo. Puede usarse para avisos legales o notas adicionales."
-msgstr "Texto pequeño al final del correo. Puede usarse para avisos legales o notas adicionales."
+msgid "Enviar correo de prueba"
+msgstr "Enviar correo de prueba"
+
+msgid "El correo se enviará a la dirección registrada en tu perfil de GLPI."
+msgstr "El correo se enviará a la dirección registrada en tu perfil de GLPI."
+
+msgid "Este es un correo de prueba enviado desde la configuración del plugin."
+msgstr "Este es un correo de prueba enviado desde la configuración del plugin."
+
+msgid "Correo de prueba enviado a %s."
+msgstr "Correo de prueba enviado a %s."
+
+msgid "No se pudo enviar el correo de prueba. Verifica la configuración de correo saliente en GLPI."
+msgstr "No se pudo enviar el correo de prueba. Verifica la configuración de correo saliente en GLPI."
+
+msgid "Tu perfil de GLPI no tiene una dirección de correo configurada."
+msgstr "Tu perfil de GLPI no tiene una dirección de correo configurada."
+
+msgid "No se pudo obtener el usuario actual."
+msgstr "No se pudo obtener el usuario actual."
+
+msgid "Servidor de correo de GLPI no configurado"
+msgstr "Servidor de correo de GLPI no configurado"
+
+msgid "Configure el asunto y cuerpo del correo primero"
+msgstr "Configure el asunto y cuerpo del correo primero"
+
+msgid "Envía un correo de prueba a tu dirección registrada en GLPI"
+msgstr "Envía un correo de prueba a tu dirección registrada en GLPI"

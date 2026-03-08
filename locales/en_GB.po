@@ -1,15 +1,15 @@
-# Email Signatures plugin for GLPI - English (United Kingdom)
+# Email Signatures plugin for GLPI - English (GB)
 # Copyright (C) 2025 Edwin Elias Alvarez
 # This file is distributed under the same license as the Email Signatures package.
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Email Signatures 1.1.0\n"
+"Project-Id-Version: Email Signatures 1.1.5\n"
 "Report-Msgid-Bugs-To: https://sontechs.com\n"
-"POT-Creation-Date: 2026-03-07 00:00+0000\n"
-"PO-Revision-Date: 2026-03-07 00:00+0000\n"
+"POT-Creation-Date: 2026-03-08 00:00+0000\n"
+"PO-Revision-Date: 2026-03-08 00:00+0000\n"
 "Last-Translator: Edwin Elias Alvarez <edwin@sontechs.com>\n"
-"Language-Team: English (United Kingdom)\n"
+"Language-Team: English (GB)\n"
 "Language: en_GB\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -26,7 +26,7 @@ msgstr "Email Signature"
 
 #: inc/user.class.php
 msgid "Generar firma para correo"
-msgstr "Generate Email Signature"
+msgstr "Generate email signature"
 
 #: inc/user.class.php
 msgid "No se encontraron las plantillas."
@@ -34,7 +34,7 @@ msgstr "Templates not found."
 
 #: inc/user.class.php
 msgid "Por favor valida que las plantillas existan en la configuración del complemento."
-msgstr "Please check that the templates exist in the plugin configuration."
+msgstr "Please verify that the templates exist in the plugin configuration."
 
 #: inc/user.class.php
 #, php-format
@@ -47,23 +47,23 @@ msgstr "Email sending is not available."
 
 #: inc/user.class.php
 msgid "Configura el asunto y cuerpo del correo en la configuración del complemento para habilitarlo."
-msgstr "Set the email subject and body in the plugin configuration to enable it."
+msgstr "Configure the email subject and body in the plugin settings to enable it."
 
 #: inc/user.class.php
 msgid "Incluir código QR de WhatsApp"
-msgstr "Include WhatsApp QR Code"
+msgstr "Include WhatsApp QR code"
 
 #: inc/user.class.php
 msgid "Este usuario no tiene número celular, el QR no estará disponible."
-msgstr "This user has no mobile number, QR code will not be available."
+msgstr "This user has no mobile number; the QR code will not be available."
 
 #: inc/user.class.php
 msgid "Descargar firma"
-msgstr "Download Signature"
+msgstr "Download signature"
 
 #: inc/user.class.php
 msgid "Enviar por correo"
-msgstr "Send by Email"
+msgstr "Send by email"
 
 #: inc/signature.class.php
 msgid "Las plantillas no están correctamente cargadas validalo en configuración del complemento"
@@ -76,19 +76,19 @@ msgstr "TTF font not found: %s"
 
 #: inc/signature.class.php
 msgid "Extensión GD de PHP es requerida"
-msgstr "PHP GD extension is required"
+msgstr "PHP GD extension is required."
 
 #: inc/signature.class.php
 msgid "El código de país para Whatsapp no está configurado. Defínelo en la configuración del complemento."
-msgstr "WhatsApp country code is not configured. Please set it in the plugin configuration."
+msgstr "WhatsApp country code is not configured. Define it in the plugin settings."
 
 #: inc/signature.class.php
 msgid "El asunto del correo no está configurado. Defínelo en la configuración del complemento."
-msgstr "Email subject is not configured. Please set it in the plugin configuration."
+msgstr "Email subject is not configured. Define it in the plugin settings."
 
 #: inc/signature.class.php
 msgid "El cuerpo del correo no está configurado. Defínelo en la configuración del complemento."
-msgstr "Email body is not configured. Please set it in the plugin configuration."
+msgstr "Email body is not configured. Define it in the plugin settings."
 
 #: inc/signature.class.php
 #, php-format
@@ -134,11 +134,11 @@ msgstr "Email Signature Configuration"
 
 #: front/config.form.php
 msgid "Plantilla con celular eliminada"
-msgstr "Template with mobile number deleted"
+msgstr "Mobile template deleted"
 
 #: front/config.form.php
 msgid "Plantilla sin celular eliminada"
-msgstr "Template without mobile number deleted"
+msgstr "No-mobile template deleted"
 
 #: front/config.form.php
 msgid "Archivo demasiado grande (Máx. 300 KB)"
@@ -146,7 +146,7 @@ msgstr "File too large (Max. 300 KB)"
 
 #: front/config.form.php
 msgid "Formato inválido, solo PNG"
-msgstr "Invalid format, PNG only"
+msgstr "Invalid format, only PNG files are permitted"
 
 #: front/config.form.php
 msgid "Configuración guardada correctamente"
@@ -169,37 +169,83 @@ msgid "Guardar"
 msgstr "Save"
 
 #: front/config.form.php
+msgid "Opciones del correo electrónico"
+msgstr "Email Options"
+
+#: front/config.form.php
+msgid "Variables disponibles"
+msgstr "Available variables"
+
+#: front/config.form.php
+msgid "Usa **texto** para negrita"
+msgstr "Use **text** for bold"
+
+#: front/config.form.php
+msgid "Nombre completo del usuario"
+msgstr "User's full name"
+
+#: front/config.form.php
+msgid "Nombre de la empresa (configurado en General)"
+msgstr "Company name (configured in General settings)"
+
+#: front/config.form.php
+msgid "Fecha del día en formato dd/mm/aaaa"
+msgstr "Today's date in dd/mm/yyyy format"
+
+#: front/config.form.php
+msgid "Puedes usar las variables {nombre}, {empresa} y {fecha}."
+msgstr "You can use the variables {nombre}, {empresa} and {fecha}."
+
+#: front/config.form.php
 msgid "Asunto del correo"
-msgstr "Email Subject"
+msgstr "Email subject"
 
 #: front/config.form.php
 msgid "Ej: Tu firma de correo corporativa"
-msgstr "Ex: Your corporate email signature"
-
-#: front/config.form.php
-msgid "Título que verá el destinatario en su bandeja de entrada."
-msgstr "Title the recipient will see in their inbox."
+msgstr "E.g.: Your corporate email signature"
 
 #: front/config.form.php
 msgid "Cuerpo del correo"
-msgstr "Email Body"
+msgstr "Email body"
 
 #: front/config.form.php
 msgid "Ej: Adjunto encontrarás tu firma de correo corporativa. Guárdala y úsala en tu cliente de correo."
-msgstr "Ex: Attached you will find your corporate email signature. Save it and use it in your email client."
-
-#: front/config.form.php
-msgid "Texto principal del correo que acompaña a la firma adjunta."
-msgstr "Main text of the email that accompanies the attached signature."
+msgstr "E.g.: Attached you will find your corporate email signature. Save it and use it in your email client."
 
 #: front/config.form.php
 msgid "Pie del correo"
-msgstr "Email Footer"
+msgstr "Email footer"
 
 #: front/config.form.php
 msgid "Ej: Este correo fue generado automáticamente por el sistema GLPI."
-msgstr "Ex: This email was automatically generated by the GLPI system."
+msgstr "E.g.: This email was automatically generated by the GLPI system."
 
-#: front/config.form.php
-msgid "Texto pequeño al final del correo. Puede usarse para avisos legales o notas adicionales."
-msgstr "Small text at the bottom of the email. Can be used for legal notices or additional notes."
+msgid "Enviar correo de prueba"
+msgstr "Send test email"
+
+msgid "El correo se enviará a la dirección registrada en tu perfil de GLPI."
+msgstr "The email will be sent to the address registered in your GLPI profile."
+
+msgid "Este es un correo de prueba enviado desde la configuración del plugin."
+msgstr "This is a test email sent from the plugin configuration."
+
+msgid "Correo de prueba enviado a %s."
+msgstr "Test email sent to %s."
+
+msgid "No se pudo enviar el correo de prueba. Verifica la configuración de correo saliente en GLPI."
+msgstr "Could not send the test email. Check the outgoing mail configuration in GLPI."
+
+msgid "Tu perfil de GLPI no tiene una dirección de correo configurada."
+msgstr "Your GLPI profile does not have an email address configured."
+
+msgid "No se pudo obtener el usuario actual."
+msgstr "Could not retrieve the current user."
+
+msgid "Servidor de correo de GLPI no configurado"
+msgstr "GLPI mail server not configured"
+
+msgid "Configure el asunto y cuerpo del correo primero"
+msgstr "Configure the email subject and body first"
+
+msgid "Envía un correo de prueba a tu dirección registrada en GLPI"
+msgstr "Send a test email to your registered GLPI address"

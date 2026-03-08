@@ -1,20 +1,18 @@
-# Email Signatures plugin for GLPI - Translation template
+# Email Signatures plugin for GLPI
 # Copyright (C) 2025 Edwin Elias Alvarez
 # This file is distributed under the same license as the Email Signatures package.
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Email Signatures 1.1.0\n"
+"Project-Id-Version: Email Signatures 1.1.5\n"
 "Report-Msgid-Bugs-To: https://sontechs.com\n"
-"POT-Creation-Date: 2026-03-07 00:00+0000\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"POT-Creation-Date: 2026-03-08 00:00+0000\n"
+"PO-Revision-Date: 2026-03-08 00:00+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
-"Language: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #: inc/user.class.php
 msgid "Email Signatures"
@@ -169,15 +167,39 @@ msgid "Guardar"
 msgstr ""
 
 #: front/config.form.php
+msgid "Opciones del correo electrónico"
+msgstr ""
+
+#: front/config.form.php
+msgid "Variables disponibles"
+msgstr ""
+
+#: front/config.form.php
+msgid "Usa **texto** para negrita"
+msgstr ""
+
+#: front/config.form.php
+msgid "Nombre completo del usuario"
+msgstr ""
+
+#: front/config.form.php
+msgid "Nombre de la empresa (configurado en General)"
+msgstr ""
+
+#: front/config.form.php
+msgid "Fecha del día en formato dd/mm/aaaa"
+msgstr ""
+
+#: front/config.form.php
+msgid "Puedes usar las variables {nombre}, {empresa} y {fecha}."
+msgstr ""
+
+#: front/config.form.php
 msgid "Asunto del correo"
 msgstr ""
 
 #: front/config.form.php
 msgid "Ej: Tu firma de correo corporativa"
-msgstr ""
-
-#: front/config.form.php
-msgid "Título que verá el destinatario en su bandeja de entrada."
 msgstr ""
 
 #: front/config.form.php
@@ -189,10 +211,6 @@ msgid "Ej: Adjunto encontrarás tu firma de correo corporativa. Guárdala y úsa
 msgstr ""
 
 #: front/config.form.php
-msgid "Texto principal del correo que acompaña a la firma adjunta."
-msgstr ""
-
-#: front/config.form.php
 msgid "Pie del correo"
 msgstr ""
 
@@ -200,6 +218,32 @@ msgstr ""
 msgid "Ej: Este correo fue generado automáticamente por el sistema GLPI."
 msgstr ""
 
-#: front/config.form.php
-msgid "Texto pequeño al final del correo. Puede usarse para avisos legales o notas adicionales."
+msgid "Enviar correo de prueba"
+msgstr ""
+
+msgid "El correo se enviará a la dirección registrada en tu perfil de GLPI."
+msgstr ""
+
+msgid "Este es un correo de prueba enviado desde la configuración del plugin."
+msgstr ""
+
+msgid "Correo de prueba enviado a %s."
+msgstr ""
+
+msgid "No se pudo enviar el correo de prueba. Verifica la configuración de correo saliente en GLPI."
+msgstr ""
+
+msgid "Tu perfil de GLPI no tiene una dirección de correo configurada."
+msgstr ""
+
+msgid "No se pudo obtener el usuario actual."
+msgstr ""
+
+msgid "Servidor de correo de GLPI no configurado"
+msgstr ""
+
+msgid "Configure el asunto y cuerpo del correo primero"
+msgstr ""
+
+msgid "Envía un correo de prueba a tu dirección registrada en GLPI"
 msgstr ""

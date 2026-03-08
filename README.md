@@ -245,7 +245,7 @@ Al desinstalar el plugin desde GLPI, se eliminan automáticamente los valores de
 
 ## Autor
 
-**monta990**  
+**Edwin Elias Alvarez**  
 [https://sontechs.com](https://sontechs.com)
 
 ## Licencia

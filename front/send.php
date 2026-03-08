@@ -104,14 +104,72 @@ $body    = trim($config['email_body']    ?? '');
 $footer  = trim($config['email_footer']  ?? '');
 
 /* ============================
+ * VARIABLES DINÁMICAS
+ * Tokens soportados: {nombre}, {empresa}, {fecha}
+ * Markdown soportado: **texto** → <span style="font-weight:bold">texto</span>
+ * ============================ */
+$varNombre = $user->getFriendlyName();
+
+// {empresa} = nombre de la entidad del usuario (igual que plugin responsivas)
+// Prioridad: entidad propia del usuario → entidad activa de sesión → nombre de GLPI
+$_entityId = (int)($user->fields['entities_id'] ?? 0);
+if ($_entityId > 0) {
+   $_entity    = new Entity();
+   $varEmpresa = $_entity->getFromDB($_entityId)
+                 ? ($_entity->fields['name'] ?? '')
+                 : '';
+} else {
+   // Entidad raíz (id = 0): usar completename si está configurado, si no $CFG_GLPI['name']
+   $_entity    = new Entity();
+   $varEmpresa = $_entity->getFromDB(0)
+                 ? ($_entity->fields['name'] ?? ($CFG_GLPI['name'] ?? ''))
+                 : ($CFG_GLPI['name'] ?? '');
+}
+unset($_entity, $_entityId);
+
+$varFecha  = date('d/m/Y');
+$varTokens = ['{nombre}', '{empresa}', '{fecha}'];
+$varValues = [$varNombre, $varEmpresa, $varFecha];
+
+/**
+ * Reemplaza variables dinámicas, escapa HTML y convierte **negrita**.
+ *
+ * Orden crítico:
+ *  1. Reemplazar tokens en texto plano (antes de escapar)
+ *  2. htmlspecialchars() → neutraliza HTML inyectado en los valores (XSS)
+ *  3. Convertir **texto** → <span style="font-weight:bold"> (los * sobreviven el escape)
+ *     Se usa span+style en lugar de <strong> porque Outlook y algunos clientes
+ *     de correo pueden despojar etiquetas semánticas pero respetan estilos inline.
+ *  4. nl2br() para saltos de línea
+ */
+$signaturesBoldToHtml = static function (string $text) use ($varTokens, $varValues): string {
+    // 1. Variable replacement
+    $text = str_replace($varTokens, $varValues, $text);
+    // 2. HTML-escape
+    $html = htmlspecialchars($text, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
+    // 3. **negrita** → <span style="font-weight:bold">negrita</span>
+    $html = preg_replace(
+        '/\*\*(.+?)\*\*/s',
+        '<span style="font-weight:bold">$1</span>',
+        $html
+    );
+    // 4. Newlines → <br>
+    $html = nl2br($html);
+    return $html;
+};
+
+// Asunto: solo variables, sin HTML ni markdown (es texto plano en el header de correo)
+$subject = str_replace($varTokens, $varValues, $subject);
+
+/* ============================
  * CONSTRUIR CUERPO HTML (sin imágenes embebidas)
  * ============================ */
 $bodyHtml  = '<div style="font-family: Arial, sans-serif; font-size: 14px; color: #333;">';
-$bodyHtml .= '<p>' . nl2br(Html::entities_deep($body)) . '</p>';
+$bodyHtml .= '<p>' . $signaturesBoldToHtml($body) . '</p>';
 
 if ($footer !== '') {
-   $bodyHtml .= '<br>';
-   $bodyHtml .= '<p style="font-size: 11px; color: #999;">' . nl2br(Html::entities_deep($footer)) . '</p>';
+   $bodyHtml .= '<hr style="border:none;border-top:1px solid #ddd;margin:12px 0;">';
+   $bodyHtml .= '<p style="font-size: 11px; color: #999;">' . $signaturesBoldToHtml($footer) . '</p>';
 }
 
 $bodyHtml .= '</div>';
