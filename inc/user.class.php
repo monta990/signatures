@@ -156,6 +156,17 @@ class PluginSignaturesUser extends CommonGLPI {
                </button>
             </form>";
 
+      /* --- Botón Vista Previa --- */
+      echo "<button type='button'
+                     class='btn btn-outline-secondary'
+                     id='btn-preview-sig'
+                     data-userid='{$user->getID()}'
+                     data-qrval='" . ($hasMobile ? '1' : '') . "'
+                     " . (!$hasBase ? 'disabled' : '') . ">
+               <i class='ti ti-eye me-2'></i>" .
+               __('Vista previa', 'signatures') .
+            "</button>";
+
       /* --- Botón Enviar por correo --- */
       echo "<form method='post' action='{$sendUrl}' id='form-send'>
                " . Html::hidden('_glpi_csrf_token', ['value' => Session::getNewCSRFToken()]) . "
@@ -174,18 +185,139 @@ class PluginSignaturesUser extends CommonGLPI {
       echo "</div></div>";
 
       /* ===========================
-       * JS: sincronizar checkbox con ambos forms
+       * Modal Vista Previa
        * =========================== */
-      if ($hasMobile) {
-         echo <<<HTML
+      $downloadUrlEsc = htmlspecialchars($downloadUrl, ENT_QUOTES, 'UTF-8');
+      echo "<div class='modal fade' id='sig-preview-modal' tabindex='-1' aria-hidden='true'>
+         <div class='modal-dialog modal-xl modal-dialog-centered'>
+            <div class='modal-content'>
+               <div class='modal-header py-2'>
+                  <h6 class='modal-title'>
+                     <i class='ti ti-eye me-2'></i>" .
+                     __('Vista previa de firma', 'signatures') .
+                  "</h6>
+                  <button type='button' class='btn-close' data-bs-dismiss='modal'></button>
+               </div>
+               <div class='modal-body text-center py-4'>
+                  <div id='sig-preview-loading' style='display:none;'>
+                     <span class='spinner-border spinner-border-sm me-2'></span>" .
+                     __('Generando vista previa...', 'signatures') .
+                  "</div>
+                  <img id='sig-preview-img' src='' alt='signature preview'
+                       style='max-width:100%;display:none;border:1px solid #dee2e6;'>
+               </div>
+            </div>
+         </div>
+      </div>";
+
+      /* ===========================
+       * JS: checkbox + preview + feedback botones
+       * =========================== */
+      echo <<<HTML
 <script>
-document.getElementById('qr_check').addEventListener('change', function () {
-   const val = this.checked ? '1' : '';
-   document.getElementById('qr_download').value = val;
-   document.getElementById('qr_send').value     = val;
-});
+// Sincronizar checkbox QR con ambos forms
+(function() {
+   const chk = document.getElementById('qr_check');
+   if (!chk) return;
+   chk.addEventListener('change', function () {
+      const val = this.checked ? '1' : '';
+      const dl = document.getElementById('qr_download');
+      const sn = document.getElementById('qr_send');
+      if (dl) dl.value = val;
+      if (sn) sn.value = val;
+   });
+})();
+
+// Feedback visual en botones al hacer submit
+// Descarga (GET): la página NO recarga — usar cookie polling para restaurar el botón
+// Envío (POST): la página recarga sola al volver del redirect
+(function() {
+   const COOKIE = 'sig_download_done';
+
+   function setCookie(name) {
+      document.cookie = name + '=1; path=/; SameSite=Strict';
+   }
+   function clearCookie(name) {
+      document.cookie = name + '=; path=/; max-age=0; SameSite=Strict';
+   }
+   function hasCookie(name) {
+      return document.cookie.split(';').some(c => c.trim().startsWith(name + '='));
+   }
+   function restoreBtn(btn, origIcon) {
+      btn.disabled = false;
+      const icon = btn.querySelector('i');
+      if (icon) icon.className = origIcon;
+   }
+
+   // Botón de descarga — GET, página no recarga
+   const dlForm = document.getElementById('form-download');
+   if (dlForm) {
+      dlForm.addEventListener('submit', function () {
+         const btn = this.querySelector('button[type="submit"]');
+         if (!btn || btn.disabled) return;
+         const origIcon = btn.querySelector('i')?.className || 'ti ti-download me-2';
+         btn.disabled = true;
+         const icon = btn.querySelector('i');
+         if (icon) icon.className = 'spinner-border spinner-border-sm me-2';
+         clearCookie(COOKIE);
+         // Poll hasta que download.php setee la cookie (máx 30 s)
+         let elapsed = 0;
+         const poll = setInterval(() => {
+            elapsed += 400;
+            if (hasCookie(COOKIE) || elapsed > 30000) {
+               clearInterval(poll);
+               clearCookie(COOKIE);
+               restoreBtn(btn, origIcon);
+            }
+         }, 400);
+      });
+   }
+
+   // Botón de envío — POST, página recarga sola
+   const snForm = document.getElementById('form-send');
+   if (snForm) {
+      snForm.addEventListener('submit', function () {
+         const btn = this.querySelector('button[type="submit"]');
+         if (!btn || btn.disabled) return;
+         btn.disabled = true;
+         const icon = btn.querySelector('i');
+         if (icon) icon.className = 'spinner-border spinner-border-sm me-2';
+      });
+   }
+})();
+
+// Modal Vista Previa
+(function() {
+   const btn = document.getElementById('btn-preview-sig');
+   if (!btn) return;
+   btn.addEventListener('click', function () {
+      const modalEl = document.getElementById('sig-preview-modal');
+      const modal   = bootstrap.Modal.getOrCreateInstance(modalEl);
+      const img     = document.getElementById('sig-preview-img');
+      const loading = document.getElementById('sig-preview-loading');
+      const qrCheck = document.getElementById('qr_check');
+      const qrVal   = qrCheck ? (qrCheck.checked ? '1' : '') : this.dataset.qrval;
+      const url     = '{$downloadUrlEsc}?userid=' + this.dataset.userid
+                    + '&include_qr=' + qrVal + '&preview=1';
+
+      img.style.display     = 'none';
+      img.src               = '';
+      loading.style.display = '';
+      modal.show();
+
+      img.onload = () => {
+         loading.style.display = 'none';
+         img.style.display     = '';
+      };
+      img.onerror = () => {
+         loading.style.display = 'none';
+         img.alt               = 'Error al cargar la vista previa';
+         img.style.display     = '';
+      };
+      img.src = url;
+   });
+})();
 </script>
 HTML;
-      }
    }
 }

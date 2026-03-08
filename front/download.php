@@ -29,6 +29,7 @@ if (!$isSelf && !$isAdmin) {
  * OPCIONES
  * ============================ */
 $include_qr = !empty($_GET['include_qr']);
+$isPreview  = !empty($_GET['preview']);   // true → inline en el browser (modal)
 
 /* ============================
  * VALIDACIONES DEL PLUGIN
@@ -57,17 +58,39 @@ try {
 }
 
 /* ============================
- * DESCARGA
+ * NOMBRE ARCHIVO — RFC 6266
  * ============================ */
-$filename   = PluginSignaturesSignature::sanitizeFilename($user->getFriendlyName(), (string)$userid);
-$attachName = 'signature_' . $filename . '.png';
+$safeName   = PluginSignaturesSignature::sanitizeFilename($user->getFriendlyName(), (string)$userid);
+$attachName = 'signature_' . $safeName . '.png';
 
+// RFC 6266: filename* para nombres con caracteres no-ASCII
+$encodedName = rawurlencode($attachName);
+
+/* ============================
+ * RESPUESTA HTTP
+ * ============================ */
 if (ob_get_length()) {
    ob_end_clean();
 }
 
 header('Content-Type: image/png');
-header('Content-Disposition: attachment; filename="' . $attachName . '"');
+header('Cache-Control: private, no-store');
+
+if ($isPreview) {
+   // Visualización inline para el modal de vista previa
+   header('Content-Disposition: inline; filename="' . $attachName . '"');
+} else {
+   // Descarga estándar con soporte RFC 6266
+   header('Content-Disposition: attachment; filename="' . $attachName . '"; filename*=UTF-8\'\'' . $encodedName);
+   // Cookie para que el JS del browser detecte que la descarga terminó y restaure el botón
+   setcookie('sig_download_done', '1', [
+      'expires'  => time() + 60,
+      'path'     => '/',
+      'secure'   => !empty($_SERVER['HTTPS']),
+      'samesite' => 'Strict',
+   ]);
+}
+
 header('Content-Length: ' . filesize($file));
 
 readfile($file);

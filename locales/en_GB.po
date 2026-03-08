@@ -306,3 +306,21 @@ msgstr "The PHP GD extension is required to install this plugin."
 
 msgid "No se pudo generar la firma. Revisa el log de GLPI para más detalles."
 msgstr "Could not generate the signature. Check the GLPI log for details."
+
+msgid "Vista previa"
+msgstr "Preview"
+
+msgid "Vista previa de firma"
+msgstr "Signature preview"
+
+msgid "Generando vista previa..."
+msgstr "Generating preview..."
+
+msgid "Hay cambios en las posiciones sin guardar. Haz clic en Guardar para aplicarlos."
+msgstr "There are unsaved position changes. Click Save to apply them."
+
+msgid "Haz clic en una variable para insertarla en el campo activo."
+msgstr "Click a variable to insert it into the active field."
+
+msgid "Clic para insertar"
+msgstr "Click to insert"

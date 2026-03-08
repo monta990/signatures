@@ -74,6 +74,8 @@ Características principales:
 - Pestaña dedicada en el perfil de cada usuario con botones de descarga y envío.
 - Configuración centralizada: plantillas, página de Facebook, código de país de WhatsApp, asunto, cuerpo y pie del correo.
 - Editor visual drag &amp; drop de posiciones de campos por plantilla (sin editar PHP).
+- Vista previa del PNG final antes de descargar o enviar.
+- Variables de correo insertables con un clic desde el panel de configuración.
 - Soporte multiidioma: Español (México), English (US), English (GB), Français.
 - Compatible con GLPI 11.0+.
          ]]></es_MX>
@@ -91,6 +93,8 @@ Key features:
 - Centralized configuration: templates, Facebook page, WhatsApp country code, email subject, body and footer.
 - Visual drag-and-drop position editor per template — no PHP editing required.
 - Visual drag-and-drop position editor per template — no PHP editing required.
+- Live PNG preview before downloading or sending.
+- Clickable variable badges for quick insertion into email fields.
 - Multilanguage: Spanish (Mexico), English (US), English (GB), French.
 - Compatible with GLPI 11.0+.
          ]]></en_US>
@@ -122,6 +126,8 @@ Fonctionnalités principales :
 - Onglet dédié dans le profil de chaque utilisateur avec boutons de téléchargement et d'envoi.
 - Configuration centralisée : modèles, page Facebook, code pays WhatsApp, objet, corps et pied de courriel.
 - Éditeur visuel de positions par glisser-déposer par modèle — sans modifier le PHP.
+- Aperçu PNG en temps réel avant le téléchargement ou l'envoi.
+- Badges de variables cliquables pour une insertion rapide dans les champs e-mail.
 - Multilingue : Español (México), English (US), English (GB), Français.
 - Compatible avec GLPI 11.0+.
          ]]></fr_FR>
@@ -142,6 +148,12 @@ Fonctionnalités principales :
 
    <!-- Versiones publicadas -->
    <versions>
+
+      <version>
+         <num>1.3.0</num>
+         <compatibility>11.0</compatibility>
+         <download_url>https://github.com/sontechs/glpi-signatures/releases/download/1.3.0/signatures-1.3.0.zip</download_url>
+      </version>
 
       <version>
          <num>1.2.0</num>

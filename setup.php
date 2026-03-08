@@ -19,7 +19,7 @@ function plugin_init_signatures(): void {
 function plugin_version_signatures(): array {
    return [
       'name'         => 'Email Signatures',
-      'version'      => '1.2.0',
+      'version'      => '1.3.0',
       'author'       => 'Edwin Elias Alvarez',
       'license'      => 'GPLv2+',
       'homepage'     => 'https://sontechs.com',
@@ -85,6 +85,17 @@ function plugin_signatures_uninstall(): bool {
       array_keys(plugin_signatures_getDefaults())
    );
    return true;
+}
+
+/**
+ * Migración al actualizar desde versiones anteriores.
+ * Reutiliza install() que aplica defaults solo para claves inexistentes.
+ * Garantiza que instalaciones existentes reciban las nuevas claves de config.
+ *
+ * @param string $fromVersion Versión de origen (provista por GLPI)
+ */
+function plugin_signatures_update(string $fromVersion): bool {
+   return plugin_signatures_install();
 }
 
 function plugin_signatures_check_prerequisites(): bool {

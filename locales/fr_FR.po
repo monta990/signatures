@@ -306,3 +306,21 @@ msgstr "L'extension PHP GD est requise pour installer ce complément."
 
 msgid "No se pudo generar la firma. Revisa el log de GLPI para más detalles."
 msgstr "Impossible de générer la signature. Consultez le journal GLPI pour plus de détails."
+
+msgid "Vista previa"
+msgstr "Aperçu"
+
+msgid "Vista previa de firma"
+msgstr "Aperçu de la signature"
+
+msgid "Generando vista previa..."
+msgstr "Génération de l'aperçu..."
+
+msgid "Hay cambios en las posiciones sin guardar. Haz clic en Guardar para aplicarlos."
+msgstr "Des modifications de positions ne sont pas enregistrées. Cliquez sur Enregistrer pour les appliquer."
+
+msgid "Haz clic en una variable para insertarla en el campo activo."
+msgstr "Cliquez sur une variable pour l'insérer dans le champ actif."
+
+msgid "Clic para insertar"
+msgstr "Cliquer pour insérer"

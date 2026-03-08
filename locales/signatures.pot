@@ -304,3 +304,21 @@ msgstr ""
 
 msgid "No se pudo generar la firma. Revisa el log de GLPI para más detalles."
 msgstr ""
+
+msgid "Vista previa"
+msgstr ""
+
+msgid "Vista previa de firma"
+msgstr ""
+
+msgid "Generando vista previa..."
+msgstr ""
+
+msgid "Hay cambios en las posiciones sin guardar. Haz clic en Guardar para aplicarlos."
+msgstr ""
+
+msgid "Haz clic en una variable para insertarla en el campo activo."
+msgstr ""
+
+msgid "Clic para insertar"
+msgstr ""

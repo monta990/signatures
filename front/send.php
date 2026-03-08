@@ -94,7 +94,7 @@ try {
 /* ============================
  * CONSTRUIR CORREO
  * ============================ */
-$config  = Config::getConfigurationValues('plugin_signatures');
+$config  = PluginSignaturesConfig::getAll();
 $subject = trim($config['email_subject'] ?? '');
 $body    = trim($config['email_body']    ?? '');
 $footer  = trim($config['email_footer']  ?? '');

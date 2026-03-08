@@ -14,7 +14,9 @@ GLPI plugin that generates personalized email signature images in PNG format for
 - Optional WhatsApp QR code (only available when the user has a mobile number)
 - **Email delivery**: sends the signature directly to the user's registered email address
 - **Dynamic email variables**: `{nombre}`, `{empresa}`, `{fecha}` with `**bold**` markdown support
-- **Visual position editor**: drag-and-drop fields over the real template at 1:1 scale using the actual TTF fonts, per template
+- **Visual position editor**: drag-and-drop fields over the real template at 1:1 scale using the actual TTF fonts, per template. Unsaved-changes indicator on the tab
+- **Signature preview**: preview the final rendered PNG in a modal before downloading or sending
+- **Clickable variable badges**: click `{nombre}`, `{empresa}`, `{fecha}` in the config panel to insert them at the cursor position
 - All field positions and font sizes stored in GLPI config — no PHP editing required
 - Configurable from the UI: Facebook page, WhatsApp country code, email subject/body/footer
 - Access control: users can only download their own signature; admins can download any user's
@@ -119,6 +121,7 @@ Visual drag-and-drop editor for field positions on each template.
 - Drag any field to reposition it; the X/Y coordinates update live
 - Per-field font size inputs in the table below the image
 - **Restore defaults** button resets all positions for that template
+- Orange dot and warning banner appear on the tab when there are unsaved changes
 - Positions are saved to `glpi_configs` when you click **Save** — no PHP editing required
 
 ---
@@ -192,9 +195,10 @@ signatures/
 │   ├── send.php                # Sends the signature by email to a user
 │   └── send_test.php           # Sends a test email to the current admin
 ├── inc/
+│   ├── config.class.php        # Centralized config access with per-request cache
 │   ├── paths.class.php         # Centralizes all file and URL paths
 │   ├── signature.class.php     # PNG generation logic (reads positions from config)
-│   └── user.class.php          # Tab on the user profile
+│   └── user.class.php          # Tab on the user profile (preview modal, send feedback)
 ├── locales/
 │   ├── signatures.pot          # Translation template
 │   ├── es_MX.po / .mo          # Spanish (Mexico)
@@ -204,7 +208,8 @@ signatures/
 ├── plugin.xml                  # GLPI marketplace descriptor
 ├── logo.png                    # Plugin icon (transparent background)
 ├── banner.png                  # Marketplace banner
-└── setup.php                   # Install, uninstall, version, defaults
+├── CHANGELOG.md                # Version history
+└── setup.php                   # Install, uninstall, update, version, defaults
 ```
 
 ---
@@ -283,7 +288,9 @@ Plugin para GLPI que genera firmas de correo electrónico personalizadas en form
 - Código QR de WhatsApp opcional (solo disponible si el usuario tiene celular)
 - **Envío por correo**: entrega la firma directamente al correo registrado del usuario en GLPI
 - **Variables dinámicas en el correo**: `{nombre}`, `{empresa}`, `{fecha}` con soporte de negritas `**texto**`
-- **Editor visual de posiciones**: drag & drop de campos sobre la plantilla real a escala 1:1 con las fuentes TTF reales, por plantilla
+- **Editor visual de posiciones**: drag & drop de campos sobre la plantilla real a escala 1:1 con las fuentes TTF reales, por plantilla. Indicador visual de cambios sin guardar
+- **Vista previa de firma**: previsualiza el PNG final en un modal antes de descargar o enviar
+- **Variables clickeables**: haz clic en `{nombre}`, `{empresa}`, `{fecha}` en la configuración para insertarlas en la posición del cursor
 - Todas las posiciones y tamaños de fuente se guardan en la config de GLPI — sin editar PHP
 - Configurable desde la interfaz: página de Facebook, código de país para WhatsApp, asunto/cuerpo/pie del correo
 - Control de acceso: cada usuario solo puede descargar su propia firma; los administradores pueden descargar la de cualquier usuario
@@ -386,6 +393,7 @@ Editor visual drag & drop para posicionar los campos sobre cada plantilla.
 - Arrastra para reposicionar; X/Y se actualiza en tiempo real
 - Inputs de tamaño de fuente por campo
 - Botón **Restaurar posiciones por defecto** por plantilla
+- Punto naranja y aviso en el tab cuando hay cambios sin guardar
 - Se guarda en `glpi_configs` al hacer clic en **Guardar** — sin editar PHP
 
 ---
@@ -457,9 +465,10 @@ signatures/
 │   ├── send.php
 │   └── send_test.php
 ├── inc/
+│   ├── config.class.php        # Acceso centralizado a config con caché por petición
 │   ├── paths.class.php
 │   ├── signature.class.php     # Lee posiciones desde glpi_configs
-│   └── user.class.php
+│   └── user.class.php          # Tab del usuario (modal de vista previa, feedback de envío)
 ├── locales/
 │   ├── signatures.pot
 │   ├── es_MX.po / .mo
@@ -469,7 +478,8 @@ signatures/
 ├── plugin.xml
 ├── logo.png
 ├── banner.png
-└── setup.php                   # Incluye plugin_signatures_getDefaults()
+├── CHANGELOG.md
+└── setup.php                   # Incluye plugin_signatures_getDefaults() y plugin_signatures_update()
 ```
 
 ---

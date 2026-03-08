@@ -29,7 +29,7 @@ class PluginSignaturesSignature {
       }
 
       if ($include_qr) {
-         $configsig    = Config::getConfigurationValues('plugin_signatures');
+         $configsig    = PluginSignaturesConfig::getAll();
          $countryCode  = trim($configsig['whatsapp_country_code'] ?? '');
 
          if ($countryCode === '') {
@@ -47,7 +47,7 @@ class PluginSignaturesSignature {
    public static function checkEmailConfig(): array {
 
       $errors  = [];
-      $config  = Config::getConfigurationValues('plugin_signatures');
+      $config  = PluginSignaturesConfig::getAll();
       $subject = trim($config['email_subject'] ?? '');
       $body    = trim($config['email_body']    ?? '');
 
@@ -67,7 +67,7 @@ class PluginSignaturesSignature {
     */
    public static function generatePNG(User $user, bool $include_qr): string {
 
-      $configsig = Config::getConfigurationValues('plugin_signatures');
+      $configsig = PluginSignaturesConfig::getAll();
       $facebook  = $configsig['facebook_page'] ?? '';
 
       /* ============================

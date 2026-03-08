@@ -10,7 +10,7 @@ function signaturesRibbonSubHeader(string $icon, string $title): void {
     echo "<div class='ribbon ribbon-bookmark ribbon-top ribbon-start bg-blue s-1'>
             <i class='fs-2x ti {$icon}' aria-hidden='true'></i>
           </div>";
-    echo "<h3 class='card-subtitle ms-5 mb-0'>" . __($title, 'signatures') . "</h3>";
+    echo "<h3 class='card-subtitle ms-5 mb-0'>{$title}</h3>";
     echo "</div>";
 }
 
@@ -135,11 +135,12 @@ if (isset($_POST['save'])) {
    }
    /* ================= FIN POSICIONES ================= */
 
+   PluginSignaturesConfig::invalidate();
    Session::addMessageAfterRedirect(__('Configuración guardada correctamente', 'signatures'), false, INFO);
    Html::redirect($self);
 }
 
-$config       = Config::getConfigurationValues('plugin_signatures');
+$config       = PluginSignaturesConfig::getAll();
 $facebookPage = $config['facebook_page']        ?? '';
 $countryCode  = $config['whatsapp_country_code'] ?? '';
 $emailSubject = $config['email_subject']         ?? '';
@@ -155,10 +156,8 @@ Html::header(__('Firma de Correo', 'signatures'), $self, 'config', 'plugins');
 echo "<form method='post' action='{$self}' enctype='multipart/form-data'>";
 echo Html::hidden('_glpi_csrf_token', ['value' => Session::getNewCSRFToken()]);
 
-echo "<div class='card mt-2 shadow-sm'>";
-
-/* TITLE */
-echo "<div class='card-header mb-3 py-1 border-top rounded-0 position-relative'>";
+echo "<div class='card mt-2 rounded-0'>";
+echo "<div class='card-header mb-3 py-1 border-top position-relative'>";
 echo "<div class='ribbon ribbon-bookmark ribbon-top ribbon-start bg-blue s-1'>
         <i class='fs-2x ti ti-settings'></i>
       </div>";
@@ -218,9 +217,9 @@ echo "<div class='tab-content'>";
  * ===================================================== */
 echo "<div class='tab-pane fade show active' id='tab-general'>";
 
-/* ================= SECCIÓN: CONFIGURACIÓN GENERAL ================= */
+/* ── Card: Configuración general ── */
 echo "<div class='card mt-2 rounded-0'>";
-signaturesRibbonSubHeader('ti-settings', 'Configuración general');
+signaturesRibbonSubHeader('ti-settings', __('Configuración general', 'signatures'));
 echo "<div class='card-body'>";
 
 /* FACEBOOK */
@@ -259,10 +258,10 @@ echo "<div class='form-text'>
       </div>";
 echo "</div>";
 
-echo "</div></div>";
+echo "</div></div>"; // card-body + card general
 
-/* ================= SECCIÓN: OPCIONES DE CORREO ================= */
-echo "<div class='card mt-3 rounded-0'>";
+/* ── Card: Opciones correo ── */
+echo "<div class='card mt-2 rounded-0'>";
 signaturesRibbonSubHeader('ti-mail-forward', __('Opciones del correo electrónico', 'signatures'));
 echo "<div class='card-body'>";
 
@@ -285,18 +284,33 @@ echo "
   </div>
   <div class='collapse' id='sigVarsPanel'>
     <div class='card-body py-2' style='font-size:0.9em;'>
+      <p class='text-muted mb-2' style='font-size:0.85em;'>
+        <i class='ti ti-hand-click me-1'></i>" . __('Haz clic en una variable para insertarla en el campo activo.', 'signatures') . "
+      </p>
       <table class='table table-borderless table-sm mb-0'>
         <tbody>
           <tr>
-            <td><code style='background:#ddeeff;padding:2px 6px;border-radius:3px;'>{nombre}</code></td>
+            <td>
+              <code class='sig-var-badge' data-var='{nombre}'
+                    style='background:#ddeeff;padding:2px 6px;border-radius:3px;cursor:pointer;'
+                    title='" . htmlspecialchars(__('Clic para insertar', 'signatures'), ENT_QUOTES, 'UTF-8') . "'>{nombre}</code>
+            </td>
             <td class='text-muted'>— " . __('Nombre completo del usuario', 'signatures') . "</td>
           </tr>
           <tr>
-            <td><code style='background:#ddeeff;padding:2px 6px;border-radius:3px;'>{empresa}</code></td>
+            <td>
+              <code class='sig-var-badge' data-var='{empresa}'
+                    style='background:#ddeeff;padding:2px 6px;border-radius:3px;cursor:pointer;'
+                    title='" . htmlspecialchars(__('Clic para insertar', 'signatures'), ENT_QUOTES, 'UTF-8') . "'>{empresa}</code>
+            </td>
             <td class='text-muted'>— " . __('Nombre de la empresa (configurado en General)', 'signatures') . "</td>
           </tr>
           <tr>
-            <td><code style='background:#ddeeff;padding:2px 6px;border-radius:3px;'>{fecha}</code></td>
+            <td>
+              <code class='sig-var-badge' data-var='{fecha}'
+                    style='background:#ddeeff;padding:2px 6px;border-radius:3px;cursor:pointer;'
+                    title='" . htmlspecialchars(__('Clic para insertar', 'signatures'), ENT_QUOTES, 'UTF-8') . "'>{fecha}</code>
+            </td>
             <td class='text-muted'>— " . __('Fecha del día en formato dd/mm/aaaa', 'signatures') . "</td>
           </tr>
         </tbody>
@@ -391,8 +405,7 @@ echo "<div class='d-flex align-items-center gap-3 flex-wrap mt-3'>
    "</span>
 </div>";
 
-echo "</div></div>";
-
+echo "</div></div>"; // card-body + card correo
 echo "</div>"; // fin tab-general
 
 /* =====================================================
@@ -400,7 +413,7 @@ echo "</div>"; // fin tab-general
  * ===================================================== */
 echo "<div class='tab-pane fade' id='tab-cel'>";
 echo "<div class='card mt-2 rounded-0'>";
-signaturesRibbonSubHeader('ti-device-mobile', 'Plantilla con celular');
+signaturesRibbonSubHeader('ti-device-mobile', __('Plantilla con celular', 'signatures'));
 echo "<div class='card-body'>";
 
 if ($hasbase1) {
@@ -424,14 +437,15 @@ echo "<div id='wrap1' class='d-none mt-2'>
         <img id='new-base1-preview' style='max-width:100%;border:1px dashed #999'>
       </div>";
 
-echo "</div></div></div>";
+echo "</div></div>"; // card-body + card
+echo "</div>"; // fin tab-cel
 
 /* =====================================================
  * TAB SIN CELULAR
  * ===================================================== */
 echo "<div class='tab-pane fade' id='tab-nocel'>";
 echo "<div class='card mt-2 rounded-0'>";
-signaturesRibbonSubHeader('ti-phone-off', 'Plantilla sin celular');
+signaturesRibbonSubHeader('ti-phone-off', __('Plantilla sin celular', 'signatures'));
 echo "<div class='card-body'>";
 
 if ($hasbase2) {
@@ -455,9 +469,8 @@ echo "<div id='wrap2' class='d-none mt-2'>
         <img id='new-base2-preview' style='max-width:100%;border:1px dashed #999'>
       </div>";
 
-echo "</div></div></div>";
-
-echo "</div>"; // tab-content
+echo "</div></div>"; // card-body + card
+echo "</div>"; // fin tab-nocel
 
 /* =====================================================
  * TAB POSICIONES — Editor visual drag & drop
@@ -512,7 +525,7 @@ $_base1Url     = PluginSignaturesPaths::base1Url();
 $_base2Url     = PluginSignaturesPaths::base2Url();
 
 // ── Leer posiciones actuales desde config ─────────────────────────────
-$_c = Config::getConfigurationValues('plugin_signatures');
+$_c = PluginSignaturesConfig::getAll();
 $_D = plugin_signatures_getDefaults();
 $_pos = static function (string $key) use ($_c, $_D): int {
    return (int)(($_c[$key] ?? '') !== '' ? $_c[$key] : ($_D[$key] ?? 0));
@@ -553,15 +566,15 @@ $_renderEditor = static function (
 
    $ASCENT_FACTOR = 0.72; // fracción del tamaño que es ascenso sobre baseline
 
-   echo "<div class='card mt-3 rounded-0'>";
-   signaturesRibbonSubHeader('ti-vector-bezier', $title);
+   echo "<div class='card mt-2 rounded-0'>";
+   signaturesRibbonSubHeader('ti-vector-bezier', htmlspecialchars($title, ENT_QUOTES, 'UTF-8'));
    echo "<div class='card-body'>";
 
    if (!$hasTemplate) {
       echo "<div class='alert alert-warning'><i class='ti ti-alert-triangle me-2'></i>"
          . __('No hay plantilla cargada para esta configuración. Carga una en la pestaña correspondiente.', 'signatures')
          . "</div>";
-      echo "</div></div>";
+      echo "</div></div>"; // card-body + card (early return sin template)
       return;
    }
 
@@ -678,7 +691,7 @@ $_renderEditor = static function (
       <i class='ti ti-refresh me-1'></i>" . __('Restaurar posiciones por defecto', 'signatures') . "
    </button>";
 
-   echo "</div></div>"; // card-body + card
+   echo "</div></div>"; // card-body + card editor
 };
 
 $_renderEditor('b1',
@@ -699,7 +712,11 @@ echo "</div>"; // tab-pane positions
 
 echo "</div>"; // tab-content
 
-/* FOOTER — Guardar dentro del form principal */
+/* FOOTER — banner de cambios sin guardar + card-footer del card exterior */
+echo "<div id='sig-unsaved-banner' class='alert alert-warning d-none mb-0 mx-0 py-2 px-3 rounded-0' style='font-size:0.88em;'>
+   <i class='ti ti-alert-triangle me-2'></i>"
+   . __('Hay cambios en las posiciones sin guardar. Haz clic en Guardar para aplicarlos.', 'signatures') .
+"</div>";
 echo "<div class='card-footer text-end'>";
 echo "<button type='submit' name='save' class='btn btn-primary'>"
    . "<i class='ti ti-device-floppy me-1'></i>"
@@ -707,7 +724,7 @@ echo "<button type='submit' name='save' class='btn btn-primary'>"
    . "</button>";
 echo "</div>";
 
-echo "</div>"; // fin .card
+echo "</div>"; // fin card exterior
 echo "</form>"; // cierre del form principal
 
 // Form oculto del correo de prueba — FUERA del form principal (evita anidamiento HTML inválido)
@@ -758,10 +775,40 @@ echo <<<HTML
 .sig-field { touch-action: none; }
 .sig-field:hover { border-color: rgba(255,100,0,0.9) !important; }
 .sig-editor-wrap { cursor: default; }
+.sig-var-badge:hover { background:#b8d8ff !important; outline:1px solid #6ab0ff; }
 </style>
 <script>
-const ASCENT = 0.72; // mismo factor que PHP para conversión GD↔CSS
+const ASCENT = 0.72;
 const SIG_DEFAULTS = {$_defaults_js};
+
+// ── Estado de cambios sin guardar ──────────────────────────────────────
+let _positionsDirty = false;
+
+function markPositionsDirty() {
+   if (_positionsDirty) return;
+   _positionsDirty = true;
+   const tabBtn = document.querySelector('[data-bs-target="#tab-positions"]');
+   if (tabBtn && !tabBtn.querySelector('.sig-dirty-dot')) {
+      const dot = document.createElement('span');
+      dot.className = 'sig-dirty-dot badge bg-warning text-dark ms-1 p-1';
+      dot.style.fontSize = '0.6em';
+      dot.title = 'Cambios sin guardar';
+      dot.textContent = '●';
+      tabBtn.appendChild(dot);
+   }
+   const banner = document.getElementById('sig-unsaved-banner');
+   if (banner) banner.classList.remove('d-none');
+}
+
+function clearPositionsDirty() {
+   _positionsDirty = false;
+   document.querySelectorAll('.sig-dirty-dot').forEach(el => el.remove());
+   const banner = document.getElementById('sig-unsaved-banner');
+   if (banner) banner.classList.add('d-none');
+}
+
+// Limpiar al guardar el form principal
+document.querySelector('form[method="post"]')?.addEventListener('submit', clearPositionsDirty);
 
 // ── Drag & drop ────────────────────────────────────────────────────────
 (function() {
@@ -787,6 +834,7 @@ const SIG_DEFAULTS = {$_defaults_js};
       dragging.style.left = newL + 'px';
       dragging.style.top  = newT + 'px';
       syncInputs(dragging, newL, newT);
+      markPositionsDirty();
    });
 
    document.addEventListener('mouseup', () => {
@@ -825,15 +873,14 @@ document.addEventListener('input', e => {
    const el = document.getElementById('field-' + base + '-' + field);
    if (!el) return;
 
-   el.style.fontSize = size + 'px';
+   el.style.fontSize   = size + 'px';
    el.dataset.fontSize = size;
 
-   // Actualizar input hidden de size
    const inpS = document.getElementById('inp-' + base + '-' + field + '-size');
    if (inpS) inpS.value = size;
 
-   // Recalcular Y baseline con el nuevo tamaño
    syncInputs(el, el.offsetLeft, el.offsetTop);
+   markPositionsDirty();
 });
 
 // ── Reset a defaults ────────────────────────────────────────────────────
@@ -863,6 +910,7 @@ document.addEventListener('click', e => {
       }
       syncInputs(el, coords.x, cssTop);
    });
+   markPositionsDirty();
 });
 
 // ── Preview de plantillas (tabs Con/Sin celular) ──────────────────────
@@ -881,6 +929,28 @@ function preview(input, imgId, wrapId) {
    };
    reader.readAsDataURL(file);
 }
+
+// ── Badges de variables clickeables ───────────────────────────────────
+let _lastFocusedField = null;
+
+['email_subject', 'email_body', 'email_footer'].forEach(name => {
+   const el = document.querySelector('[name="' + name + '"]');
+   if (el) el.addEventListener('focus', () => { _lastFocusedField = el; });
+});
+
+document.addEventListener('click', e => {
+   const badge = e.target.closest('.sig-var-badge');
+   if (!badge) return;
+   const varText = badge.dataset.var;
+   const target  = _lastFocusedField || document.querySelector('[name="email_body"]');
+   if (!target) return;
+
+   const start = target.selectionStart ?? target.value.length;
+   const end   = target.selectionEnd   ?? target.value.length;
+   target.value = target.value.slice(0, start) + varText + target.value.slice(end);
+   target.selectionStart = target.selectionEnd = start + varText.length;
+   target.focus();
+});
 </script>
 HTML;
 
