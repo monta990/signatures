@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Email Signatures 1.0.0\n"
+"Project-Id-Version: Email Signatures 1.1.0\n"
 "Report-Msgid-Bugs-To: https://sontechs.com\n"
-"POT-Creation-Date: 2025-02-25 00:00+0000\n"
-"PO-Revision-Date: 2025-02-25 00:00+0000\n"
+"POT-Creation-Date: 2026-03-07 00:00+0000\n"
+"PO-Revision-Date: 2026-03-07 00:00+0000\n"
 "Last-Translator: Edwin Elias Alvarez <edwin@sontechs.com>\n"
 "Language-Team: Español (México)\n"
 "Language: es_MX\n"
@@ -42,6 +42,14 @@ msgid "Generando firma para: %s"
 msgstr "Generando firma para: %s"
 
 #: inc/user.class.php
+msgid "El envío por correo no está disponible."
+msgstr "El envío por correo no está disponible."
+
+#: inc/user.class.php
+msgid "Configura el asunto y cuerpo del correo en la configuración del complemento para habilitarlo."
+msgstr "Configura el asunto y cuerpo del correo en la configuración del complemento para habilitarlo."
+
+#: inc/user.class.php
 msgid "Incluir código QR de WhatsApp"
 msgstr "Incluir código QR de WhatsApp"
 
@@ -52,6 +60,10 @@ msgstr "Este usuario no tiene número celular, el QR no estará disponible."
 #: inc/user.class.php
 msgid "Descargar firma"
 msgstr "Descargar firma"
+
+#: inc/user.class.php
+msgid "Enviar por correo"
+msgstr "Enviar por correo"
 
 #: inc/signature.class.php
 msgid "Las plantillas no están correctamente cargadas validalo en configuración del complemento"
@@ -69,6 +81,14 @@ msgstr "La extensión GD de PHP es requerida."
 #: inc/signature.class.php
 msgid "El código de país para Whatsapp no está configurado. Defínelo en la configuración del complemento."
 msgstr "El código de país para WhatsApp no está configurado. Defínelo en la configuración del complemento."
+
+#: inc/signature.class.php
+msgid "El asunto del correo no está configurado. Defínelo en la configuración del complemento."
+msgstr "El asunto del correo no está configurado. Defínelo en la configuración del complemento."
+
+#: inc/signature.class.php
+msgid "El cuerpo del correo no está configurado. Defínelo en la configuración del complemento."
+msgstr "El cuerpo del correo no está configurado. Defínelo en la configuración del complemento."
 
 #: inc/signature.class.php
 #, php-format
@@ -90,6 +110,19 @@ msgstr "Oficina:"
 #: inc/signature.class.php
 msgid "Ext:"
 msgstr "Ext:"
+
+#: front/send.php
+msgid "El usuario no tiene una dirección de correo configurada."
+msgstr "El usuario no tiene una dirección de correo configurada."
+
+#: front/send.php
+#, php-format
+msgid "Firma enviada correctamente a %s."
+msgstr "Firma enviada correctamente a %s."
+
+#: front/send.php
+msgid "No se pudo enviar el correo. Verifica la configuración de correo saliente en GLPI."
+msgstr "No se pudo enviar el correo. Verifica la configuración de correo saliente en GLPI."
 
 #: front/config.form.php
 msgid "Firma de Correo"
@@ -116,8 +149,8 @@ msgid "Formato inválido, solo PNG"
 msgstr "Formato inválido, solo se permiten archivos PNG"
 
 #: front/config.form.php
-msgid "Plantillas guardadas correctamente"
-msgstr "Plantillas guardadas correctamente"
+msgid "Configuración guardada correctamente"
+msgstr "Configuración guardada correctamente"
 
 #: front/config.form.php
 msgid "Actual"
@@ -134,3 +167,39 @@ msgstr "Cargar nueva"
 #: front/config.form.php
 msgid "Guardar"
 msgstr "Guardar"
+
+#: front/config.form.php
+msgid "Asunto del correo"
+msgstr "Asunto del correo"
+
+#: front/config.form.php
+msgid "Ej: Tu firma de correo corporativa"
+msgstr "Ej: Tu firma de correo corporativa"
+
+#: front/config.form.php
+msgid "Título que verá el destinatario en su bandeja de entrada."
+msgstr "Título que verá el destinatario en su bandeja de entrada."
+
+#: front/config.form.php
+msgid "Cuerpo del correo"
+msgstr "Cuerpo del correo"
+
+#: front/config.form.php
+msgid "Ej: Adjunto encontrarás tu firma de correo corporativa. Guárdala y úsala en tu cliente de correo."
+msgstr "Ej: Adjunto encontrarás tu firma de correo corporativa. Guárdala y úsala en tu cliente de correo."
+
+#: front/config.form.php
+msgid "Texto principal del correo que acompaña a la firma adjunta."
+msgstr "Texto principal del correo que acompaña a la firma adjunta."
+
+#: front/config.form.php
+msgid "Pie del correo"
+msgstr "Pie del correo"
+
+#: front/config.form.php
+msgid "Ej: Este correo fue generado automáticamente por el sistema GLPI."
+msgstr "Ej: Este correo fue generado automáticamente por el sistema GLPI."
+
+#: front/config.form.php
+msgid "Texto pequeño al final del correo. Puede usarse para avisos legales o notas adicionales."
+msgstr "Texto pequeño al final del correo. Puede usarse para avisos legales o notas adicionales."

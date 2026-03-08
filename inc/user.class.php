@@ -55,17 +55,19 @@ class PluginSignaturesUser extends CommonGLPI {
       /* ===========================
        * Validar ambas plantillas
        * =========================== */
+      $hasBase = (
+         is_readable(PluginSignaturesPaths::base1Path()) &&
+         is_readable(PluginSignaturesPaths::base2Path())
+      );
 
-      $base1 = PluginSignaturesPaths::base1Path(); // con celular
-      $base2 = PluginSignaturesPaths::base2Path(); // sin celular
-
-      $hasBase1 = is_readable($base1);
-      $hasBase2 = is_readable($base2);
-
-      // SOLO válido si existen ambas
-      $hasBase = ($hasBase1 && $hasBase2);
+      /* ===========================
+       * Validar configuración de correo
+       * =========================== */
+      $emailErrors = PluginSignaturesSignature::checkEmailConfig();
+      $hasEmail    = empty($emailErrors);
 
       $downloadUrl = Plugin::getWebDir('signatures') . '/front/download.php';
+      $sendUrl     = Plugin::getWebDir('signatures') . '/front/send.php';
 
       // Mensajes GLPI (redirect-safe)
       Html::displayMessageAfterRedirect();
@@ -87,7 +89,7 @@ class PluginSignaturesUser extends CommonGLPI {
       echo "<div class='card-body text-center'>";
 
       /* ===========================
-       * Validación plantillas
+       * Aviso: plantillas faltantes
        * =========================== */
       if (!$hasBase) {
          echo "<div class='alert alert-warning text-start'>
@@ -97,47 +99,93 @@ class PluginSignaturesUser extends CommonGLPI {
              </div>";
       }
 
+      /* ===========================
+       * Aviso: correo sin configurar
+       * =========================== */
+      if (!$hasEmail) {
+         echo "<div class='alert alert-info text-start'>
+                <i class='ti ti-mail-off me-2'></i>
+                <strong>" . __('El envío por correo no está disponible.', 'signatures') . "</strong><br>
+                " . __('Configura el asunto y cuerpo del correo en la configuración del complemento para habilitarlo.', 'signatures') . "
+             </div>";
+      }
+
       echo "<p class='text-muted mb-3'>" .
-                sprintf(
-                   __('Generando firma para: %s', 'signatures'),
-                   $user->getFriendlyName()
-                ) .
-             "</p>";
+               sprintf(
+                  __('Generando firma para: %s', 'signatures'),
+                  $user->getFriendlyName()
+               ) .
+           "</p>";
 
       /* ===========================
-       * Formulario descarga
+       * Checkbox QR (compartido)
        * =========================== */
-      echo "
-      <form method='get' action='{$downloadUrl}'>
-         <input type='hidden' name='userid' value='{$user->getID()}'>";
+      $hasMobile = !empty($user->fields['mobile']);
 
-        $hasMobile = !empty($user->fields['mobile']);
-        
-        if ($hasMobile) {
-          echo "<label class='form-check d-inline-flex align-items-center gap-2'>
-                    <input type='checkbox'
-                           class='form-check-input'
-                           name='include_qr'
-                           value='1'
-                           checked >
-                    " . __('Incluir código QR de WhatsApp', 'signatures') . "
-                 <i class='ti ti-brand-whatsapp me-2'></i></label>";
-        } else {
-           echo "<p class='text-muted'><i class='ti ti-info-circle me-1'></i>" . 
-                __('Este usuario no tiene número celular, el QR no estará disponible.', 'signatures') . 
-                "</p>";
-        }
+      if ($hasMobile) {
+         echo "<div class='mb-3'>
+                  <label class='form-check d-inline-flex align-items-center gap-2'>
+                     <input type='checkbox'
+                            class='form-check-input'
+                            id='qr_check'
+                            value='1'
+                            checked>
+                     " . __('Incluir código QR de WhatsApp', 'signatures') . "
+                  <i class='ti ti-brand-whatsapp ms-1'></i></label>
+               </div>";
+      } else {
+         echo "<p class='text-muted'><i class='ti ti-info-circle me-1'></i>" .
+              __('Este usuario no tiene número celular, el QR no estará disponible.', 'signatures') .
+              "</p>";
+      }
 
-      echo "<div class='mt-4'>
-                <button type='submit'
-                        class='btn btn-primary'
-                        " . (!$hasBase ? 'disabled' : '') . ">
-                   <i class='ti ti-download me-2'></i>
-                   " . __('Descargar firma', 'signatures') . "
-                </button>
-             </div>
-          </form>";
+      /* ===========================
+       * Botones: Descargar | Enviar
+       * =========================== */
+      echo "<div class='d-flex gap-3 justify-content-center mt-4'>";
+
+      /* --- Botón Descargar firma --- */
+      echo "<form method='get' action='{$downloadUrl}' id='form-download'>
+               <input type='hidden' name='userid'     value='{$user->getID()}'>
+               <input type='hidden' name='include_qr' id='qr_download' value='" . ($hasMobile ? '1' : '') . "'>
+               <button type='submit'
+                       class='btn btn-primary'
+                       " . (!$hasBase ? 'disabled' : '') . ">
+                  <i class='ti ti-download me-2'></i>
+                  " . __('Descargar firma', 'signatures') . "
+               </button>
+            </form>";
+
+      /* --- Botón Enviar por correo --- */
+      echo "<form method='post' action='{$sendUrl}' id='form-send'>
+               " . Html::hidden('_glpi_csrf_token', ['value' => Session::getNewCSRFToken()]) . "
+               <input type='hidden' name='userid'     value='{$user->getID()}'>
+               <input type='hidden' name='include_qr' id='qr_send' value='" . ($hasMobile ? '1' : '') . "'>
+               <button type='submit'
+                       class='btn btn-success'
+                       " . (!$hasBase || !$hasEmail ? 'disabled' : '') . ">
+                  <i class='ti ti-send me-2'></i>
+                  " . __('Enviar por correo', 'signatures') . "
+               </button>
+            </form>";
+
+      echo "</div>"; // fin botones
 
       echo "</div></div>";
+
+      /* ===========================
+       * JS: sincronizar checkbox con ambos forms
+       * =========================== */
+      if ($hasMobile) {
+         echo <<<HTML
+<script>
+document.getElementById('qr_check').addEventListener('change', function () {
+   const val = this.checked ? '1' : '';
+   document.getElementById('qr_download').value = val;
+   document.getElementById('qr_send').value     = val;
+});
+</script>
+HTML;
+      }
    }
 }

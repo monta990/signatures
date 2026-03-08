@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<root>
+
+   <!--
+      ============================================================
+      Email Signatures — GLPI Plugin
+      Catálogo: https://plugins.glpi-project.org/#/submit
+      ============================================================
+      Para publicar este plugin:
+      1. Sube el repositorio a GitHub (público) con este archivo en la raíz.
+      2. Haz una Release con el ZIP del plugin (nombrado signatures-1.1.0.zip).
+      3. Actualiza <download_url> con la URL directa al ZIP de la release.
+      4. Envía la URL raw de este XML en: https://plugins.glpi-project.org/#/submit
+      ============================================================
+   -->
+
+   <!-- Nombre técnico — debe coincidir exactamente con el directorio del plugin -->
+   <name>signatures</name>
+
+   <!-- Nombre visible en el catálogo -->
+   <display_name>Email Signatures</display_name>
+
+   <!-- Estado: stable | beta | unstable -->
+   <state>stable</state>
+
+   <!-- Licencia SPDX -->
+   <license>GPL-2.0-or-later</license>
+
+   <!-- URL del repositorio público -->
+   <homepage>https://github.com/sontechs/glpi-signatures</homepage>
+
+   <!-- URL de descarga de releases -->
+   <download>https://github.com/sontechs/glpi-signatures/releases</download>
+
+   <!-- Tracker de issues -->
+   <issues>https://github.com/sontechs/glpi-signatures/issues</issues>
+
+   <!-- README -->
+   <readme>https://raw.githubusercontent.com/sontechs/glpi-signatures/main/README.md</readme>
+
+   <!-- Logo — ruta relativa desde la raíz del repo -->
+   <logo>https://raw.githubusercontent.com/sontechs/glpi-signatures/main/logo.png</logo>
+
+   <!-- Banner — imagen amplia para el listado -->
+   <image>https://raw.githubusercontent.com/sontechs/glpi-signatures/main/banner.png</image>
+
+   <!-- Autores -->
+   <authors>
+      <author>
+         <name>Edwin Elias Alvarez</name>
+         <homepage>https://sontechs.com</homepage>
+      </author>
+   </authors>
+
+   <!-- Descripciones multiidioma -->
+   <description>
+      <short>
+         <es_MX><![CDATA[Genera firmas de correo corporativas en PNG para tus usuarios de GLPI.]]></es_MX>
+         <en_US><![CDATA[Generate corporate PNG email signatures for your GLPI users.]]></en_US>
+         <en_GB><![CDATA[Generate corporate PNG email signatures for your GLPI users.]]></en_GB>
+         <fr_FR><![CDATA[Génère des signatures d'e-mail d'entreprise en PNG pour vos utilisateurs GLPI.]]></fr_FR>
+      </short>
+      <long>
+         <es_MX><![CDATA[
+Email Signatures permite generar imágenes PNG personalizadas de firma de correo para cada usuario de GLPI.
+La firma incorpora nombre completo, título, correo electrónico, teléfonos, página de Facebook, sitio web corporativo y, opcionalmente, un código QR de WhatsApp.
+
+Características principales:
+- Dos plantillas PNG configurables: una para usuarios con número celular y otra sin celular.
+- Generación dinámica sobre las plantillas usando la extensión GD de PHP.
+- Ajuste automático del tamaño de fuente para el nombre del usuario.
+- Código QR de WhatsApp generado con TCPDF (incluido en GLPI).
+- Envío de la firma directamente al correo del usuario mediante el sistema de correo saliente de GLPI.
+- Pestaña dedicada en el perfil de cada usuario con botones de descarga y envío.
+- Configuración centralizada: plantillas, página de Facebook, código de país de WhatsApp, asunto, cuerpo y pie del correo.
+- Soporte multiidioma: Español (México), English (US), English (GB), Français.
+- Compatible con GLPI 11.0+.
+         ]]></es_MX>
+         <en_US><![CDATA[
+Email Signatures generates personalized PNG email signature images for each GLPI user.
+The signature includes full name, title, email address, phone numbers, Facebook page, corporate website and an optional WhatsApp QR code.
+
+Key features:
+- Two configurable PNG templates: one for users with a mobile number and one without.
+- Dynamic image generation over the templates using PHP GD extension.
+- Automatic font size adjustment to fit the user's name.
+- WhatsApp QR code generated with TCPDF (bundled with GLPI).
+- Send the signature directly to the user's email via GLPI's outgoing mail system.
+- Dedicated tab on each user's profile with download and send buttons.
+- Centralized configuration: templates, Facebook page, WhatsApp country code, email subject, body and footer.
+- Multilanguage: Spanish (Mexico), English (US), English (GB), French.
+- Compatible with GLPI 11.0+.
+         ]]></en_US>
+         <en_GB><![CDATA[
+Email Signatures generates personalised PNG email signature images for each GLPI user.
+The signature includes full name, title, email address, phone numbers, Facebook page, corporate website and an optional WhatsApp QR code.
+
+Key features:
+- Two configurable PNG templates: one for users with a mobile number and one without.
+- Dynamic image generation over the templates using PHP GD extension.
+- Automatic font size adjustment to fit the user's name.
+- WhatsApp QR code generated with TCPDF (bundled with GLPI).
+- Send the signature directly to the user's email via GLPI's outgoing mail system.
+- Dedicated tab on each user's profile with download and send buttons.
+- Centralised configuration: templates, Facebook page, WhatsApp country code, email subject, body and footer.
+- Multilanguage: Spanish (Mexico), English (US), English (GB), French.
+- Compatible with GLPI 11.0+.
+         ]]></en_GB>
+         <fr_FR><![CDATA[
+Email Signatures génère des images de signature d'e-mail PNG personnalisées pour chaque utilisateur GLPI.
+La signature inclut le nom complet, le titre, l'adresse e-mail, les numéros de téléphone, la page Facebook, le site web de l'entreprise et, en option, un code QR WhatsApp.
+
+Fonctionnalités principales :
+- Deux modèles PNG configurables : un pour les utilisateurs avec un numéro de portable et un sans portable.
+- Génération dynamique sur les modèles grâce à l'extension GD de PHP.
+- Ajustement automatique de la taille de police pour le nom de l'utilisateur.
+- Code QR WhatsApp généré avec TCPDF (inclus dans GLPI).
+- Envoi de la signature directement à l'adresse e-mail de l'utilisateur via le système de courrier sortant de GLPI.
+- Onglet dédié dans le profil de chaque utilisateur avec boutons de téléchargement et d'envoi.
+- Configuration centralisée : modèles, page Facebook, code pays WhatsApp, objet, corps et pied de courriel.
+- Multilingue : Español (México), English (US), English (GB), Français.
+- Compatible avec GLPI 11.0+.
+         ]]></fr_FR>
+      </long>
+   </description>
+
+   <!-- Etiquetas para búsqueda en el catálogo -->
+   <tags>
+      <tag>email</tag>
+      <tag>signature</tag>
+      <tag>png</tag>
+      <tag>user</tag>
+      <tag>whatsapp</tag>
+      <tag>qr</tag>
+      <tag>corporate</tag>
+      <tag>mail</tag>
+   </tags>
+
+   <!-- Versiones publicadas -->
+   <versions>
+
+      <version>
+         <num>1.1.0</num>
+         <compatibility>11.0</compatibility>
+         <!-- Actualiza esta URL al crear la release en GitHub -->
+         <download_url>https://github.com/sontechs/glpi-signatures/releases/download/1.1.0/signatures-1.1.0.zip</download_url>
+      </version>
+
+      <version>
+         <num>1.0.0</num>
+         <compatibility>11.0</compatibility>
+         <download_url>https://github.com/sontechs/glpi-signatures/releases/download/1.0.0/signatures-1.0.0.zip</download_url>
+      </version>
+
+   </versions>
+
+</root>

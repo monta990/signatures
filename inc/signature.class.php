@@ -6,7 +6,7 @@ class PluginSignaturesSignature {
    public static function checkRequirements(bool $include_qr = false): array {
 
       $errors = [];
-      
+
       $base1 = PluginSignaturesPaths::base1Path();
       $base2 = PluginSignaturesPaths::base2Path();
 
@@ -18,7 +18,7 @@ class PluginSignaturesSignature {
       if (!is_readable($font)) {
          $errors[] = sprintf(__('No se encontró la fuente TTF: %s', 'signatures'), $font);
       }
-      
+
       $font2 = PluginSignaturesPaths::getFontAvenirRoman();
       if (!is_readable($font2)) {
          $errors[] = sprintf(__('No se encontró la fuente TTF: %s', 'signatures'), $font2);
@@ -27,33 +27,55 @@ class PluginSignaturesSignature {
       if (!extension_loaded('gd')) {
          $errors[] = __('Extensión GD de PHP es requerida', 'signatures');
       }
-      
-       if ($include_qr) {
-          $configsig = Config::getConfigurationValues('plugin_signatures');
-          $countryCode = trim($configsig['whatsapp_country_code'] ?? '');
-    
-          if ($countryCode === '') {
-             $errors[] = __('El código de país para Whatsapp no está configurado. Defínelo en la configuración del complemento.', 'signatures');
-          }
-       }
+
+      if ($include_qr) {
+         $configsig    = Config::getConfigurationValues('plugin_signatures');
+         $countryCode  = trim($configsig['whatsapp_country_code'] ?? '');
+
+         if ($countryCode === '') {
+            $errors[] = __('El código de país para Whatsapp no está configurado. Defínelo en la configuración del complemento.', 'signatures');
+         }
+      }
 
       return $errors;
    }
 
    /**
-    * Genera la firma en PNG
+    * Verifica que la configuración de correo esté completa (asunto y cuerpo obligatorios).
+    * Retorna array de errores; vacío si todo está bien.
+    */
+   public static function checkEmailConfig(): array {
+
+      $errors  = [];
+      $config  = Config::getConfigurationValues('plugin_signatures');
+      $subject = trim($config['email_subject'] ?? '');
+      $body    = trim($config['email_body']    ?? '');
+
+      if ($subject === '') {
+         $errors[] = __('El asunto del correo no está configurado. Defínelo en la configuración del complemento.', 'signatures');
+      }
+
+      if ($body === '') {
+         $errors[] = __('El cuerpo del correo no está configurado. Defínelo en la configuración del complemento.', 'signatures');
+      }
+
+      return $errors;
+   }
+
+   /**
+    * Genera la firma en PNG y devuelve la ruta del archivo temporal.
     */
    public static function generatePNG(User $user, bool $include_qr): string {
 
       $configsig = Config::getConfigurationValues('plugin_signatures');
-      $facebook = $configsig['facebook_page'] ?? '';
+      $facebook  = $configsig['facebook_page'] ?? '';
 
       /* ============================
        * CELULAR / EXT / OFICINA
        * ============================ */
-      $mobile = trim((string)($user->fields['mobile'] ?? '')); //Celular usuario
-      $phone  = trim((string)($user->fields['phone'] ?? ''));  //Como extensión de conmutador
-      $phone2 = trim((string)($user->fields['phone2'] ?? ''));  //Si no hay extension es porque es una oficina remota y se usa este dato si esta poblado
+      $mobile = trim((string)($user->fields['mobile'] ?? '')); // Celular usuario
+      $phone  = trim((string)($user->fields['phone']  ?? '')); // Como extensión de conmutador
+      $phone2 = trim((string)($user->fields['phone2'] ?? '')); // Oficina remota si no hay extensión
 
       $hasMobile = ($mobile !== '');
 
@@ -106,7 +128,7 @@ class PluginSignaturesSignature {
       /* ============================
        * DATOS USUARIO
        * ============================ */
-      $name = $user->getFriendlyName();
+      $name   = $user->getFriendlyName();
       $titulo = __('No especificado', 'signatures');
       $email  = __('No especificado', 'signatures');
 
@@ -142,12 +164,12 @@ class PluginSignaturesSignature {
       /* ============================
        * AJUSTE AUTOMÁTICO NOMBRE
        * ============================ */
-      $startX = 20;
+      $startX   = 20;
       $maxWidth = imagesx($img) - $startX - 20;
-      $size = 40;
+      $size     = 40;
 
       while ($size > 20) {
-         $bbox = imagettfbbox($size, 0, $fontblack, $name);
+         $bbox       = imagettfbbox($size, 0, $fontblack, $name);
          $text_width = $bbox[2] - $bbox[0];
          if ($text_width <= $maxWidth) break;
          $size--;
@@ -198,10 +220,10 @@ class PluginSignaturesSignature {
          require_once GLPI_ROOT . '/vendor/tecnickcom/tcpdf/tcpdf_barcodes_2d.php';
 
          $mobile_clean = preg_replace('/\D+/', '', $mobile);
-         $wa_url = 'https://wa.me/' . trim($configsig['whatsapp_country_code'] ?? '') . $mobile_clean;
+         $wa_url       = 'https://wa.me/' . trim($configsig['whatsapp_country_code'] ?? '') . $mobile_clean;
 
          $barcode = new TCPDF2DBarcode($wa_url, 'QRCODE,M');
-         $qr_png = $barcode->getBarcodePngData(3, 3, [0, 0, 0]);
+         $qr_png  = $barcode->getBarcodePngData(3, 3, [0, 0, 0]);
 
          $qr_tmp = GLPI_TMP_DIR . '/signature_qr_' . $user->getID() . '.png';
          file_put_contents($qr_tmp, $qr_png);

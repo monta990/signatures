@@ -19,7 +19,7 @@ function plugin_init_signatures(): void {
 function plugin_version_signatures(): array {
    return [
       'name'         => 'Email Signatures',
-      'version'      => '1.0.0',
+      'version'      => '1.1.0',
       'author'       => 'Edwin Elias Alvarez',
       'license'      => 'GPLv2+',
       'homepage'     => 'https://sontechs.com',
@@ -40,7 +40,13 @@ function plugin_signatures_install(): bool {
 function plugin_signatures_uninstall(): bool {
    Config::deleteConfigurationValues(
       'plugin_signatures',
-      ['facebook_page', 'whatsapp_country_code']
+      [
+         'facebook_page',
+         'whatsapp_country_code',
+         'email_subject',
+         'email_body',
+         'email_footer',
+      ]
    );
    return true;
 }
