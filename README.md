@@ -494,6 +494,30 @@ signatures/
 | QR temporal | `{GLPI_TMP_DIR}/signature_qr_{userid}.png` |
 | Configuración y posiciones | `glpi_configs`, contexto `plugin_signatures` |
 
+## Flujo interno de generación
+
+```
+download.php / send.php
+  │
+  ├── Verificación de sesión y control de acceso
+  ├── checkRequirements() → valida plantillas, fuentes, GD, código de país
+  ├── checkEmailConfig()  → valida asunto y cuerpo (solo send.php)
+  │
+  └── generatePNG()
+        ├── Lee configuración (Facebook, código WhatsApp, posiciones de campos)
+        ├── Determina si hay celular → selecciona plantilla correspondiente
+        ├── Carga la imagen base con imagecreatefrompng()
+        ├── Obtiene datos del usuario y entidad desde GLPI
+        ├── Ajusta automáticamente el tamaño del nombre (desde el tamaño configurado, mín. 20px)
+        ├── Escribe texto con imagettftext() usando posiciones de glpi_configs
+        ├── Si include_qr y hay celular → genera QR con TCPDF y lo superpone
+        ├── Guarda PNG temporal en GLPI_TMP_DIR
+        └── Devuelve la ruta del archivo temporal
+
+  → download.php: envía el PNG al navegador como descarga y elimina el temporal
+  → send.php: adjunta el PNG a GLPIMailer, envía el correo y elimina el temporal
+```
+
 ---
 
 ## Desinstalación
