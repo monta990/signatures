@@ -4,7 +4,7 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Email Signatures 1.1.5\n"
+"Project-Id-Version: Email Signatures 1.2.0\n"
 "Report-Msgid-Bugs-To: https://sontechs.com\n"
 "POT-Creation-Date: 2026-03-08 00:00+0000\n"
 "PO-Revision-Date: 2026-03-08 00:00+0000\n"
@@ -249,3 +249,60 @@ msgstr "Configure the email subject and body first"
 
 msgid "Envía un correo de prueba a tu dirección registrada en GLPI"
 msgstr "Send a test email to your registered GLPI address"
+
+msgid "Posiciones"
+msgstr "Positions"
+
+msgid "Arrastra cada campo a su posición. Usa los inputs de tamaño para ajustar el tamaño de fuente. Guarda con el botón Guardar."
+msgstr "Drag each field to its position. Use size inputs to adjust font size. Save with the Save button."
+
+msgid "No hay plantilla cargada para esta configuración. Carga una en la pestaña correspondiente."
+msgstr "No template loaded for this configuration. Upload one in the corresponding tab."
+
+msgid "Título"
+msgstr "Title"
+
+msgid "Correo"
+msgstr "Email"
+
+msgid "Celular"
+msgstr "Mobile"
+
+msgid "Tel. entidad"
+msgstr "Entity phone"
+
+msgid "Ext/Oficina"
+msgstr "Ext/Office"
+
+msgid "Web"
+msgstr "Website"
+
+msgid "QR WhatsApp"
+msgstr "WhatsApp QR"
+
+msgid "Campo"
+msgstr "Field"
+
+msgid "Tamaño (px)"
+msgstr "Size (px)"
+
+msgid "Posición"
+msgstr "Position"
+
+msgid "Restaurar posiciones por defecto"
+msgstr "Restore default positions"
+
+msgid "Plantilla con celular — Editor de posiciones"
+msgstr "Template with mobile — Position editor"
+
+msgid "Plantilla sin celular — Editor de posiciones"
+msgstr "Template without mobile — Position editor"
+
+msgid "Se requiere PHP 8.1 o superior para instalar este complemento."
+msgstr "PHP 8.1 or higher is required to install this plugin."
+
+msgid "La extensión GD de PHP es requerida para instalar este complemento."
+msgstr "The PHP GD extension is required to install this plugin."
+
+msgid "No se pudo generar la firma. Revisa el log de GLPI para más detalles."
+msgstr "Could not generate the signature. Check the GLPI log for details."

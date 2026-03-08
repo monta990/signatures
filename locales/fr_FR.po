@@ -4,7 +4,7 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Email Signatures 1.1.5\n"
+"Project-Id-Version: Email Signatures 1.2.0\n"
 "Report-Msgid-Bugs-To: https://sontechs.com\n"
 "POT-Creation-Date: 2026-03-08 00:00+0000\n"
 "PO-Revision-Date: 2026-03-08 00:00+0000\n"
@@ -249,3 +249,60 @@ msgstr "Configurez d'abord l'objet et le corps de l'e-mail"
 
 msgid "Envía un correo de prueba a tu dirección registrada en GLPI"
 msgstr "Envoyer un e-mail de test à votre adresse enregistrée dans GLPI"
+
+msgid "Posiciones"
+msgstr "Positions"
+
+msgid "Arrastra cada campo a su posición. Usa los inputs de tamaño para ajustar el tamaño de fuente. Guarda con el botón Guardar."
+msgstr "Faites glisser chaque champ vers sa position. Utilisez les entrées de taille pour ajuster la taille de police. Sauvegardez avec le bouton Enregistrer."
+
+msgid "No hay plantilla cargada para esta configuración. Carga una en la pestaña correspondiente."
+msgstr "Aucun modèle chargé pour cette configuration. Téléversez-en un dans l'onglet correspondant."
+
+msgid "Título"
+msgstr "Titre"
+
+msgid "Correo"
+msgstr "E-mail"
+
+msgid "Celular"
+msgstr "Mobile"
+
+msgid "Tel. entidad"
+msgstr "Tél. entité"
+
+msgid "Ext/Oficina"
+msgstr "Poste/Bureau"
+
+msgid "Web"
+msgstr "Site web"
+
+msgid "QR WhatsApp"
+msgstr "QR WhatsApp"
+
+msgid "Campo"
+msgstr "Champ"
+
+msgid "Tamaño (px)"
+msgstr "Taille (px)"
+
+msgid "Posición"
+msgstr "Position"
+
+msgid "Restaurar posiciones por defecto"
+msgstr "Restaurer les positions par défaut"
+
+msgid "Plantilla con celular — Editor de posiciones"
+msgstr "Modèle avec mobile — Éditeur de positions"
+
+msgid "Plantilla sin celular — Editor de posiciones"
+msgstr "Modèle sans mobile — Éditeur de positions"
+
+msgid "Se requiere PHP 8.1 o superior para instalar este complemento."
+msgstr "PHP 8.1 ou supérieur est requis pour installer ce complément."
+
+msgid "La extensión GD de PHP es requerida para instalar este complemento."
+msgstr "L'extension PHP GD est requise pour installer ce complément."
+
+msgid "No se pudo generar la firma. Revisa el log de GLPI para más detalles."
+msgstr "Impossible de générer la signature. Consultez le journal GLPI pour plus de détails."

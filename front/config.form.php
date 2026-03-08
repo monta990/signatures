@@ -118,6 +118,23 @@ if (isset($_POST['save'])) {
       chmod($dest, 0644);
    }
 
+   /* ================= POSICIONES ================= */
+   $posKeys = array_keys(array_filter(
+      plugin_signatures_getDefaults(),
+      static fn($k) => str_starts_with($k, 'sig_b'),
+      ARRAY_FILTER_USE_KEY
+   ));
+   $posToSave = [];
+   foreach ($posKeys as $key) {
+      if (isset($_POST[$key]) && $_POST[$key] !== '') {
+         $posToSave[$key] = (int)$_POST[$key];
+      }
+   }
+   if (!empty($posToSave)) {
+      Config::setConfigurationValues('plugin_signatures', $posToSave);
+   }
+   /* ================= FIN POSICIONES ================= */
+
    Session::addMessageAfterRedirect(__('Configuración guardada correctamente', 'signatures'), false, INFO);
    Html::redirect($self);
 }
@@ -179,6 +196,15 @@ echo "
             data-bs-target='#tab-nocel'
             type='button'>
       <i class='ti ti-phone-off me-1'></i> Sin celular
+    </button>
+  </li>
+
+  <li class='nav-item'>
+    <button class='nav-link'
+            data-bs-toggle='tab'
+            data-bs-target='#tab-positions'
+            type='button'>
+      <i class='ti ti-vector-bezier me-1'></i> Posiciones
     </button>
   </li>
 
@@ -433,6 +459,246 @@ echo "</div></div></div>";
 
 echo "</div>"; // tab-content
 
+/* =====================================================
+ * TAB POSICIONES — Editor visual drag & drop
+ * ===================================================== */
+echo "<div class='tab-pane fade' id='tab-positions'>";
+
+// ── Obtener datos reales del usuario actual ────────────────────────────
+$_adminId  = (int)Session::getLoginUserID();
+$_adminUser = new User();
+$_adminUser->getFromDB($_adminId);
+
+$_uName     = $_adminUser->getFriendlyName() ?: 'Nombre Apellido';
+$_uEmail    = 'correo@empresa.com';
+$_uMobile   = $_adminUser->fields['mobile'] ?? '55 1234 5678';
+$_uPhone    = $_adminUser->fields['phone']  ?? '';
+$_uPhone2   = $_adminUser->fields['phone2'] ?? '';
+
+$_uEmails = (new UserEmail())->find(['users_id' => $_adminId, 'is_default' => 1], [], 1);
+if (!empty($_uEmails)) {
+   $_row    = reset($_uEmails);
+   $_uEmail = $_row['email'] ?? $_uEmail;
+}
+
+if (empty($_uMobile)) { $_uMobile = '55 1234 5678'; }
+
+$_uTitulo  = __('No especificado', 'signatures');
+if (!empty($_adminUser->fields['usertitles_id'])) {
+   $_uTitulo = Dropdown::getDropdownName('glpi_usertitles', (int)$_adminUser->fields['usertitles_id']);
+}
+
+$_entityPos = new Entity();
+$_phoneEnt  = '';
+$_web       = '';
+if ($_entityPos->getFromDB((int)($_adminUser->fields['entities_id'] ?? 0))) {
+   $_phoneEnt = (string)$_entityPos->getField('phonenumber');
+   $_web      = (string)$_entityPos->getField('website');
+}
+if (empty($_phoneEnt)) { $_phoneEnt = '55 9876 5432'; }
+if (empty($_web))      { $_web = 'www.empresa.com'; }
+
+$_extraLabel = '';
+$_extraPhone = '';
+if ($_uPhone2 !== '')       { $_extraLabel = 'Oficina: '; $_extraPhone = $_uPhone2; }
+elseif ($_uPhone !== '')    { $_extraLabel = 'Ext: ';    $_extraPhone = $_uPhone; }
+if (empty($_extraPhone))    { $_extraLabel = 'Ext: '; $_extraPhone = '123'; }
+
+// ── URLs de fuentes y plantillas ──────────────────────────────────────
+$_pluginWebDir = Plugin::getWebDir('signatures');
+$_fontBlackUrl = $_pluginWebDir . '/fonts/AvenirBlack.ttf';
+$_fontRomanUrl = $_pluginWebDir . '/fonts/AvenirRoman.ttf';
+$_base1Url     = PluginSignaturesPaths::base1Url();
+$_base2Url     = PluginSignaturesPaths::base2Url();
+
+// ── Leer posiciones actuales desde config ─────────────────────────────
+$_c = Config::getConfigurationValues('plugin_signatures');
+$_D = plugin_signatures_getDefaults();
+$_pos = static function (string $key) use ($_c, $_D): int {
+   return (int)(($_c[$key] ?? '') !== '' ? $_c[$key] : ($_D[$key] ?? 0));
+};
+
+// ── Datos de campos por plantilla ─────────────────────────────────────
+// [ id, label, x, y, size, font (black|roman), color (white|black), sample_text ]
+$_fieldsB1 = [
+   ['nombre',   __('Nombre',         'signatures'), $_pos('sig_b1_nombre_x'),   $_pos('sig_b1_nombre_y'),   $_pos('sig_b1_nombre_size'),   'black', 'white',  $_uName],
+   ['titulo',   __('Título',         'signatures'), $_pos('sig_b1_titulo_x'),   $_pos('sig_b1_titulo_y'),   $_pos('sig_b1_titulo_size'),   'black', 'white',  $_uTitulo],
+   ['email',    __('Correo',         'signatures'), $_pos('sig_b1_email_x'),    $_pos('sig_b1_email_y'),    $_pos('sig_b1_email_size'),    'roman', 'black',  $_uEmail],
+   ['mobile',   __('Celular',        'signatures'), $_pos('sig_b1_mobile_x'),   $_pos('sig_b1_mobile_y'),   $_pos('sig_b1_mobile_size'),   'roman', 'black',  $_uMobile],
+   ['tel',      __('Tel. entidad',   'signatures'), $_pos('sig_b1_tel_x'),      $_pos('sig_b1_tel_y'),      $_pos('sig_b1_tel_size'),      'roman', 'black',  $_phoneEnt],
+   ['ext',      __('Ext/Oficina',    'signatures'), $_pos('sig_b1_ext_x'),      $_pos('sig_b1_ext_y'),      $_pos('sig_b1_ext_size'),      'roman', 'black',  $_extraLabel . $_extraPhone],
+   ['facebook', __('Facebook',       'signatures'), $_pos('sig_b1_facebook_x'), $_pos('sig_b1_facebook_y'), $_pos('sig_b1_facebook_size'), 'roman', 'black',  $facebookPage ?: 'cyalimentos'],
+   ['web',      __('Web',            'signatures'), $_pos('sig_b1_web_x'),      $_pos('sig_b1_web_y'),      $_pos('sig_b1_web_size'),      'roman', 'black',  $_web],
+   ['qr',       __('QR WhatsApp',    'signatures'), $_pos('sig_b1_qr_x'),       $_pos('sig_b1_qr_y'),       0,                            'roman', 'black',  '▣ QR'],
+];
+
+$_fieldsB2 = [
+   ['nombre',   __('Nombre',         'signatures'), $_pos('sig_b2_nombre_x'),   $_pos('sig_b2_nombre_y'),   $_pos('sig_b2_nombre_size'),   'black', 'white',  $_uName],
+   ['titulo',   __('Título',         'signatures'), $_pos('sig_b2_titulo_x'),   $_pos('sig_b2_titulo_y'),   $_pos('sig_b2_titulo_size'),   'black', 'white',  $_uTitulo],
+   ['email',    __('Correo',         'signatures'), $_pos('sig_b2_email_x'),    $_pos('sig_b2_email_y'),    $_pos('sig_b2_email_size'),    'roman', 'black',  $_uEmail],
+   ['tel',      __('Tel. entidad',   'signatures'), $_pos('sig_b2_tel_x'),      $_pos('sig_b2_tel_y'),      $_pos('sig_b2_tel_size'),      'roman', 'black',  $_phoneEnt],
+   ['ext',      __('Ext/Oficina',    'signatures'), $_pos('sig_b2_ext_x'),      $_pos('sig_b2_ext_y'),      $_pos('sig_b2_ext_size'),      'roman', 'black',  $_extraLabel . $_extraPhone],
+   ['facebook', __('Facebook',       'signatures'), $_pos('sig_b2_facebook_x'), $_pos('sig_b2_facebook_y'), $_pos('sig_b2_facebook_size'), 'roman', 'black',  $facebookPage ?: 'cyalimentos'],
+   ['web',      __('Web',            'signatures'), $_pos('sig_b2_web_x'),      $_pos('sig_b2_web_y'),      $_pos('sig_b2_web_size'),      'roman', 'black',  $_web],
+];
+
+// ── Renderizar editor ─────────────────────────────────────────────────
+$_renderEditor = static function (
+   string $baseId,
+   string $title,
+   string $bgUrl,
+   array  $fields,
+   bool   $hasTemplate
+) use ($_fontBlackUrl, $_fontRomanUrl): void {
+
+   $ASCENT_FACTOR = 0.72; // fracción del tamaño que es ascenso sobre baseline
+
+   echo "<div class='card mt-3 rounded-0'>";
+   signaturesRibbonSubHeader('ti-vector-bezier', $title);
+   echo "<div class='card-body'>";
+
+   if (!$hasTemplate) {
+      echo "<div class='alert alert-warning'><i class='ti ti-alert-triangle me-2'></i>"
+         . __('No hay plantilla cargada para esta configuración. Carga una en la pestaña correspondiente.', 'signatures')
+         . "</div>";
+      echo "</div></div>";
+      return;
+   }
+
+   echo "<p class='text-muted small mb-2'>
+      <i class='ti ti-hand-move me-1'></i>"
+      . __('Arrastra cada campo a su posición. Usa los inputs de tamaño para ajustar el tamaño de fuente. Guarda con el botón Guardar.', 'signatures') .
+   "</p>";
+
+   // Contenedor del editor (posición relativa, tamaño natural de la imagen)
+   echo "<div class='sig-editor-wrap' id='editor-{$baseId}' style='position:relative;display:inline-block;overflow:visible;'>";
+   echo "<img src='{$bgUrl}&t=" . time() . "'
+              id='img-{$baseId}'
+              style='display:block;max-width:100%;'
+              draggable='false'>";
+
+   foreach ($fields as [$fieldId, $label, $gdX, $gdY, $gdSize, $fontType, $color, $sample]) {
+      $isQr    = ($fieldId === 'qr');
+      $fontCss = $fontType === 'black' ? 'AvenirBlack' : 'AvenirRoman';
+      $textColor = $color === 'white' ? '#fff' : '#000';
+      $inputKey  = "sig_{$baseId}_{$fieldId}";
+
+      // Convertir coordenadas GD (baseline) a CSS (top de la caja)
+      // css_top = gd_y - gdSize * ASCENT_FACTOR
+      $cssTop  = $isQr ? $gdY : max(0, (int)round($gdY - $gdSize * $ASCENT_FACTOR));
+      $cssLeft = $gdX;
+      $cssFontSize = $gdSize; // 1:1 aproximación inicial
+
+      if ($isQr) {
+         // QR: caja fija de 100x100px
+         echo "<div class='sig-field sig-field-qr'
+                    id='field-{$baseId}-{$fieldId}'
+                    data-base='{$baseId}'
+                    data-field='{$fieldId}'
+                    data-is-qr='1'
+                    style='position:absolute;
+                           left:{$cssLeft}px;top:{$cssTop}px;
+                           width:100px;height:100px;
+                           border:2px dashed rgba(255,140,0,0.8);
+                           background:rgba(255,140,0,0.15);
+                           cursor:grab;
+                           display:flex;align-items:center;justify-content:center;
+                           font-size:13px;color:rgba(255,140,0,0.9);
+                           user-select:none;'>
+                 <i class='ti ti-qrcode' style='font-size:24px;'></i>
+              </div>";
+      } else {
+         $labelEsc  = htmlspecialchars($label, ENT_QUOTES, 'UTF-8');
+         $sampleEsc = htmlspecialchars($sample, ENT_QUOTES, 'UTF-8');
+         echo "<div class='sig-field'
+                    id='field-{$baseId}-{$fieldId}'
+                    data-base='{$baseId}'
+                    data-field='{$fieldId}'
+                    data-font-size='{$gdSize}'
+                    title='{$labelEsc}'
+                    style='position:absolute;
+                           left:{$cssLeft}px;top:{$cssTop}px;
+                           font-family:{$fontCss},sans-serif;
+                           font-size:{$cssFontSize}px;
+                           color:{$textColor};
+                           white-space:nowrap;
+                           cursor:grab;
+                           padding:1px 3px;
+                           border:1px dashed rgba(255,140,0,0.6);
+                           background:rgba(255,140,0,0.08);
+                           user-select:none;
+                           line-height:1;'>
+                    {$sampleEsc}
+              </div>";
+      }
+
+      // Inputs ocultos para X e Y (en coordenadas GD)
+      $inputBase = "sig_{$baseId}_{$fieldId}";
+      echo "<input type='hidden' name='{$inputBase}_x' id='inp-{$baseId}-{$fieldId}-x' value='{$gdX}'>";
+      echo "<input type='hidden' name='{$inputBase}_y' id='inp-{$baseId}-{$fieldId}-y' value='{$gdY}'>";
+      if (!$isQr) {
+         echo "<input type='hidden' name='{$inputBase}_size' id='inp-{$baseId}-{$fieldId}-size' value='{$gdSize}'>";
+      }
+   }
+
+   echo "</div>"; // .sig-editor-wrap
+
+   // Tabla de controles de tamaño de fuente
+   echo "<div class='mt-3'>";
+   echo "<table class='table table-sm table-bordered' style='max-width:420px'>";
+   echo "<thead><tr>
+      <th>" . __('Campo', 'signatures') . "</th>
+      <th style='width:100px'>" . __('Tamaño (px)', 'signatures') . "</th>
+      <th style='width:80px'>" . __('Posición', 'signatures') . "</th>
+   </tr></thead><tbody>";
+
+   foreach ($fields as [$fieldId, $label, $gdX, $gdY, $gdSize]) {
+      if ($fieldId === 'qr') continue; // QR no tiene tamaño de fuente
+      $inputBase = "sig_{$baseId}_{$fieldId}";
+      echo "<tr>
+         <td><small>{$label}</small></td>
+         <td>
+            <input type='number' min='6' max='80'
+                   class='form-control form-control-sm sig-size-input'
+                   data-base='{$baseId}' data-field='{$fieldId}'
+                   value='{$gdSize}' style='width:70px;'>
+         </td>
+         <td>
+            <small class='text-muted sig-pos-display' id='pos-{$baseId}-{$fieldId}'>
+               {$gdX},{$gdY}
+            </small>
+         </td>
+      </tr>";
+   }
+
+   echo "</tbody></table></div>";
+
+   // Botón reset
+   echo "<button type='button' class='btn btn-sm btn-outline-secondary sig-reset-btn' data-base='{$baseId}'>
+      <i class='ti ti-refresh me-1'></i>" . __('Restaurar posiciones por defecto', 'signatures') . "
+   </button>";
+
+   echo "</div></div>"; // card-body + card
+};
+
+$_renderEditor('b1',
+   'Plantilla con celular — Editor de posiciones',
+   $_base1Url,
+   $_fieldsB1,
+   $hasbase1
+);
+
+$_renderEditor('b2',
+   'Plantilla sin celular — Editor de posiciones',
+   $_base2Url,
+   $_fieldsB2,
+   $hasbase2
+);
+
+echo "</div>"; // tab-pane positions
+
+echo "</div>"; // tab-content
+
 /* FOOTER — Guardar dentro del form principal */
 echo "<div class='card-footer text-end'>";
 echo "<button type='submit' name='save' class='btn btn-primary'>"
@@ -450,19 +716,164 @@ echo "<form id='sig-test-mail-form' method='post' action='" . htmlspecialchars($
    <input type='hidden' name='_glpi_csrf_token' value='{$_testCsrfToken}'>
 </form>";
 
-/* ========================== JS PREVIEW ========================== */
+/* ========================== JS PREVIEW + EDITOR ========================== */
+$_defaults_js = json_encode([
+   'b1' => [
+      'nombre'   => ['x'=>20,  'y'=>75,  'size'=>40],
+      'titulo'   => ['x'=>20,  'y'=>104, 'size'=>11],
+      'email'    => ['x'=>63,  'y'=>138, 'size'=>11],
+      'mobile'   => ['x'=>63,  'y'=>161, 'size'=>11],
+      'tel'      => ['x'=>185, 'y'=>161, 'size'=>11],
+      'ext'      => ['x'=>283, 'y'=>161, 'size'=>11],
+      'facebook' => ['x'=>63,  'y'=>183, 'size'=>11],
+      'web'      => ['x'=>185, 'y'=>183, 'size'=>11],
+      'qr'       => ['x'=>560, 'y'=>130],
+   ],
+   'b2' => [
+      'nombre'   => ['x'=>20,  'y'=>75,  'size'=>40],
+      'titulo'   => ['x'=>20,  'y'=>104, 'size'=>11],
+      'email'    => ['x'=>63,  'y'=>138, 'size'=>11],
+      'tel'      => ['x'=>63,  'y'=>161, 'size'=>11],
+      'ext'      => ['x'=>160, 'y'=>161, 'size'=>11],
+      'facebook' => ['x'=>63,  'y'=>183, 'size'=>11],
+      'web'      => ['x'=>185, 'y'=>183, 'size'=>11],
+   ],
+], JSON_UNESCAPED_UNICODE);
+
+$_fontBlackUrlJs = htmlspecialchars($_fontBlackUrl, ENT_QUOTES, 'UTF-8');
+$_fontRomanUrlJs = htmlspecialchars($_fontRomanUrl, ENT_QUOTES, 'UTF-8');
+
 echo <<<HTML
+<style>
+@font-face {
+   font-family: 'AvenirBlack';
+   src: url('{$_fontBlackUrlJs}');
+   font-weight: normal; font-style: normal;
+}
+@font-face {
+   font-family: 'AvenirRoman';
+   src: url('{$_fontRomanUrlJs}');
+   font-weight: normal; font-style: normal;
+}
+.sig-field { touch-action: none; }
+.sig-field:hover { border-color: rgba(255,100,0,0.9) !important; }
+.sig-editor-wrap { cursor: default; }
+</style>
 <script>
+const ASCENT = 0.72; // mismo factor que PHP para conversión GD↔CSS
+const SIG_DEFAULTS = {$_defaults_js};
+
+// ── Drag & drop ────────────────────────────────────────────────────────
+(function() {
+   let dragging = null, ox = 0, oy = 0, startL = 0, startT = 0;
+
+   document.addEventListener('mousedown', e => {
+      const el = e.target.closest('.sig-field');
+      if (!el) return;
+      e.preventDefault();
+      dragging = el;
+      ox = e.clientX; oy = e.clientY;
+      startL = el.offsetLeft; startT = el.offsetTop;
+      el.style.cursor = 'grabbing';
+      el.style.zIndex = 999;
+   });
+
+   document.addEventListener('mousemove', e => {
+      if (!dragging) return;
+      const dx = e.clientX - ox;
+      const dy = e.clientY - oy;
+      const newL = Math.max(0, startL + dx);
+      const newT = Math.max(0, startT + dy);
+      dragging.style.left = newL + 'px';
+      dragging.style.top  = newT + 'px';
+      syncInputs(dragging, newL, newT);
+   });
+
+   document.addEventListener('mouseup', () => {
+      if (!dragging) return;
+      dragging.style.cursor = 'grab';
+      dragging.style.zIndex = '';
+      dragging = null;
+   });
+})();
+
+function syncInputs(el, cssLeft, cssTop) {
+   const base    = el.dataset.base;
+   const field   = el.dataset.field;
+   const isQr    = el.dataset.isQr === '1';
+   const gdSize  = isQr ? 0 : parseInt(el.dataset.fontSize || '11');
+   const gdX     = Math.round(cssLeft);
+   const gdY     = isQr ? Math.round(cssTop) : Math.round(cssTop + gdSize * ASCENT);
+
+   const inpX = document.getElementById('inp-' + base + '-' + field + '-x');
+   const inpY = document.getElementById('inp-' + base + '-' + field + '-y');
+   if (inpX) inpX.value = gdX;
+   if (inpY) inpY.value = gdY;
+
+   const pos = document.getElementById('pos-' + base + '-' + field);
+   if (pos) pos.textContent = gdX + ',' + gdY;
+}
+
+// ── Cambio de tamaño desde input ───────────────────────────────────────
+document.addEventListener('input', e => {
+   const inp = e.target;
+   if (!inp.classList.contains('sig-size-input')) return;
+   const base  = inp.dataset.base;
+   const field = inp.dataset.field;
+   const size  = parseInt(inp.value) || 11;
+
+   const el = document.getElementById('field-' + base + '-' + field);
+   if (!el) return;
+
+   el.style.fontSize = size + 'px';
+   el.dataset.fontSize = size;
+
+   // Actualizar input hidden de size
+   const inpS = document.getElementById('inp-' + base + '-' + field + '-size');
+   if (inpS) inpS.value = size;
+
+   // Recalcular Y baseline con el nuevo tamaño
+   syncInputs(el, el.offsetLeft, el.offsetTop);
+});
+
+// ── Reset a defaults ────────────────────────────────────────────────────
+document.addEventListener('click', e => {
+   const btn = e.target.closest('.sig-reset-btn');
+   if (!btn) return;
+   const base = btn.dataset.base;
+   const defs = SIG_DEFAULTS[base];
+   if (!defs) return;
+
+   Object.entries(defs).forEach(([field, coords]) => {
+      const el = document.getElementById('field-' + base + '-' + field);
+      if (!el) return;
+      const isQr   = el.dataset.isQr === '1';
+      const size   = coords.size || 11;
+      const cssTop = isQr ? coords.y : Math.max(0, Math.round(coords.y - size * ASCENT));
+
+      el.style.left = coords.x + 'px';
+      el.style.top  = cssTop + 'px';
+      if (!isQr) {
+         el.style.fontSize   = size + 'px';
+         el.dataset.fontSize = size;
+         const inpS = document.getElementById('inp-' + base + '-' + field + '-size');
+         if (inpS) inpS.value = size;
+         const sizeInput = document.querySelector('.sig-size-input[data-base="' + base + '"][data-field="' + field + '"]');
+         if (sizeInput) sizeInput.value = size;
+      }
+      syncInputs(el, coords.x, cssTop);
+   });
+});
+
+// ── Preview de plantillas (tabs Con/Sin celular) ──────────────────────
 function preview(input, imgId, wrapId) {
    const file = input.files[0];
    if (!file) return;
-
    if (file.type !== 'image/png') {
       alert('Solo PNG permitido');
-      input.value='';
+      input.value = '';
       return;
    }
-
    const reader = new FileReader();
    reader.onload = e => {
       document.getElementById(imgId).src = e.target.result;

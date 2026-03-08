@@ -55,10 +55,12 @@ class PluginSignaturesUser extends CommonGLPI {
       /* ===========================
        * Validar ambas plantillas
        * =========================== */
-      $hasBase = (
-         is_readable(PluginSignaturesPaths::base1Path()) &&
-         is_readable(PluginSignaturesPaths::base2Path())
-      );
+      $hasMobile = !empty($user->fields['mobile']);
+
+      // Solo se necesita la plantilla correspondiente al usuario
+      $hasBase = $hasMobile
+         ? is_readable(PluginSignaturesPaths::base1Path())
+         : is_readable(PluginSignaturesPaths::base2Path());
 
       /* ===========================
        * Validar configuración de correo
@@ -120,8 +122,6 @@ class PluginSignaturesUser extends CommonGLPI {
       /* ===========================
        * Checkbox QR (compartido)
        * =========================== */
-      $hasMobile = !empty($user->fields['mobile']);
-
       if ($hasMobile) {
          echo "<div class='mb-3'>
                   <label class='form-check d-inline-flex align-items-center gap-2'>

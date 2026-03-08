@@ -1,6 +1,277 @@
+![Email Signatures](banner.png)
+
+# Email Signatures — GLPI Plugin
+
+GLPI plugin that generates personalized email signature images in PNG format for each user, pulling data directly from GLPI (name, title, email, phone numbers, entity) with optional WhatsApp QR code support. Includes an email delivery system and a visual drag-and-drop position editor.
+
+---
+
+## Features
+
+- Generates a personalized PNG signature per user in one click
+- Automatically selects the template based on whether the user has a mobile number
+- Auto-adjusts the name font size to prevent overflow
+- Optional WhatsApp QR code (only available when the user has a mobile number)
+- **Email delivery**: sends the signature directly to the user's registered email address
+- **Dynamic email variables**: `{nombre}`, `{empresa}`, `{fecha}` with `**bold**` markdown support
+- **Visual position editor**: drag-and-drop fields over the real template at 1:1 scale using the actual TTF fonts, per template
+- All field positions and font sizes stored in GLPI config — no PHP editing required
+- Configurable from the UI: Facebook page, WhatsApp country code, email subject/body/footer
+- Access control: users can only download their own signature; admins can download any user's
+- Clean uninstall: removes all configuration values from the database
+- Compatible with GLPI 11.0+
+
+---
+
+## Requirements
+
+| Requirement | Minimum version |
+|-------------|----------------|
+| GLPI | 11.0 |
+| PHP | 8.1 |
+| PHP GD extension | Any modern version |
+| TCPDF | Bundled with GLPI (required only for QR) |
+
+> **Note:** The GD extension is required for image manipulation. The plugin automatically validates its availability before generating any signature.
+
+---
+
+## Installation
+
+### From the marketplace (recommended)
+
+1. In GLPI go to **Setup → Plugins → Browse the marketplace**
+2. Search for **Email Signatures** and install it from there
+
+### Manual
+
+1. Download or clone this repository and copy the folder into GLPI's `marketplace` directory:
+
+```
+/glpi/marketplace/signatures/
+```
+
+2. In GLPI go to **Setup → Plugins**, locate **Email Signatures** and click **Install**, then **Enable**.
+
+### Post-installation
+
+On install, the plugin automatically creates the template storage directory:
+
+```
+{GLPI_PLUGIN_DOC_DIR}/signatures/templates/
+```
+
+All configuration keys (positions, font sizes, email options) are initialized with default values on first install. Existing values are never overwritten on update.
+
+---
+
+## Configuration
+
+Access from **Setup → Email Signatures**. Requires **config UPDATE** permission.
+
+### General tab
+
+| Field | Description | Example |
+|-------|-------------|---------|
+| **Facebook page name** | Name only, no URL or @ | `SontechsMX` |
+| **WhatsApp country code** | Numeric only, no `+` or spaces | `52` Mexico · `1` USA · `34` Spain |
+
+### Email options
+
+Configure the email sent to users when their signature is delivered.
+
+| Field | Description |
+|-------|-------------|
+| **Subject** | Email subject line. Supports variables. |
+| **Body** | Main email body. Supports variables and `**bold**`. |
+| **Footer** | Optional footer below a divider line. |
+
+**Available variables:**
+
+| Variable | Replaced with |
+|----------|--------------|
+| `{nombre}` | User's full name |
+| `{empresa}` | Entity name from GLPI |
+| `{fecha}` | Today's date in `dd/mm/yyyy` format |
+
+Use `**text**` for bold text in the body and footer.
+
+**Test email button**: sends a test email to your own registered GLPI address using the current saved configuration. Disabled if GLPI's outgoing mail is not configured or if subject/body are empty.
+
+### Templates (With mobile / Without mobile tabs)
+
+Upload the PNG template to use as background for each case.
+
+**Template restrictions:**
+- Format: PNG only
+- Max size: 300 KB
+- Server-side MIME type validation (not just extension)
+
+From each tab you can preview, download and delete the active template.
+
+### Positions tab
+
+Visual drag-and-drop editor for field positions on each template.
+
+- Template displayed at **natural (1:1) pixel size** — no scaling
+- Fields rendered using the **real Avenir TTF fonts** (same as GD)
+- Sample text populated with the **current admin's actual GLPI data**
+- Drag any field to reposition it; the X/Y coordinates update live
+- Per-field font size inputs in the table below the image
+- **Restore defaults** button resets all positions for that template
+- Positions are saved to `glpi_configs` when you click **Save** — no PHP editing required
+
+---
+
+## Signature generation
+
+1. Go to any user profile in GLPI
+2. Select the **Email Signature** tab
+3. If the user has a mobile number, you'll see the option to include a WhatsApp QR (checked by default)
+4. Click **Download signature** to save the PNG, or **Send signature** to email it directly
+5. The file downloads as `signature_FirstnameLastname.png`
+
+> If any template is missing or configuration is incomplete, the buttons are disabled with an informational notice.
+
+---
+
+## Access control
+
+| Action | Required permission |
+|--------|---------------------|
+| Download own signature | Authenticated user |
+| Download another user's signature | `config → UPDATE` (admin) |
+| Send own signature by email | Authenticated user |
+| Send another user's signature | `config → UPDATE` (admin) |
+| View/configure templates | `config → UPDATE` (admin) |
+| Edit field positions | `config → UPDATE` (admin) |
+| View templates (internal resource) | `config → READ` |
+
+---
+
+## Signature data
+
+| Field in signature | Source in GLPI |
+|---|---|
+| Full name | `getFriendlyName()` |
+| Title / Position | `glpi_usertitles` via `usertitles_id` |
+| Email | Primary email in user profile |
+| Mobile | `mobile` field in user profile |
+| Entity phone | `phonenumber` field of the user's entity |
+| Extension / Office | `phone` or `phone2` field in user profile |
+| Facebook | Configured in the plugin |
+| Website | `website` field of the user's entity |
+| WhatsApp QR | Generated from the user's mobile number |
+
+### Phone logic
+
+| User fields | Result in signature |
+|---|---|
+| `mobile` only | Mobile + entity phone |
+| `mobile` + `phone` | Mobile + entity phone + `Ext: xxx` |
+| `mobile` + `phone2` | Mobile + entity phone + `Office: xxx` |
+| No `mobile` | Entity phone only |
+| No `mobile` + `phone` or `phone2` | Entity phone + extension or office |
+
+> `phone2` takes priority over `phone` for the office label.
+
+---
+
+## Plugin structure
+
+```
+signatures/
+├── fonts/
+│   ├── AvenirBlack.ttf         # Font for name and title (bold)
+│   ├── AvenirBook.ttf          # Alternative font (reserved)
+│   └── AvenirRoman.ttf         # Font for contact data
+├── front/
+│   ├── config.form.php         # Plugin config page (General, Email, Templates, Positions tabs)
+│   ├── download.php            # PNG generation and download endpoint
+│   ├── resource.send.php       # Serves template PNGs to the browser
+│   ├── send.php                # Sends the signature by email to a user
+│   └── send_test.php           # Sends a test email to the current admin
+├── inc/
+│   ├── paths.class.php         # Centralizes all file and URL paths
+│   ├── signature.class.php     # PNG generation logic (reads positions from config)
+│   └── user.class.php          # Tab on the user profile
+├── locales/
+│   ├── signatures.pot          # Translation template
+│   ├── es_MX.po / .mo          # Spanish (Mexico)
+│   ├── en_US.po / .mo          # English (US)
+│   ├── en_GB.po / .mo          # English (GB)
+│   └── fr_FR.po / .mo          # French
+├── plugin.xml                  # GLPI marketplace descriptor
+├── logo.png                    # Plugin icon (transparent background)
+├── banner.png                  # Marketplace banner
+└── setup.php                   # Install, uninstall, version, defaults
+```
+
+---
+
+## Internal generation flow
+
+```
+download.php / send.php
+  │
+  ├── Session & access control check
+  ├── checkRequirements() → validates templates, fonts, GD, country code
+  ├── checkEmailConfig()  → validates subject and body (send.php only)
+  │
+  └── generatePNG()
+        ├── Reads config (Facebook, WhatsApp code, field positions)
+        ├── Determines mobile presence → selects template
+        ├── Loads base image with imagecreatefrompng()
+        ├── Fetches user and entity data from GLPI
+        ├── Auto-adjusts name font size (starts at configured size, min 20px)
+        ├── Writes text with imagettftext() using positions from glpi_configs
+        ├── If include_qr and mobile → generates QR with TCPDF and composites it
+        ├── Saves temporary PNG to GLPI_TMP_DIR
+        └── Returns temp file path
+
+  → download.php: sends PNG to browser as download, then deletes temp file
+  → send.php: attaches PNG to GLPIMailer, sends email, then deletes temp file
+```
+
+---
+
+## Storage
+
+| Type | Location |
+|------|----------|
+| PNG templates | `{GLPI_PLUGIN_DOC_DIR}/signatures/templates/` |
+| TTF fonts | `{plugin_dir}/fonts/` |
+| Generated temp PNG | `{GLPI_TMP_DIR}/signature_{userid}.png` (deleted after use) |
+| QR temp PNG | `{GLPI_TMP_DIR}/signature_qr_{userid}.png` (deleted after compositing) |
+| Configuration & positions | `glpi_configs` table, context `plugin_signatures` |
+
+---
+
+## Uninstall
+
+Uninstalling the plugin from GLPI automatically removes all configuration values (including saved positions) from the database.
+
+> PNG templates stored in `{GLPI_PLUGIN_DOC_DIR}/signatures/templates/` are **not deleted** automatically, so you can reinstall while keeping your templates.
+
+---
+
+## Author
+
+**Edwin Elias Alvarez**  
+[https://sontechs.com](https://sontechs.com)
+
+## License
+
+GPLv2+
+
+---
+---
+
+![Email Signatures](banner.png)
+
 # Email Signatures — Plugin para GLPI
 
-Plugin para GLPI que genera firmas de correo electrónico personalizadas en formato PNG para cada usuario, con datos obtenidos directamente de GLPI (nombre, cargo, email, teléfonos, entidad) y soporte opcional para código QR de WhatsApp.
+Plugin para GLPI que genera firmas de correo electrónico personalizadas en formato PNG para cada usuario, con datos obtenidos directamente de GLPI (nombre, cargo, email, teléfonos, entidad) y soporte opcional para código QR de WhatsApp. Incluye sistema de envío por correo y editor visual de posiciones con drag & drop.
 
 ---
 
@@ -10,9 +281,13 @@ Plugin para GLPI que genera firmas de correo electrónico personalizadas en form
 - Selecciona automáticamente la plantilla según si el usuario tiene número celular o no
 - Ajuste automático del tamaño de fuente del nombre para que nunca se desborde
 - Código QR de WhatsApp opcional (solo disponible si el usuario tiene celular)
-- Configurable desde la interfaz: página de Facebook y código de país para WhatsApp
+- **Envío por correo**: entrega la firma directamente al correo registrado del usuario en GLPI
+- **Variables dinámicas en el correo**: `{nombre}`, `{empresa}`, `{fecha}` con soporte de negritas `**texto**`
+- **Editor visual de posiciones**: drag & drop de campos sobre la plantilla real a escala 1:1 con las fuentes TTF reales, por plantilla
+- Todas las posiciones y tamaños de fuente se guardan en la config de GLPI — sin editar PHP
+- Configurable desde la interfaz: página de Facebook, código de país para WhatsApp, asunto/cuerpo/pie del correo
 - Control de acceso: cada usuario solo puede descargar su propia firma; los administradores pueden descargar la de cualquier usuario
-- Desinstalación limpia: elimina la configuración de la base de datos al desinstalar
+- Desinstalación limpia: elimina toda la configuración de la base de datos al desinstalar
 - Compatible con GLPI 11.0+
 
 ---
@@ -55,11 +330,13 @@ Al instalar, el plugin crea automáticamente el directorio donde se almacenan la
 {GLPI_PLUGIN_DOC_DIR}/signatures/templates/
 ```
 
+Todas las claves de configuración (posiciones, tamaños de fuente, opciones de correo) se inicializan con valores por defecto en la primera instalación. Los valores existentes nunca se sobreescriben en una actualización.
+
 ---
 
 ## Configuración
 
-Accede desde **Configuración → Email Signatures**. Solo los usuarios con permiso de **actualizar configuración** pueden acceder a esta página.
+Accede desde **Configuración → Email Signatures**. Solo los usuarios con permiso de **actualizar configuración** pueden acceder.
 
 ### Pestaña General
 
@@ -68,22 +345,48 @@ Accede desde **Configuración → Email Signatures**. Solo los usuarios con perm
 | **Nombre de página de Facebook** | Solo el nombre, sin URL ni @ | `SontechsMX` |
 | **Código de país para QR de WhatsApp** | Código numérico sin `+` ni espacios | `52` México · `1` EE.UU. · `34` España |
 
-> El campo de código de país solo acepta dígitos. Si no está configurado, el plugin bloqueará la generación de firmas con QR y mostrará un mensaje de error indicando que debe configurarse.
+### Opciones del correo electrónico
 
-### Pestaña Con celular
+Configura el correo que se envía al usuario al entregar su firma.
 
-Sube la plantilla PNG que se usará como fondo cuando el usuario **tenga número celular** registrado. Esta plantilla normalmente incluye espacio visual para el QR de WhatsApp y los campos de teléfonos.
+| Campo | Descripción |
+|-------|-------------|
+| **Asunto** | Línea de asunto. Soporta variables. |
+| **Cuerpo** | Cuerpo principal. Soporta variables y `**negrita**`. |
+| **Pie** | Pie opcional separado por una línea divisoria. |
 
-### Pestaña Sin celular
+**Variables disponibles:**
 
-Sube la plantilla PNG que se usará cuando el usuario **no tenga número celular**. Normalmente es una versión simplificada sin el área del QR.
+| Variable | Se reemplaza con |
+|----------|-----------------|
+| `{nombre}` | Nombre completo del usuario |
+| `{empresa}` | Nombre de la entidad en GLPI |
+| `{fecha}` | Fecha del día en formato `dd/mm/aaaa` |
 
-**Restricciones de las plantillas:**
+Usa `**texto**` para negritas en el cuerpo y pie del correo.
+
+**Botón Enviar correo de prueba**: envía un correo de prueba a tu propia dirección registrada en GLPI con la configuración guardada. Se desactiva si el correo saliente de GLPI no está configurado o si el asunto/cuerpo están vacíos.
+
+### Pestañas Con celular / Sin celular
+
+Sube la plantilla PNG de fondo para cada caso.
+
+**Restricciones:**
 - Formato: PNG únicamente
 - Tamaño máximo: 300 KB
-- El plugin valida el tipo MIME real del archivo en el servidor (no solo la extensión)
+- Validación de tipo MIME real en el servidor
 
-Desde cada pestaña puedes ver la plantilla activa, descargarla y eliminarla.
+### Pestaña Posiciones
+
+Editor visual drag & drop para posicionar los campos sobre cada plantilla.
+
+- Plantilla a **tamaño natural (1:1)** — sin escala
+- Campos renderizados con las **fuentes Avenir TTF reales**
+- Texto de muestra con los **datos reales del administrador actual**
+- Arrastra para reposicionar; X/Y se actualiza en tiempo real
+- Inputs de tamaño de fuente por campo
+- Botón **Restaurar posiciones por defecto** por plantilla
+- Se guarda en `glpi_configs` al hacer clic en **Guardar** — sin editar PHP
 
 ---
 
@@ -91,11 +394,9 @@ Desde cada pestaña puedes ver la plantilla activa, descargarla y eliminarla.
 
 1. Ve al perfil de cualquier usuario en GLPI
 2. Selecciona la pestaña **Firma de correo**
-3. Si el usuario tiene número móvil, verás la opción de incluir QR de WhatsApp (marcada por defecto). Si no tiene celular, se muestra un aviso informativo
-4. Haz clic en **Descargar firma**
-5. El archivo se descarga como `signature_NombreUsuario.png`
-
-> Si alguna plantilla no está cargada o la configuración está incompleta, el botón de descarga aparece deshabilitado y se muestra un aviso.
+3. Si el usuario tiene celular, verás la opción de incluir QR de WhatsApp (marcada por defecto)
+4. Haz clic en **Descargar firma** o en **Enviar firma** para enviarlo por correo
+5. El archivo se descarga como `signature_NombreApellido.png`
 
 ---
 
@@ -104,8 +405,11 @@ Desde cada pestaña puedes ver la plantilla activa, descargarla y eliminarla.
 | Acción | Permiso requerido |
 |--------|------------------|
 | Descargar propia firma | Usuario autenticado |
-| Descargar firma de otro usuario | `config → UPDATE` (administrador) |
-| Ver/configurar plantillas | `config → UPDATE` (administrador) |
+| Descargar firma de otro usuario | `config → UPDATE` |
+| Enviar propia firma por correo | Usuario autenticado |
+| Enviar firma de otro usuario | `config → UPDATE` |
+| Ver/configurar plantillas | `config → UPDATE` |
+| Editar posiciones de campos | `config → UPDATE` |
 | Ver plantillas (recurso interno) | `config → READ` |
 
 ---
@@ -114,21 +418,19 @@ Desde cada pestaña puedes ver la plantilla activa, descargarla y eliminarla.
 
 | Campo en la firma | Fuente en GLPI |
 |---|---|
-| Nombre completo | `getFriendlyName()` del usuario |
-| Cargo / Título | Tabla `glpi_usertitles` vía `usertitles_id` del perfil |
-| Email | Email marcado como principal en el perfil |
+| Nombre completo | `getFriendlyName()` |
+| Cargo / Título | `glpi_usertitles` vía `usertitles_id` |
+| Email | Email principal del perfil |
 | Celular | Campo `Móvil` del perfil |
-| Teléfono entidad | Campo `Teléfono` de la entidad del usuario |
+| Teléfono entidad | Campo `Teléfono` de la entidad |
 | Extensión / Oficina | Campo `Teléfono` o `Teléfono 2` del perfil |
 | Facebook | Configurado en el plugin |
-| Sitio web | Campo `Sitio web` de la entidad del usuario |
-| QR WhatsApp | Generado desde el número móvil del usuario |
+| Sitio web | Campo `Sitio web` de la entidad |
+| QR WhatsApp | Generado desde el número móvil |
 
 ### Lógica de teléfonos
 
-El plugin determina automáticamente qué mostrar según los campos disponibles:
-
-| Campos del usuario | Resultado en la firma |
+| Campos del usuario | Resultado |
 |---|---|
 | Solo `Móvil` | Celular + teléfono entidad |
 | `Móvil` + `Teléfono` | Celular + teléfono entidad + `Ext: xxx` |
@@ -140,85 +442,34 @@ El plugin determina automáticamente qué mostrar según los campos disponibles:
 
 ---
 
-## Posicionamiento del texto — importante
-
-> ⚠️ Las coordenadas X/Y, tamaños de fuente y posición del QR sobre la imagen están **definidos manualmente (hardcoded)** en `inc/signature.class.php`. Esto significa que el posicionamiento está calibrado para un tamaño específico de plantilla PNG.
-
-Si cambias las dimensiones de tus plantillas, deberás ajustar manualmente los valores en `signature.class.php`. Los parámetros relevantes son:
-
-```php
-// Nombre — tamaño automático desde 40px hasta mínimo 20px
-imagettftext($img, $size, 0, 20,  75,  ...);  // X=20,  Y=75
-
-// Cargo / Título
-imagettftext($img, 11,    0, 20,  104, ...);  // X=20,  Y=104
-
-// Email
-imagettftext($img, 11,    0, 63,  138, ...);  // X=63,  Y=138
-
-// Teléfonos (plantilla con celular)
-imagettftext($img, 11,    0, 63,  161, ...);  // Celular      X=63
-imagettftext($img, 11,    0, 185, 161, ...);  // Tel entidad  X=185
-imagettftext($img, 11,    0, 283, 161, ...);  // Ext/Oficina  X=283
-
-// Teléfonos (plantilla sin celular)
-imagettftext($img, 11,    0, 63,  161, ...);  // Tel entidad  X=63
-imagettftext($img, 11,    0, 160, 161, ...);  // Ext/Oficina  X=160
-
-// Facebook y web
-imagettftext($img, 11,    0, 63,  183, ...);  // Facebook     X=63
-imagettftext($img, 11,    0, 185, 183, ...);  // Web          X=185
-
-// QR WhatsApp — posición y tamaño (100x100 px)
-imagecopy($img, $qr, 560, 130, 0, 0, 100, 100); // X=560, Y=130
-```
-
-El nombre es el único campo con tamaño dinámico: empieza en 40px y reduce de 1 en 1 hasta 20px para que no se desborde del ancho disponible de la plantilla.
-
----
-
 ## Estructura del plugin
 
 ```
 signatures/
 ├── fonts/
-│   ├── AvenirBlack.ttf         # Fuente para nombre y cargo (negrita)
-│   ├── AvenirBook.ttf          # Fuente alternativa (reservada)
-│   └── AvenirRoman.ttf         # Fuente para datos de contacto
+│   ├── AvenirBlack.ttf
+│   ├── AvenirBook.ttf
+│   └── AvenirRoman.ttf
 ├── front/
-│   ├── config.form.php         # Página de configuración del plugin
-│   ├── download.php            # Endpoint de generación y descarga
-│   └── resource.send.php       # Sirve las plantillas PNG al navegador
+│   ├── config.form.php         # Configuración (General, Correo, Plantillas, Posiciones)
+│   ├── download.php
+│   ├── resource.send.php
+│   ├── send.php
+│   └── send_test.php
 ├── inc/
-│   ├── paths.class.php         # Centraliza todas las rutas de archivos
-│   ├── signature.class.php     # Lógica de generación del PNG
-│   └── user.class.php          # Tab en el perfil del usuario
-└── setup.php                   # Instalación, registro y versión del plugin
-```
-
----
-
-## Flujo interno de generación
-
-```
-download.php
-  │
-  ├── Verifica sesión y control de acceso (propio usuario o admin)
-  ├── checkRequirements() → valida plantillas, fuentes, GD y código de país
-  │
-  └── generatePNG()
-        ├── Lee configuración (Facebook, código de país WhatsApp)
-        ├── Determina si el usuario tiene celular → selecciona plantilla
-        ├── Carga imagen base con imagecreatefrompng()
-        ├── Obtiene datos del usuario y su entidad desde GLPI
-        ├── Ajusta tamaño de fuente automáticamente para el nombre
-        ├── Escribe texto sobre la imagen con imagettftext()
-        ├── Si include_qr y hay celular → genera QR con TCPDF y lo superpone
-        ├── Guarda PNG temporal en GLPI_TMP_DIR
-        └── Retorna ruta del archivo temporal
-
-  → Envía PNG al navegador como descarga
-  → Elimina el archivo temporal
+│   ├── paths.class.php
+│   ├── signature.class.php     # Lee posiciones desde glpi_configs
+│   └── user.class.php
+├── locales/
+│   ├── signatures.pot
+│   ├── es_MX.po / .mo
+│   ├── en_US.po / .mo
+│   ├── en_GB.po / .mo
+│   └── fr_FR.po / .mo
+├── plugin.xml
+├── logo.png
+├── banner.png
+└── setup.php                   # Incluye plugin_signatures_getDefaults()
 ```
 
 ---
@@ -229,17 +480,15 @@ download.php
 |------|-----------|
 | Plantillas PNG | `{GLPI_PLUGIN_DOC_DIR}/signatures/templates/` |
 | Fuentes TTF | `{directorio_plugin}/fonts/` |
-| PNG temporal generado | `{GLPI_TMP_DIR}/signature_{userid}.png` (se borra tras la descarga) |
-| QR temporal | `{GLPI_TMP_DIR}/signature_qr_{userid}.png` (se borra tras composición) |
-| Configuración | Tabla `glpi_configs` con contexto `plugin_signatures` |
+| PNG temporal | `{GLPI_TMP_DIR}/signature_{userid}.png` |
+| QR temporal | `{GLPI_TMP_DIR}/signature_qr_{userid}.png` |
+| Configuración y posiciones | `glpi_configs`, contexto `plugin_signatures` |
 
 ---
 
 ## Desinstalación
 
-Al desinstalar el plugin desde GLPI, se eliminan automáticamente los valores de configuración (`facebook_page` y `whatsapp_country_code`) de la base de datos.
-
-> Las plantillas PNG almacenadas en `{GLPI_PLUGIN_DOC_DIR}/signatures/templates/` **no se eliminan** automáticamente, por si deseas reinstalar el plugin conservando las plantillas.
+Al desinstalar se eliminan todos los valores de configuración (incluidas las posiciones). Las plantillas PNG **no se eliminan** automáticamente.
 
 ---
 
@@ -250,4 +499,4 @@ Al desinstalar el plugin desde GLPI, se eliminan automáticamente los valores de
 
 ## Licencia
 
-GPLv2.
+GPLv2+

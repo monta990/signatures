@@ -73,6 +73,7 @@ Características principales:
 - Envío de la firma directamente al correo del usuario mediante el sistema de correo saliente de GLPI.
 - Pestaña dedicada en el perfil de cada usuario con botones de descarga y envío.
 - Configuración centralizada: plantillas, página de Facebook, código de país de WhatsApp, asunto, cuerpo y pie del correo.
+- Editor visual drag &amp; drop de posiciones de campos por plantilla (sin editar PHP).
 - Soporte multiidioma: Español (México), English (US), English (GB), Français.
 - Compatible con GLPI 11.0+.
          ]]></es_MX>
@@ -88,6 +89,8 @@ Key features:
 - Send the signature directly to the user's email via GLPI's outgoing mail system.
 - Dedicated tab on each user's profile with download and send buttons.
 - Centralized configuration: templates, Facebook page, WhatsApp country code, email subject, body and footer.
+- Visual drag-and-drop position editor per template — no PHP editing required.
+- Visual drag-and-drop position editor per template — no PHP editing required.
 - Multilanguage: Spanish (Mexico), English (US), English (GB), French.
 - Compatible with GLPI 11.0+.
          ]]></en_US>
@@ -118,6 +121,7 @@ Fonctionnalités principales :
 - Envoi de la signature directement à l'adresse e-mail de l'utilisateur via le système de courrier sortant de GLPI.
 - Onglet dédié dans le profil de chaque utilisateur avec boutons de téléchargement et d'envoi.
 - Configuration centralisée : modèles, page Facebook, code pays WhatsApp, objet, corps et pied de courriel.
+- Éditeur visuel de positions par glisser-déposer par modèle — sans modifier le PHP.
 - Multilingue : Español (México), English (US), English (GB), Français.
 - Compatible avec GLPI 11.0+.
          ]]></fr_FR>
@@ -140,10 +144,22 @@ Fonctionnalités principales :
    <versions>
 
       <version>
-         <num>1.5.0</num>
+         <num>1.2.0</num>
+         <compatibility>11.0</compatibility>
+         <download_url>https://github.com/sontechs/glpi-signatures/releases/download/1.2.0/signatures-1.2.0.zip</download_url>
+      </version>
+
+      <version>
+         <num>1.1.0</num>
          <compatibility>11.0</compatibility>
          <!-- Actualiza esta URL al crear la release en GitHub -->
-         <download_url>https://github.com/sontechs/glpi-signatures/releases/download/1.1.5/signatures-1.1.5.zip</download_url>
+         <download_url>https://github.com/sontechs/glpi-signatures/releases/download/1.1.0/signatures-1.1.0.zip</download_url>
+      </version>
+
+      <version>
+         <num>1.0.0</num>
+         <compatibility>11.0</compatibility>
+         <download_url>https://github.com/sontechs/glpi-signatures/releases/download/1.0.0/signatures-1.0.0.zip</download_url>
       </version>
 
    </versions>

@@ -162,11 +162,23 @@ class PluginSignaturesSignature {
       }
 
       /* ============================
+       * POSICIONES DESDE CONFIG
+       * ============================ */
+      $pfx = $hasMobile ? 'sig_b1_' : 'sig_b2_';
+
+      $p = static function (string $key, int $default) use ($configsig, $pfx): int {
+         return isset($configsig[$pfx . $key]) && $configsig[$pfx . $key] !== ''
+                ? (int)$configsig[$pfx . $key]
+                : $default;
+      };
+
+      /* ============================
        * AJUSTE AUTOMÁTICO NOMBRE
        * ============================ */
-      $startX   = 20;
-      $maxWidth = imagesx($img) - $startX - 20;
-      $size     = 40;
+      $startX      = $p('nombre_x', 20);
+      $nombreY     = $p('nombre_y', 75);
+      $maxWidth    = imagesx($img) - $startX - 20;
+      $size        = $p('nombre_size', 40);
 
       while ($size > 20) {
          $bbox       = imagettfbbox($size, 0, $fontblack, $name);
@@ -178,39 +190,33 @@ class PluginSignaturesSignature {
       /* ============================
        * TEXTO SOBRE IMAGEN
        * ============================ */
-      imagettftext($img, $size, 0, $startX, 75, $white, $fontblack, $name);
-      imagettftext($img, 11, 0, 20, 104, $white, $fontblack, $titulo);
-      imagettftext($img, 11, 0, 63, 138, $black, $fontroman, $email);
+      imagettftext($img, $size, 0, $startX, $nombreY, $white, $fontblack, $name);
+      imagettftext($img, $p('titulo_size', 11), 0, $p('titulo_x', 20),  $p('titulo_y', 104),  $white, $fontblack, $titulo);
+      imagettftext($img, $p('email_size',  11), 0, $p('email_x',  63),  $p('email_y',  138),  $black, $fontroman, $email);
 
       /* ============================
        * TELÉFONOS DINÁMICOS
        * ============================ */
       if ($hasMobile) {
 
-         // Móvil
-         imagettftext($img, 11, 0, 63, 161, $black, $fontroman, $mobile);
+         imagettftext($img, $p('mobile_size', 11), 0, $p('mobile_x', 63),  $p('mobile_y', 161), $black, $fontroman, $mobile);
+         imagettftext($img, $p('tel_size',    11), 0, $p('tel_x',    185), $p('tel_y',    161), $black, $fontroman, $phone_entity);
 
-         // Tel entidad
-         imagettftext($img, 11, 0, 185, 161, $black, $fontroman, $phone_entity);
-
-         // Oficina o Ext
          if ($extraPhone !== '') {
-            imagettftext($img, 11, 0, 283, 161, $black, $fontroman, $extraLabel . $extraPhone);
+            imagettftext($img, $p('ext_size', 11), 0, $p('ext_x', 283), $p('ext_y', 161), $black, $fontroman, $extraLabel . $extraPhone);
          }
 
       } else {
 
-         // Sin móvil → solo entidad
-         imagettftext($img, 11, 0, 63, 161, $black, $fontroman, $phone_entity);
+         imagettftext($img, $p('tel_size', 11), 0, $p('tel_x', 63),  $p('tel_y', 161), $black, $fontroman, $phone_entity);
 
-         // Oficina o Ext
          if ($extraPhone !== '') {
-            imagettftext($img, 11, 0, 160, 161, $black, $fontroman, $extraLabel . $extraPhone);
+            imagettftext($img, $p('ext_size', 11), 0, $p('ext_x', 160), $p('ext_y', 161), $black, $fontroman, $extraLabel . $extraPhone);
          }
       }
 
-      imagettftext($img, 11, 0, 63, 183, $black, $fontroman, $facebook);
-      imagettftext($img, 11, 0, 185, 183, $black, $fontroman, $web);
+      imagettftext($img, $p('facebook_size', 11), 0, $p('facebook_x', 63),  $p('facebook_y', 183), $black, $fontroman, $facebook);
+      imagettftext($img, $p('web_size',      11), 0, $p('web_x',      185), $p('web_y',      183), $black, $fontroman, $web);
 
       /* ============================
        * QR SOLO SI HAY CELULAR
@@ -230,7 +236,7 @@ class PluginSignaturesSignature {
 
          if (is_readable($qr_tmp)) {
             $qr = imagecreatefrompng($qr_tmp);
-            imagecopy($img, $qr, 560, 130, 0, 0, 100, 100);
+            imagecopy($img, $qr, $p('qr_x', 560), $p('qr_y', 130), 0, 0, 100, 100);
             imagedestroy($qr);
             unlink($qr_tmp);
          }
@@ -244,5 +250,81 @@ class PluginSignaturesSignature {
       imagedestroy($img);
 
       return $out;
+   }
+
+   /**
+    * Sanitiza el nombre completo de un usuario para usarlo como nombre de archivo.
+    * Transliterar UTF-8 → ASCII, reemplazar espacios por _, eliminar caracteres especiales.
+    *
+    * @param string $name     Nombre a sanitizar (getFriendlyName)
+    * @param string $fallback Valor de respaldo si el resultado queda vacío
+    */
+   public static function sanitizeFilename(string $name, string $fallback = 'user'): string {
+      $safe = iconv('UTF-8', 'ASCII//TRANSLIT//IGNORE', $name) ?: '';
+      $safe = preg_replace('/\s+/', '_', $safe);
+      $safe = preg_replace('/[^A-Za-z0-9_\-]/', '', $safe);
+      return $safe !== '' ? $safe : $fallback;
+   }
+
+   /**
+    * Construye el cuerpo HTML del correo con variables dinámicas y soporte **negrita**.
+    *
+    * Variables soportadas: {nombre}, {empresa}, {fecha}
+    * Markdown: **texto** → <span style="font-weight:bold">texto</span>
+    *
+    * @param string $body      Cuerpo principal (texto plano con variables)
+    * @param string $footer    Pie opcional (texto plano con variables)
+    * @param array  $vars      Mapa ['token' => 'valor'] — ej. ['{nombre}' => 'Juan']
+    * @param bool   $isTest    Si es true agrega aviso visual de correo de prueba
+    */
+   public static function buildEmailHtml(
+      string $body,
+      string $footer,
+      array  $vars,
+      bool   $isTest = false
+   ): string {
+
+      $tokens = array_keys($vars);
+      $values = array_values($vars);
+
+      $render = static function (string $text) use ($tokens, $values): string {
+         // 1. Variables
+         $text = str_replace($tokens, $values, $text);
+         // 2. HTML-escape (previene XSS si los valores contienen caracteres especiales)
+         $html = htmlspecialchars($text, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
+         // 3. **negrita** → inline style (más compatible con Outlook que <strong>)
+         $html = preg_replace(
+            '/\*\*(.+?)\*\*/s',
+            '<span style="font-weight:bold">$1</span>',
+            $html
+         );
+         // 4. Saltos de línea
+         return nl2br($html);
+      };
+
+      $html  = '<div style="font-family:Arial,sans-serif;font-size:14px;color:#333;">';
+
+      if ($isTest) {
+         $html .= '<p style="background:#fff3cd;border:1px solid #ffc107;border-radius:4px;'
+                . 'padding:8px 12px;font-size:12px;color:#856404;margin-bottom:16px;">'
+                . '&#9888; '
+                . htmlspecialchars(
+                     __('Este es un correo de prueba enviado desde la configuración del plugin.', 'signatures'),
+                     ENT_QUOTES,
+                     'UTF-8'
+                  )
+                . '</p>';
+      }
+
+      $html .= '<p>' . $render($body) . '</p>';
+
+      if ($footer !== '') {
+         $html .= '<hr style="border:none;border-top:1px solid #ddd;margin:12px 0;">';
+         $html .= '<p style="font-size:11px;color:#999;">' . $render($footer) . '</p>';
+      }
+
+      $html .= '</div>';
+
+      return $html;
    }
 }

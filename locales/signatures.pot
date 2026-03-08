@@ -4,7 +4,7 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Email Signatures 1.1.5\n"
+"Project-Id-Version: Email Signatures 1.2.0\n"
 "Report-Msgid-Bugs-To: https://sontechs.com\n"
 "POT-Creation-Date: 2026-03-08 00:00+0000\n"
 "PO-Revision-Date: 2026-03-08 00:00+0000\n"
@@ -246,4 +246,61 @@ msgid "Configure el asunto y cuerpo del correo primero"
 msgstr ""
 
 msgid "Envía un correo de prueba a tu dirección registrada en GLPI"
+msgstr ""
+
+msgid "Posiciones"
+msgstr ""
+
+msgid "Arrastra cada campo a su posición. Usa los inputs de tamaño para ajustar el tamaño de fuente. Guarda con el botón Guardar."
+msgstr ""
+
+msgid "No hay plantilla cargada para esta configuración. Carga una en la pestaña correspondiente."
+msgstr ""
+
+msgid "Título"
+msgstr ""
+
+msgid "Correo"
+msgstr ""
+
+msgid "Celular"
+msgstr ""
+
+msgid "Tel. entidad"
+msgstr ""
+
+msgid "Ext/Oficina"
+msgstr ""
+
+msgid "Web"
+msgstr ""
+
+msgid "QR WhatsApp"
+msgstr ""
+
+msgid "Campo"
+msgstr ""
+
+msgid "Tamaño (px)"
+msgstr ""
+
+msgid "Posición"
+msgstr ""
+
+msgid "Restaurar posiciones por defecto"
+msgstr ""
+
+msgid "Plantilla con celular — Editor de posiciones"
+msgstr ""
+
+msgid "Plantilla sin celular — Editor de posiciones"
+msgstr ""
+
+msgid "Se requiere PHP 8.1 o superior para instalar este complemento."
+msgstr ""
+
+msgid "La extensión GD de PHP es requerida para instalar este complemento."
+msgstr ""
+
+msgid "No se pudo generar la firma. Revisa el log de GLPI para más detalles."
 msgstr ""

@@ -44,30 +44,30 @@ if (!empty($errors)) {
 /* ============================
  * GENERAR PNG
  * ============================ */
-$file = PluginSignaturesSignature::generatePNG($user, $include_qr);
-
-/* ============================
- * NOMBRE ARCHIVO SEGURO
- * ============================ */
-$filename = $user->getFriendlyName();
-
-$filename = iconv('UTF-8', 'ASCII//TRANSLIT//IGNORE', $filename) ?: '';
-$filename = preg_replace('/\s+/', '_', $filename);
-$filename = preg_replace('/[^A-Za-z0-9_\-]/', '', $filename);
-
-if ($filename === '') {
-   $filename = (string)$userid;
+try {
+   $file = PluginSignaturesSignature::generatePNG($user, $include_qr);
+} catch (\Throwable $e) {
+   Toolbox::logError('signatures plugin – generatePNG: ' . $e->getMessage());
+   Session::addMessageAfterRedirect(
+      __('No se pudo generar la firma. Revisa el log de GLPI para más detalles.', 'signatures'),
+      false,
+      ERROR
+   );
+   Html::redirect($_SERVER['HTTP_REFERER'] ?? $CFG_GLPI['root_doc']);
 }
 
 /* ============================
  * DESCARGA
  * ============================ */
+$filename   = PluginSignaturesSignature::sanitizeFilename($user->getFriendlyName(), (string)$userid);
+$attachName = 'signature_' . $filename . '.png';
+
 if (ob_get_length()) {
    ob_end_clean();
 }
 
 header('Content-Type: image/png');
-header('Content-Disposition: attachment; filename="signature_' . $filename . '.png"');
+header('Content-Disposition: attachment; filename="' . $attachName . '"');
 header('Content-Length: ' . filesize($file));
 
 readfile($file);
