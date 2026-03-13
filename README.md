@@ -1,3 +1,4 @@
+![Email Signatures](banner.png)
 # Email Signatures — GLPI Plugin
 
 > **Version 1.3.1** · Compatible with GLPI 11.0+ · PHP 8.1+ · GPL-2.0-or-later  
@@ -466,7 +467,7 @@ GPL-2.0-or-later — see [LICENSE](LICENSE).
 
 ---
 ---
-
+![Email Signatures](banner.png)
 # Email Signatures — Plugin GLPI (Español)
 
 > **Versión 1.3.1** · Compatible con GLPI 11.0+ · PHP 8.1+ · GPL-2.0-or-later  
