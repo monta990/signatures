@@ -1,44 +1,81 @@
 <?php
 declare(strict_types=1);
 
+/**
+ * send.php — Genera y envía la firma de correo del usuario.
+ *
+ * Modo normal  ($_POST['is_test'] ausente o '0'):
+ *   Envía la firma del usuario indicado en $_POST['userid'] a su correo registrado.
+ *   Requiere sesión activa. Solo un admin (config UPDATE) puede enviar la firma
+ *   de otro usuario.
+ *
+ * Modo prueba  ($_POST['is_test'] = '1'):
+ *   Envía la firma del administrador actual a su propio correo con prefijo [PRUEBA].
+ *   Requiere derecho config UPDATE.
+ *   Se invoca desde el botón "Enviar correo de prueba" en config.form.php.
+ */
+
+// Solo POST
+if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+    http_response_code(405);
+    exit;
+}
+
 Session::checkLoginUser();
 
 global $CFG_GLPI;
 
-/* ============================
- * USUARIO
- * ============================ */
-$userid = (int)($_POST['userid'] ?? Session::getLoginUserID());
+$isTest  = (($_POST['is_test'] ?? '0') === '1');
+$backUrl = $_SERVER['HTTP_REFERER'] ?? $CFG_GLPI['root_doc'];
 
-$user = new User();
-if (!$user->getFromDB($userid)) {
-   Html::redirect($CFG_GLPI['root_doc']);
+/* ============================
+ * MODO PRUEBA — requiere config UPDATE
+ * ============================ */
+if ($isTest) {
+    Session::checkRight('config', UPDATE);
+
+    $user = new User();
+    if (!$user->getFromDB((int)Session::getLoginUserID())) {
+        Session::addMessageAfterRedirect(
+            __('No se pudo obtener el usuario actual.', 'signatures'),
+            false,
+            ERROR
+        );
+        Html::redirect($backUrl);
+    }
+
+    // Para la prueba: incluir QR si el admin tiene celular
+    $include_qr = !empty($user->fields['mobile']);
+
+/* ============================
+ * MODO NORMAL — envío al usuario indicado
+ * ============================ */
+} else {
+    $userid  = (int)($_POST['userid'] ?? Session::getLoginUserID());
+    $isSelf  = ($userid === (int)Session::getLoginUserID());
+    $isAdmin = Session::haveRight('config', UPDATE);
+
+    if (!$isSelf && !$isAdmin) {
+        Html::redirect($CFG_GLPI['root_doc']);
+    }
+
+    $user = new User();
+    if (!$user->getFromDB($userid)) {
+        Html::redirect($CFG_GLPI['root_doc']);
+    }
+
+    $include_qr = !empty($_POST['include_qr']);
 }
-
-/* ============================
- * CONTROL DE ACCESO
- * ============================ */
-$isSelf  = ($userid === (int)Session::getLoginUserID());
-$isAdmin = Session::haveRight('config', UPDATE);
-
-if (!$isSelf && !$isAdmin) {
-   Html::redirect($CFG_GLPI['root_doc']);
-}
-
-/* ============================
- * OPCIONES
- * ============================ */
-$include_qr = !empty($_POST['include_qr']);
 
 /* ============================
  * VALIDAR PLANTILLAS / FUENTES / GD
  * ============================ */
 $errors = PluginSignaturesSignature::checkRequirements($include_qr);
 if (!empty($errors)) {
-   foreach ($errors as $msg) {
-      Session::addMessageAfterRedirect($msg, false, ERROR);
-   }
-   Html::redirect($_SERVER['HTTP_REFERER'] ?? $CFG_GLPI['root_doc']);
+    foreach ($errors as $msg) {
+        Session::addMessageAfterRedirect($msg, false, ERROR);
+    }
+    Html::redirect($backUrl);
 }
 
 /* ============================
@@ -46,82 +83,36 @@ if (!empty($errors)) {
  * ============================ */
 $emailErrors = PluginSignaturesSignature::checkEmailConfig();
 if (!empty($emailErrors)) {
-   foreach ($emailErrors as $msg) {
-      Session::addMessageAfterRedirect($msg, false, ERROR);
-   }
-   Html::redirect($_SERVER['HTTP_REFERER'] ?? $CFG_GLPI['root_doc']);
+    foreach ($emailErrors as $msg) {
+        Session::addMessageAfterRedirect($msg, false, ERROR);
+    }
+    Html::redirect($backUrl);
 }
 
 /* ============================
- * OBTENER EMAIL DEL USUARIO
+ * CONSTRUIR PAYLOAD DEL CORREO
  * ============================ */
-$userEmailAddress = '';
-$useremail        = new UserEmail();
-$emails           = $useremail->find([
-   'users_id'   => (int)$user->getID(),
-   'is_default' => 1
-], [], 1);
-
-if (!empty($emails)) {
-   $row              = reset($emails);
-   $userEmailAddress = trim($row['email'] ?? '');
-}
-
-if ($userEmailAddress === '') {
-   Session::addMessageAfterRedirect(
-      __('El usuario no tiene una dirección de correo configurada.', 'signatures'),
-      false,
-      ERROR
-   );
-   Html::redirect($_SERVER['HTTP_REFERER'] ?? $CFG_GLPI['root_doc']);
+try {
+    $payload = PluginSignaturesSignature::buildMailPayload($user, $isTest);
+} catch (\RuntimeException $e) {
+    Session::addMessageAfterRedirect($e->getMessage(), false, ERROR);
+    Html::redirect($backUrl);
 }
 
 /* ============================
  * GENERAR PNG
  * ============================ */
 try {
-   $file = PluginSignaturesSignature::generatePNG($user, $include_qr);
+    $file = PluginSignaturesSignature::generatePNG($user, $include_qr);
 } catch (\Throwable $e) {
-   Toolbox::logError('signatures plugin – generatePNG: ' . $e->getMessage());
-   Session::addMessageAfterRedirect(
-      __('No se pudo generar la firma. Revisa el log de GLPI para más detalles.', 'signatures'),
-      false,
-      ERROR
-   );
-   Html::redirect($_SERVER['HTTP_REFERER'] ?? $CFG_GLPI['root_doc']);
+    Toolbox::logError('signatures plugin - generatePNG: ' . $e->getMessage());
+    Session::addMessageAfterRedirect(
+        __('No se pudo generar la firma. Revisa el log de GLPI para más detalles.', 'signatures'),
+        false,
+        ERROR
+    );
+    Html::redirect($backUrl);
 }
-
-/* ============================
- * CONSTRUIR CORREO
- * ============================ */
-$config  = PluginSignaturesConfig::getAll();
-$subject = trim($config['email_subject'] ?? '');
-$body    = trim($config['email_body']    ?? '');
-$footer  = trim($config['email_footer']  ?? '');
-
-// Variables dinámicas
-$_entityId = (int)($user->fields['entities_id'] ?? 0);
-$_entity   = new Entity();
-if ($_entityId > 0) {
-   $varEmpresa = $_entity->getFromDB($_entityId) ? ($_entity->fields['name'] ?? '') : '';
-} else {
-   $varEmpresa = $_entity->getFromDB(0)
-                 ? ($_entity->fields['name'] ?? ($CFG_GLPI['name'] ?? ''))
-                 : ($CFG_GLPI['name'] ?? '');
-}
-
-$vars = [
-   '{nombre}'  => $user->getFriendlyName(),
-   '{empresa}' => $varEmpresa,
-   '{fecha}'   => date('d/m/Y'),
-];
-
-// Asunto (texto plano — solo variables, sin HTML)
-$subject = str_replace(array_keys($vars), array_values($vars), $subject);
-
-$bodyHtml   = PluginSignaturesSignature::buildEmailHtml($body, $footer, $vars);
-$filename   = PluginSignaturesSignature::sanitizeFilename($user->getFriendlyName(), (string)$userid);
-$attachName = 'signature_' . $filename . '.png';
 
 /* ============================
  * ENVÍO
@@ -129,40 +120,56 @@ $attachName = 'signature_' . $filename . '.png';
 $sent = false;
 
 try {
-   $mail = new GLPIMailer();
-   $mail->AddAddress($userEmailAddress, $user->getFriendlyName());
-   $mail->Subject = $subject;
-   $mail->isHTML(true);
-   $mail->Body    = $bodyHtml;
-   $mail->AddAttachment($file, $attachName, 'base64', 'image/png');
-   $sent = $mail->Send();
+    $mail = new GLPIMailer();
+
+    // ── From con nombre amigable ──────────────────────────────────────────────
+    // GLPI guarda el nombre del remitente en from_email_name (campo "Nombre del
+    // remitente" en Configuración → Notificaciones). Si no está configurado se
+    // cae a admin_email_name. Es exactamente lo que usan las notificaciones nativas.
+    $fromName  = trim($CFG_GLPI['from_email_name']  ?? $CFG_GLPI['admin_email_name'] ?? '');
+    $fromEmail = trim($CFG_GLPI['from_email']        ?? $CFG_GLPI['admin_email']      ?? '');
+
+    if ($fromEmail !== '' && $fromName !== '') {
+        // GLPI 11 usa Symfony Mailer internamente; getEmail() devuelve el objeto Email.
+        if (method_exists($mail, 'getEmail')) {
+            $mail->getEmail()->from(
+                new \Symfony\Component\Mime\Address($fromEmail, $fromName)
+            );
+        }
+    }
+    // ─────────────────────────────────────────────────────────────────────────
+
+    $mail->AddAddress($payload['toAddress'], $user->getFriendlyName());
+    $mail->Subject = $payload['subject'];
+    $mail->isHTML(true);
+    $mail->Body    = $payload['bodyHtml'];
+    $mail->AddAttachment($file, $payload['attachName'], 'base64', 'image/png');
+    $sent = $mail->Send();
 } catch (\Throwable $e) {
-   Toolbox::logError('signatures plugin – GLPIMailer: ' . $e->getMessage());
-   $sent = false;
+    Toolbox::logError('signatures plugin - GLPIMailer: ' . $e->getMessage());
+    $sent = false;
 }
 
 /* ============================
  * LIMPIEZA
  * ============================ */
 if (is_file($file)) {
-   unlink($file);
+    unlink($file);
 }
 
 /* ============================
  * RESULTADO
  * ============================ */
 if ($sent) {
-   Session::addMessageAfterRedirect(
-      sprintf(__('Firma enviada correctamente a %s.', 'signatures'), $userEmailAddress),
-      false,
-      INFO
-   );
+    $successMsg = $isTest
+        ? sprintf(__('Correo de prueba enviado a %s.', 'signatures'), $payload['toAddress'])
+        : sprintf(__('Firma enviada correctamente a %s.', 'signatures'), $payload['toAddress']);
+    Session::addMessageAfterRedirect($successMsg, false, INFO);
 } else {
-   Session::addMessageAfterRedirect(
-      __('No se pudo enviar el correo. Verifica la configuración de correo saliente en GLPI.', 'signatures'),
-      false,
-      ERROR
-   );
+    $errorMsg = $isTest
+        ? __('No se pudo enviar el correo de prueba. Verifica la configuración de correo saliente en GLPI.', 'signatures')
+        : __('No se pudo enviar el correo. Verifica la configuración de correo saliente en GLPI.', 'signatures');
+    Session::addMessageAfterRedirect($errorMsg, false, ERROR);
 }
 
-Html::redirect($_SERVER['HTTP_REFERER'] ?? $CFG_GLPI['root_doc']);
+Html::redirect($backUrl);

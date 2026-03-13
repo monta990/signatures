@@ -114,6 +114,22 @@ if (isset($_POST['save'])) {
          Html::redirect($self);
       }
 
+      // #14 Validar dimensiones: avisar si difieren notablemente de 650×216
+      $imgInfo = getimagesize($tmp);
+      if ($imgInfo !== false) {
+         [$imgW, $imgH] = $imgInfo;
+         if ($imgW < 400 || $imgH < 100 || $imgW > 2000 || $imgH > 800) {
+            Session::addMessageAfterRedirect(
+               sprintf(
+                  __('Aviso: la imagen tiene dimensiones %d×%d px. Se recomienda usar una imagen de aproximadamente 650×216 px para mejor resultado.', 'signatures'),
+                  $imgW, $imgH
+               ),
+               false,
+               WARNING
+            );
+         }
+      }
+
       move_uploaded_file($tmp, $dest);
       chmod($dest, 0644);
    }
@@ -176,7 +192,7 @@ echo "
             data-bs-toggle='tab'
             data-bs-target='#tab-general'
             type='button'>
-      <i class='ti ti-settings me-1'></i> General
+      <i class='ti ti-settings me-1'></i> " . __('General', 'signatures') . "
     </button>
   </li>
 
@@ -185,7 +201,7 @@ echo "
             data-bs-toggle='tab'
             data-bs-target='#tab-cel'
             type='button'>
-      <i class='ti ti-device-mobile me-1'></i> Con celular
+      <i class='ti ti-device-mobile me-1'></i> " . __('Con celular', 'signatures') . "
     </button>
   </li>
 
@@ -194,16 +210,17 @@ echo "
             data-bs-toggle='tab'
             data-bs-target='#tab-nocel'
             type='button'>
-      <i class='ti ti-phone-off me-1'></i> Sin celular
+      <i class='ti ti-phone-off me-1'></i> " . __('Sin celular', 'signatures') . "
     </button>
   </li>
 
   <li class='nav-item'>
     <button class='nav-link'
+            id='btn-tab-positions'
             data-bs-toggle='tab'
             data-bs-target='#tab-positions'
             type='button'>
-      <i class='ti ti-vector-bezier me-1'></i> Posiciones
+      <i class='ti ti-vector-bezier me-1'></i> " . __('Posiciones', 'signatures') . "
     </button>
   </li>
 
@@ -371,7 +388,7 @@ echo "<div class='form-text'>" .
 echo "</div>";
 
 /* ── Botón enviar correo de prueba ──────────────────────────────────── */
-$_testUrl     = Plugin::getWebDir('signatures') . '/front/send_test.php';
+$_testUrl     = Plugin::getWebDir('signatures') . '/front/send.php';
 $_coreCfg     = Config::getConfigurationValues('core');
 $_mailOk      = ($_coreCfg['use_notifications']    ?? 0) == 1
              && ($_coreCfg['notifications_mailing'] ?? 0) == 1;
@@ -387,9 +404,9 @@ if (!$_mailOk) {
 }
 
 $_btnTooltipEsc = htmlspecialchars($_btnTooltip, ENT_QUOTES, 'UTF-8');
-$_btnCls        = $_btnDisabled
-   ? "btn btn-warning disabled' aria-disabled='true' style='pointer-events:none;opacity:.65"
-   : "btn btn-warning";
+$_btnCls = $_btnDisabled
+   ? "btn btn-outline-secondary disabled' aria-disabled='true' style='pointer-events:none;opacity:.65"
+   : "btn btn-outline-secondary";
 $_testCsrfToken = Session::getNewCSRFToken();
 
 echo "<div class='d-flex align-items-center gap-3 flex-wrap mt-3'>
@@ -417,16 +434,21 @@ signaturesRibbonSubHeader('ti-device-mobile', __('Plantilla con celular', 'signa
 echo "<div class='card-body'>";
 
 if ($hasbase1) {
-   $url = PluginSignaturesPaths::base1Url();
+   $url       = PluginSignaturesPaths::base1Url();
+   $cacheBust = filemtime($base1File);
+   $csrf1     = Session::getNewCSRFToken();
    echo "<div class='mb-4'>";
    echo "<label class='fw-bold'>" . __('Actual', 'signatures') . "</label><br>";
    echo "<a href='{$url}' download='plantilla_con_celular.png'>";
-   echo "<img src='{$url}&t=" . time() . "' style='max-width:100%;border:1px solid #ccc'>";
+   echo "<img src='{$url}&t={$cacheBust}' style='max-width:100%;border:1px solid #ccc'>";
    echo "</a><br><br>";
-   echo "<button type='button' name='delete_base1' class='btn btn-danger'
-            onclick=\"this.form.submit(); this.form.delete_base1.value=1;\">
-            <i class='ti ti-trash'></i> " . __('Eliminar', 'signatures') . "
-         </button>";
+   // #6: form independiente para el botón eliminar (evita enviar toda la config al mismo tiempo)
+   echo "<form method='post' action='{$self}' style='display:inline;'>
+            <input type='hidden' name='_glpi_csrf_token' value='{$csrf1}'>
+            <button type='submit' name='delete_base1' value='1' class='btn btn-danger'>
+               <i class='ti ti-trash'></i> " . __('Eliminar', 'signatures') . "
+            </button>
+         </form>";
    echo "</div>";
 }
 
@@ -449,16 +471,21 @@ signaturesRibbonSubHeader('ti-phone-off', __('Plantilla sin celular', 'signature
 echo "<div class='card-body'>";
 
 if ($hasbase2) {
-   $url = PluginSignaturesPaths::base2Url();
+   $url       = PluginSignaturesPaths::base2Url();
+   $cacheBust = filemtime($base2File);
+   $csrf2     = Session::getNewCSRFToken();
    echo "<div class='mb-4'>";
    echo "<label class='fw-bold'>" . __('Actual', 'signatures') . "</label><br>";
    echo "<a href='{$url}' download='plantilla_sin_celular.png'>";
-   echo "<img src='{$url}&t=" . time() . "' style='max-width:100%;border:1px solid #ccc'>";
+   echo "<img src='{$url}&t={$cacheBust}' style='max-width:100%;border:1px solid #ccc'>";
    echo "</a><br><br>";
-   echo "<button type='button' name='delete_base2' class='btn btn-danger'
-            onclick=\"this.form.submit(); this.form.delete_base2.value=1;\">
-            <i class='ti ti-trash'></i> " . __('Eliminar', 'signatures') . "
-         </button>";
+   // #6: form independiente para el botón eliminar
+   echo "<form method='post' action='{$self}' style='display:inline;'>
+            <input type='hidden' name='_glpi_csrf_token' value='{$csrf2}'>
+            <button type='submit' name='delete_base2' value='1' class='btn btn-danger'>
+               <i class='ti ti-trash'></i> " . __('Eliminar', 'signatures') . "
+            </button>
+         </form>";
    echo "</div>";
 }
 
@@ -583,32 +610,38 @@ $_renderEditor = static function (
       . __('Arrastra cada campo a su posición. Usa los inputs de tamaño para ajustar el tamaño de fuente. Guarda con el botón Guardar.', 'signatures') .
    "</p>";
 
-   // Contenedor del editor (posición relativa, tamaño natural de la imagen)
+   // Contenedor del editor — la imagen se escala con max-width:100%
+   // Los campos se posicionan en coordenadas GD (espacio natural) y el JS
+   // los reescala al tamaño visible en cuanto el tab se abre (#2)
+   $cacheBustEditor = $hasTemplate
+      ? filemtime(($baseId === 'b1')
+         ? PluginSignaturesPaths::base1Path()
+         : PluginSignaturesPaths::base2Path())
+      : 0;
    echo "<div class='sig-editor-wrap' id='editor-{$baseId}' style='position:relative;display:inline-block;overflow:visible;'>";
-   echo "<img src='{$bgUrl}&t=" . time() . "'
+   echo "<img src='{$bgUrl}&t={$cacheBustEditor}'
               id='img-{$baseId}'
               style='display:block;max-width:100%;'
               draggable='false'>";
 
    foreach ($fields as [$fieldId, $label, $gdX, $gdY, $gdSize, $fontType, $color, $sample]) {
-      $isQr    = ($fieldId === 'qr');
-      $fontCss = $fontType === 'black' ? 'AvenirBlack' : 'AvenirRoman';
+      $isQr      = ($fieldId === 'qr');
+      $fontCss   = $fontType === 'black' ? 'AvenirBlack' : 'AvenirRoman';
       $textColor = $color === 'white' ? '#fff' : '#000';
-      $inputKey  = "sig_{$baseId}_{$fieldId}";
 
-      // Convertir coordenadas GD (baseline) a CSS (top de la caja)
-      // css_top = gd_y - gdSize * ASCENT_FACTOR
-      $cssTop  = $isQr ? $gdY : max(0, (int)round($gdY - $gdSize * $ASCENT_FACTOR));
-      $cssLeft = $gdX;
-      $cssFontSize = $gdSize; // 1:1 aproximación inicial
+      // Coordenadas GD se usan también como CSS iniciales (el JS las escala al abrir el tab)
+      $cssTop      = $isQr ? $gdY : max(0, (int)round($gdY - $gdSize * $ASCENT_FACTOR));
+      $cssLeft     = $gdX;
+      $cssFontSize = $gdSize;
 
       if ($isQr) {
-         // QR: caja fija de 100x100px
          echo "<div class='sig-field sig-field-qr'
                     id='field-{$baseId}-{$fieldId}'
                     data-base='{$baseId}'
                     data-field='{$fieldId}'
                     data-is-qr='1'
+                    data-gd-x='{$gdX}'
+                    data-gd-y='{$gdY}'
                     style='position:absolute;
                            left:{$cssLeft}px;top:{$cssTop}px;
                            width:100px;height:100px;
@@ -628,6 +661,8 @@ $_renderEditor = static function (
                     data-base='{$baseId}'
                     data-field='{$fieldId}'
                     data-font-size='{$gdSize}'
+                    data-gd-x='{$gdX}'
+                    data-gd-y='{$gdY}'
                     title='{$labelEsc}'
                     style='position:absolute;
                            left:{$cssLeft}px;top:{$cssTop}px;
@@ -666,8 +701,20 @@ $_renderEditor = static function (
    </tr></thead><tbody>";
 
    foreach ($fields as [$fieldId, $label, $gdX, $gdY, $gdSize]) {
-      if ($fieldId === 'qr') continue; // QR no tiene tamaño de fuente
       $inputBase = "sig_{$baseId}_{$fieldId}";
+      if ($fieldId === 'qr') {
+         // #4: QR aparece en la tabla con su posición X,Y pero sin input de tamaño de fuente
+         echo "<tr>
+            <td><small>{$label}</small></td>
+            <td><small class='text-muted'>—</small></td>
+            <td>
+               <small class='text-muted sig-pos-display' id='pos-{$baseId}-{$fieldId}'>
+                  {$gdX},{$gdY}
+               </small>
+            </td>
+         </tr>";
+         continue;
+      }
       echo "<tr>
          <td><small>{$label}</small></td>
          <td>
@@ -695,14 +742,14 @@ $_renderEditor = static function (
 };
 
 $_renderEditor('b1',
-   'Plantilla con celular — Editor de posiciones',
+   __('Plantilla con celular — Editor de posiciones', 'signatures'),
    $_base1Url,
    $_fieldsB1,
    $hasbase1
 );
 
 $_renderEditor('b2',
-   'Plantilla sin celular — Editor de posiciones',
+   __('Plantilla sin celular — Editor de posiciones', 'signatures'),
    $_base2Url,
    $_fieldsB2,
    $hasbase2
@@ -718,8 +765,8 @@ echo "<div id='sig-unsaved-banner' class='alert alert-warning d-none mb-0 mx-0 p
    . __('Hay cambios en las posiciones sin guardar. Haz clic en Guardar para aplicarlos.', 'signatures') .
 "</div>";
 echo "<div class='card-footer text-end'>";
-echo "<button type='submit' name='save' class='btn btn-primary'>"
-   . "<i class='ti ti-device-floppy me-1'></i>"
+echo "<button type='submit' name='save' id='btn-save-config' class='btn btn-warning'>"
+   . "<i class='ti ti-device-floppy me-1' id='icon-save-config'></i>"
    . __('Guardar', 'signatures')
    . "</button>";
 echo "</div>";
@@ -731,6 +778,7 @@ echo "</form>"; // cierre del form principal
 // El <button form='sig-test-mail-form'> declarado dentro del tab-general se asocia a este form via HTML5.
 echo "<form id='sig-test-mail-form' method='post' action='" . htmlspecialchars($_testUrl, ENT_QUOTES, 'UTF-8') . "' style='display:none;'>
    <input type='hidden' name='_glpi_csrf_token' value='{$_testCsrfToken}'>
+   <input type='hidden' name='is_test' value='1'>
 </form>";
 
 /* ========================== JS PREVIEW + EDITOR ========================== */
@@ -774,12 +822,82 @@ echo <<<HTML
 }
 .sig-field { touch-action: none; }
 .sig-field:hover { border-color: rgba(255,100,0,0.9) !important; }
+#btn-save-config, #btn-save-config:hover { color: #000 !important; }
 .sig-editor-wrap { cursor: default; }
 .sig-var-badge:hover { background:#b8d8ff !important; outline:1px solid #6ab0ff; }
 </style>
 <script>
-const ASCENT = 0.72;
+const ASCENT      = 0.72;
 const SIG_DEFAULTS = {$_defaults_js};
+
+// ── #2 Escala: convierte coordenadas GD ↔ CSS según tamaño visible ─────
+// La imagen base tiene ~650px de ancho natural pero se muestra más pequeña.
+// Todos los campos almacenan sus coords en espacio GD (naturalWidth).
+// Al abrir el tab, applyScale() los reposiciona al tamaño CSS real.
+function getScale(wrap) {
+   const img = wrap && wrap.querySelector('img');
+   if (!img || !img.naturalWidth) return 1;
+   const s = img.clientWidth / img.naturalWidth;
+   return s > 0 ? s : 1;
+}
+
+function applyScale(baseId) {
+   const wrap = document.getElementById('editor-' + baseId);
+   if (!wrap) return;
+   const scale = getScale(wrap);
+   wrap.dataset.scale = scale;
+
+   wrap.querySelectorAll('.sig-field').forEach(el => {
+      const gdX  = parseFloat(el.dataset.gdX ?? el.offsetLeft);
+      const gdY  = parseFloat(el.dataset.gdY ?? el.offsetTop);
+      const isQr = el.dataset.isQr === '1';
+      const size = parseInt(el.dataset.fontSize || '11');
+
+      el.style.left = (gdX * scale) + 'px';
+      el.style.top  = (isQr
+         ? gdY * scale
+         : Math.max(0, (gdY - size * ASCENT) * scale)) + 'px';
+
+      if (isQr) {
+         const px = Math.round(100 * scale);
+         el.style.width  = px + 'px';
+         el.style.height = px + 'px';
+         const icon = el.querySelector('i');
+         if (icon) icon.style.fontSize = Math.round(px * 0.45) + 'px';
+      } else {
+         el.style.fontSize = (size * scale) + 'px';
+      }
+   });
+}
+
+// Inicializar cuando el tab de posiciones se muestra
+// (antes es invisible y clientWidth = 0)
+document.addEventListener('DOMContentLoaded', function () {
+   const tabBtn = document.getElementById('btn-tab-positions');
+   if (tabBtn) {
+      tabBtn.addEventListener('shown.bs.tab', function () {
+         ['b1', 'b2'].forEach(id => {
+            const wrap = document.getElementById('editor-' + id);
+            const img  = wrap && wrap.querySelector('img');
+            if (!img) return;
+            if (img.complete && img.naturalWidth > 0) {
+               applyScale(id);
+            } else {
+               img.addEventListener('load', () => applyScale(id), { once: true });
+            }
+         });
+      });
+   }
+   // Si el tab ya es visible al cargar (hash en URL)
+   const pane = document.getElementById('tab-positions');
+   if (pane && pane.classList.contains('show')) {
+      ['b1', 'b2'].forEach(id => applyScale(id));
+   }
+});
+
+window.addEventListener('resize', () => {
+   ['b1', 'b2'].forEach(id => applyScale(id));
+});
 
 // ── Estado de cambios sin guardar ──────────────────────────────────────
 let _positionsDirty = false;
@@ -807,51 +925,32 @@ function clearPositionsDirty() {
    if (banner) banner.classList.add('d-none');
 }
 
-// Limpiar al guardar el form principal
-document.querySelector('form[method="post"]')?.addEventListener('submit', clearPositionsDirty);
+// ── #17 Spinner en botón Guardar ───────────────────────────────────────
+document.querySelector('form[method="post"]')?.addEventListener('submit', function () {
+   clearPositionsDirty();
+   const btn  = document.getElementById('btn-save-config');
+   const icon = document.getElementById('icon-save-config');
+   if (btn)  btn.disabled = true;
+   if (icon) icon.className = 'spinner-border spinner-border-sm me-1';
+});
 
-// ── Drag & drop ────────────────────────────────────────────────────────
-(function() {
-   let dragging = null, ox = 0, oy = 0, startL = 0, startT = 0;
-
-   document.addEventListener('mousedown', e => {
-      const el = e.target.closest('.sig-field');
-      if (!el) return;
-      e.preventDefault();
-      dragging = el;
-      ox = e.clientX; oy = e.clientY;
-      startL = el.offsetLeft; startT = el.offsetTop;
-      el.style.cursor = 'grabbing';
-      el.style.zIndex = 999;
-   });
-
-   document.addEventListener('mousemove', e => {
-      if (!dragging) return;
-      const dx = e.clientX - ox;
-      const dy = e.clientY - oy;
-      const newL = Math.max(0, startL + dx);
-      const newT = Math.max(0, startT + dy);
-      dragging.style.left = newL + 'px';
-      dragging.style.top  = newT + 'px';
-      syncInputs(dragging, newL, newT);
-      markPositionsDirty();
-   });
-
-   document.addEventListener('mouseup', () => {
-      if (!dragging) return;
-      dragging.style.cursor = 'grab';
-      dragging.style.zIndex = '';
-      dragging = null;
-   });
-})();
-
+// ── #2 syncInputs: CSS → GD dividiendo por escala ──────────────────────
 function syncInputs(el, cssLeft, cssTop) {
-   const base    = el.dataset.base;
-   const field   = el.dataset.field;
-   const isQr    = el.dataset.isQr === '1';
-   const gdSize  = isQr ? 0 : parseInt(el.dataset.fontSize || '11');
-   const gdX     = Math.round(cssLeft);
-   const gdY     = isQr ? Math.round(cssTop) : Math.round(cssTop + gdSize * ASCENT);
+   const wrap  = el.closest('.sig-editor-wrap');
+   const scale = parseFloat(wrap?.dataset.scale || '1') || 1;
+   const base  = el.dataset.base;
+   const field = el.dataset.field;
+   const isQr  = el.dataset.isQr === '1';
+   const size  = isQr ? 0 : parseInt(el.dataset.fontSize || '11');
+
+   const gdX = Math.round(cssLeft / scale);
+   const gdY = isQr
+      ? Math.round(cssTop / scale)
+      : Math.round(cssTop / scale + size * ASCENT);
+
+   // Actualizar data attributes para que applyScale() use los nuevos valores
+   el.dataset.gdX = gdX;
+   el.dataset.gdY = gdY;
 
    const inpX = document.getElementById('inp-' + base + '-' + field + '-x');
    const inpY = document.getElementById('inp-' + base + '-' + field + '-y');
@@ -862,6 +961,54 @@ function syncInputs(el, cssLeft, cssTop) {
    if (pos) pos.textContent = gdX + ',' + gdY;
 }
 
+// ── #10 Drag & drop con soporte mouse Y touch ──────────────────────────
+(function() {
+   let dragging = null, ox = 0, oy = 0, startL = 0, startT = 0;
+
+   function getCoords(e) {
+      const src = e.touches ? e.touches[0] : e;
+      return { x: src.clientX, y: src.clientY };
+   }
+
+   function onStart(e) {
+      const el = e.target.closest('.sig-field');
+      if (!el) return;
+      e.preventDefault();
+      dragging = el;
+      const c = getCoords(e);
+      ox = c.x; oy = c.y;
+      startL = el.offsetLeft; startT = el.offsetTop;
+      el.style.cursor = 'grabbing';
+      el.style.zIndex = 999;
+   }
+
+   function onMove(e) {
+      if (!dragging) return;
+      e.preventDefault();
+      const c    = getCoords(e);
+      const newL = Math.max(0, startL + c.x - ox);
+      const newT = Math.max(0, startT + c.y - oy);
+      dragging.style.left = newL + 'px';
+      dragging.style.top  = newT + 'px';
+      syncInputs(dragging, newL, newT);
+      markPositionsDirty();
+   }
+
+   function onEnd() {
+      if (!dragging) return;
+      dragging.style.cursor = 'grab';
+      dragging.style.zIndex = '';
+      dragging = null;
+   }
+
+   document.addEventListener('mousedown',  onStart);
+   document.addEventListener('mousemove',  onMove);
+   document.addEventListener('mouseup',    onEnd);
+   document.addEventListener('touchstart', onStart, { passive: false });
+   document.addEventListener('touchmove',  onMove,  { passive: false });
+   document.addEventListener('touchend',   onEnd);
+})();
+
 // ── Cambio de tamaño desde input ───────────────────────────────────────
 document.addEventListener('input', e => {
    const inp = e.target;
@@ -870,11 +1017,13 @@ document.addEventListener('input', e => {
    const field = inp.dataset.field;
    const size  = parseInt(inp.value) || 11;
 
-   const el = document.getElementById('field-' + base + '-' + field);
+   const el   = document.getElementById('field-' + base + '-' + field);
    if (!el) return;
+   const wrap  = el.closest('.sig-editor-wrap');
+   const scale = parseFloat(wrap?.dataset.scale || '1') || 1;
 
-   el.style.fontSize   = size + 'px';
    el.dataset.fontSize = size;
+   el.style.fontSize   = (size * scale) + 'px';
 
    const inpS = document.getElementById('inp-' + base + '-' + field + '-size');
    if (inpS) inpS.value = size;
@@ -887,28 +1036,46 @@ document.addEventListener('input', e => {
 document.addEventListener('click', e => {
    const btn = e.target.closest('.sig-reset-btn');
    if (!btn) return;
-   const base = btn.dataset.base;
-   const defs = SIG_DEFAULTS[base];
+   const base  = btn.dataset.base;
+   const defs  = SIG_DEFAULTS[base];
    if (!defs) return;
+
+   const wrap  = document.getElementById('editor-' + base);
+   const scale = parseFloat(wrap?.dataset.scale || '1') || 1;
 
    Object.entries(defs).forEach(([field, coords]) => {
       const el = document.getElementById('field-' + base + '-' + field);
       if (!el) return;
-      const isQr   = el.dataset.isQr === '1';
-      const size   = coords.size || 11;
-      const cssTop = isQr ? coords.y : Math.max(0, Math.round(coords.y - size * ASCENT));
+      const isQr = el.dataset.isQr === '1';
+      const size = coords.size || 11;
 
-      el.style.left = coords.x + 'px';
-      el.style.top  = cssTop + 'px';
-      if (!isQr) {
-         el.style.fontSize   = size + 'px';
+      // Actualizar data GD
+      el.dataset.gdX = coords.x;
+      el.dataset.gdY = coords.y;
+
+      const cssL = coords.x * scale;
+      const cssT = isQr
+         ? coords.y * scale
+         : Math.max(0, (coords.y - size * ASCENT) * scale);
+
+      el.style.left = cssL + 'px';
+      el.style.top  = cssT + 'px';
+
+      if (isQr) {
+         const px = Math.round(100 * scale);
+         el.style.width  = px + 'px';
+         el.style.height = px + 'px';
+         const icon = el.querySelector('i');
+         if (icon) icon.style.fontSize = Math.round(px * 0.45) + 'px';
+      } else {
          el.dataset.fontSize = size;
+         el.style.fontSize   = (size * scale) + 'px';
          const inpS = document.getElementById('inp-' + base + '-' + field + '-size');
          if (inpS) inpS.value = size;
          const sizeInput = document.querySelector('.sig-size-input[data-base="' + base + '"][data-field="' + field + '"]');
          if (sizeInput) sizeInput.value = size;
       }
-      syncInputs(el, coords.x, cssTop);
+      syncInputs(el, cssL, cssT);
    });
    markPositionsDirty();
 });
@@ -944,7 +1111,6 @@ document.addEventListener('click', e => {
    const varText = badge.dataset.var;
    const target  = _lastFocusedField || document.querySelector('[name="email_body"]');
    if (!target) return;
-
    const start = target.selectionStart ?? target.value.length;
    const end   = target.selectionEnd   ?? target.value.length;
    target.value = target.value.slice(0, start) + varText + target.value.slice(end);

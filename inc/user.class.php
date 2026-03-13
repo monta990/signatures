@@ -23,10 +23,24 @@ class PluginSignaturesUser extends CommonGLPI {
          return [];
       }
 
+      // #11: indicador visual si la configuración está incompleta
+      $hasMobile = !empty($item->fields['mobile']);
+      $hasBase   = $hasMobile
+         ? is_readable(PluginSignaturesPaths::base1Path())
+         : is_readable(PluginSignaturesPaths::base2Path());
+      $hasEmail  = empty(PluginSignaturesSignature::checkEmailConfig());
+
+      $badge = '';
+      if (!$hasBase || !$hasEmail) {
+         $badge = " <span class='badge bg-warning text-dark ms-1' style='font-size:0.65em;' "
+                . "title='" . htmlspecialchars(__('Configuración incompleta', 'signatures'), ENT_QUOTES, 'UTF-8') . "'>!</span>";
+      }
+
       return [
          'signatures' => "<span class='d-flex align-items-center'>
                              <i class='ti ti-mail me-2'></i>" .
                              __('Firma de correo', 'signatures') .
+                             $badge .
                           "</span>"
       ];
    }
@@ -73,8 +87,6 @@ class PluginSignaturesUser extends CommonGLPI {
 
       // Mensajes GLPI (redirect-safe)
       Html::displayMessageAfterRedirect();
-
-      echo "<div class='card mt-3 shadow-sm'>";
 
       /* ===========================
        * Header
@@ -173,7 +185,7 @@ class PluginSignaturesUser extends CommonGLPI {
                <input type='hidden' name='userid'     value='{$user->getID()}'>
                <input type='hidden' name='include_qr' id='qr_send' value='" . ($hasMobile ? '1' : '') . "'>
                <button type='submit'
-                       class='btn btn-success'
+                       class='btn btn-primary'
                        " . (!$hasBase || !$hasEmail ? 'disabled' : '') . ">
                   <i class='ti ti-send me-2'></i>
                   " . __('Enviar por correo', 'signatures') . "

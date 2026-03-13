@@ -4,9 +4,9 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Email Signatures 1.2.0\n"
+"Project-Id-Version: Email Signatures 1.3.1\n"
 "Report-Msgid-Bugs-To: https://sontechs.com\n"
-"POT-Creation-Date: 2026-03-08 00:00+0000\n"
+"POT-Creation-Date: 2026-03-12 00:00+0000\n"
 "PO-Revision-Date: 2026-03-08 00:00+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -321,4 +321,24 @@ msgid "Haz clic en una variable para insertarla en el campo activo."
 msgstr ""
 
 msgid "Clic para insertar"
+msgstr ""
+
+#: front/config.form.php
+msgid "General"
+msgstr ""
+
+#: front/config.form.php
+msgid "Con celular"
+msgstr ""
+
+#: front/config.form.php
+msgid "Sin celular"
+msgstr ""
+
+#: front/config.form.php
+msgid "Configuración incompleta"
+msgstr ""
+
+#: front/config.form.php inc/user.class.php
+msgid "Aviso: la imagen tiene dimensiones %d×%d px. Se recomienda usar una imagen de aproximadamente 650×216 px para mejor resultado."
 msgstr ""

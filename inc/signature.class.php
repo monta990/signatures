@@ -180,11 +180,21 @@ class PluginSignaturesSignature {
       $maxWidth    = imagesx($img) - $startX - 20;
       $size        = $p('nombre_size', 40);
 
+      // Bajar tamaño si el nombre es demasiado ancho
       while ($size > 20) {
          $bbox       = imagettfbbox($size, 0, $fontblack, $name);
          $text_width = $bbox[2] - $bbox[0];
          if ($text_width <= $maxWidth) break;
          $size--;
+      }
+
+      // Subir tamaño si hay espacio y el configurado permite más
+      $configured = $p('nombre_size', 40);
+      while ($size < $configured) {
+         $bbox       = imagettfbbox($size + 1, 0, $fontblack, $name);
+         $text_width = $bbox[2] - $bbox[0];
+         if ($text_width > $maxWidth) break;
+         $size++;
       }
 
       /* ============================
@@ -235,8 +245,11 @@ class PluginSignaturesSignature {
          file_put_contents($qr_tmp, $qr_png);
 
          if (is_readable($qr_tmp)) {
-            $qr = imagecreatefrompng($qr_tmp);
-            imagecopy($img, $qr, $p('qr_x', 560), $p('qr_y', 130), 0, 0, 100, 100);
+            $qr    = imagecreatefrompng($qr_tmp);
+            $qr_w  = imagesx($qr);
+            $qr_h  = imagesy($qr);
+            // Escalar siempre a 100×100 para coincidencia exacta con el placeholder del editor
+            imagecopyresampled($img, $qr, $p('qr_x', 560), $p('qr_y', 130), 0, 0, 100, 100, $qr_w, $qr_h);
             imagedestroy($qr);
             unlink($qr_tmp);
          }
@@ -293,9 +306,11 @@ class PluginSignaturesSignature {
          // 2. HTML-escape (previene XSS si los valores contienen caracteres especiales)
          $html = htmlspecialchars($text, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
          // 3. **negrita** → inline style (más compatible con Outlook que <strong>)
-         $html = preg_replace(
+         //    El contenido capturado ya está escapado por htmlspecialchars en el paso 2,
+         //    así que es seguro insertarlo directamente como texto HTML.
+         $html = preg_replace_callback(
             '/\*\*(.+?)\*\*/s',
-            '<span style="font-weight:bold">$1</span>',
+            static fn(array $m): string => '<span style="font-weight:bold">' . $m[1] . '</span>',
             $html
          );
          // 4. Saltos de línea
@@ -326,5 +341,67 @@ class PluginSignaturesSignature {
       $html .= '</div>';
 
       return $html;
+   }
+
+   /**
+    * Construye el payload completo del correo (asunto, HTML, adjunto, destinatario).
+    * Centraliza la lógica duplicada entre send.php y send_test.php.
+    *
+    * @param User $user    Usuario destinatario / propietario de la firma
+    * @param bool $isTest  Si es true, agrega prefijo [PRUEBA] y aviso visual
+    * @return array{subject:string, bodyHtml:string, attachName:string, toAddress:string}
+    * @throws RuntimeException Si el usuario no tiene correo registrado
+    */
+   public static function buildMailPayload(User $user, bool $isTest = false): array {
+
+      global $CFG_GLPI;
+
+      // Dirección de destino
+      $toAddress = '';
+      $useremail = new UserEmail();
+      $emails    = $useremail->find(['users_id' => (int)$user->getID(), 'is_default' => 1], [], 1);
+      if (!empty($emails)) {
+         $row       = reset($emails);
+         $toAddress = trim($row['email'] ?? '');
+      }
+      if ($toAddress === '') {
+         throw new RuntimeException(
+            __('El usuario no tiene una dirección de correo configurada.', 'signatures')
+         );
+      }
+
+      // Variables dinámicas
+      $entityId = (int)($user->fields['entities_id'] ?? 0);
+      $entity   = new Entity();
+      if ($entityId > 0) {
+         $varEmpresa = $entity->getFromDB($entityId) ? ($entity->fields['name'] ?? '') : '';
+      } else {
+         $varEmpresa = $entity->getFromDB(0)
+                       ? ($entity->fields['name'] ?? ($CFG_GLPI['name'] ?? ''))
+                       : ($CFG_GLPI['name'] ?? '');
+      }
+
+      $vars = [
+         '{nombre}'  => $user->getFriendlyName(),
+         '{empresa}' => $varEmpresa,
+         '{fecha}'   => date('d/m/Y'),
+      ];
+
+      // Asunto y cuerpo desde configuración
+      $config  = PluginSignaturesConfig::getAll();
+      $subject = trim($config['email_subject'] ?? '');
+      $body    = trim($config['email_body']    ?? '');
+      $footer  = trim($config['email_footer']  ?? '');
+
+      // Sustituir variables en el asunto (texto plano)
+      $subject = str_replace(array_keys($vars), array_values($vars), $subject);
+      if ($isTest) {
+         $subject = '[PRUEBA] ' . $subject;
+      }
+
+      $bodyHtml   = self::buildEmailHtml($body, $footer, $vars, $isTest);
+      $attachName = 'signature_' . self::sanitizeFilename($user->getFriendlyName(), (string)$user->getID()) . '.png';
+
+      return compact('subject', 'bodyHtml', 'attachName', 'toAddress');
    }
 }

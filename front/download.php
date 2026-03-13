@@ -12,6 +12,7 @@ $userid = (int)($_GET['userid'] ?? Session::getLoginUserID());
 
 $user = new User();
 if (!$user->getFromDB($userid)) {
+   if (ob_get_length()) ob_end_clean();
    Html::redirect($CFG_GLPI['root_doc']);
 }
 
@@ -22,6 +23,7 @@ $isSelf  = ($userid === (int)Session::getLoginUserID());
 $isAdmin = Session::haveRight('config', UPDATE);
 
 if (!$isSelf && !$isAdmin) {
+   if (ob_get_length()) ob_end_clean();
    Html::redirect($CFG_GLPI['root_doc']);
 }
 
@@ -39,6 +41,7 @@ if (!empty($errors)) {
    foreach ($errors as $msg) {
       Session::addMessageAfterRedirect($msg, false, ERROR);
    }
+   if (ob_get_length()) ob_end_clean();
    Html::redirect($_SERVER['HTTP_REFERER'] ?? $CFG_GLPI['root_doc']);
 }
 
@@ -54,6 +57,7 @@ try {
       false,
       ERROR
    );
+   if (ob_get_length()) ob_end_clean();
    Html::redirect($_SERVER['HTTP_REFERER'] ?? $CFG_GLPI['root_doc']);
 }
 
