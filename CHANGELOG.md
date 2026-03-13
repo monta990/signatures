@@ -6,6 +6,69 @@ Versioning follows [Semantic Versioning](https://semver.org/).
 
 ---
 
+## [1.3.2] — 2026-03-13
+
+### Added
+- **Inline text formatting in email fields**: the email body and footer now support
+  a lightweight markdown-style syntax rendered as inline CSS styles (Outlook/Gmail
+  compatible):
+  - `**texto**` → **bold** (`font-weight:bold`)
+  - `*texto*` → *italic* (`font-style:italic`)
+  - `__texto__` → underline (`text-decoration:underline`)
+  Formats can be combined (e.g. `**__bold underline__**`).
+- **Format toolbar (B / I / U)**: a three-button toolbar appears above the Body and
+  Footer textareas. Clicking a button wraps the selected text in the corresponding
+  markers, or inserts a placeholder word if nothing is selected.
+- **Editable X/Y position inputs**: the Posición column in the position editor table
+  now renders two independent numeric inputs (X and Y) per field instead of a
+  read-only text label. Typing a value moves the corresponding canvas element
+  immediately, keeping drag and manual entry always in sync.
+- **Placeholder labels on X/Y inputs**: each position input carries
+  `placeholder="X"` or `placeholder="Y"` so their purpose is clear at a glance.
+- **Active-tab persistence after save**: the form tracks the currently visible tab
+  via a hidden `active_tab` input. After saving, the page redirects back to the same
+  tab using a URL hash (`#tab-positions`, `#tab-cel`, etc.) and Bootstrap Tab API
+  activates it on load.
+- **`.gitignore`**: ignores OS artifacts (`.DS_Store`, `Thumbs.db`), editor
+  directories, zip files, and the `templates/` directory.
+
+### Fixed
+- **Drag boundary clamping**: fields can no longer be dragged outside the template
+  image. `onMove()` now computes the maximum allowed CSS position as
+  `img.clientWidth - el.offsetWidth` (and the Y equivalent), so the limit accounts
+  for the element's own size and adapts to any template resolution or viewport width.
+  Previously only the minimum (0) was enforced.
+- **Manual input boundary clamping**: the same boundary logic is applied when the
+  user types into the X or Y inputs. Maximum GD coordinates are pre-calculated by
+  `applyScale()` and stored in `el.dataset` so they remain available even when the
+  canvas tab is hidden (`clientWidth = 0`).
+- **JS broken by `<?= ?>` inside heredoc**: `SIG_I18N` and `SIG_USER_I18N` objects
+  were rendered as literal PHP tags inside `echo <<<HTML` blocks, corrupting the
+  entire script. All translated strings are now pre-computed as PHP variables before
+  the heredoc and interpolated via `{$_var}` syntax.
+- **Race condition in `generatePNG()`**: the temporary PNG file is now named with
+  `uniqid('', true)` in addition to the user ID, ensuring concurrent requests each
+  get their own file.
+- **Server-side position sanitization**: coordinate values received via POST are now
+  clamped to `0–9999` (X/Y) and `1–200` (font size) before being stored in DB.
+- **Reset confirmation dialog**: clicking "Restaurar posiciones por defecto" now
+  shows a `confirm()` prompt before applying the reset. The prompt text is fully
+  translatable via the i18n system.
+- **`resource.send.php` HTTP caching**: emits `Last-Modified` and `ETag` headers
+  and returns `304 Not Modified` when the client already has the current version.
+- **`signature.class.php` fallback coordinates**: the `$p()` lambda now reads
+  missing config values from `plugin_signatures_getDefaults()` instead of
+  hardcoded literals, keeping a single source of truth.
+- **Dark-mode text visibility**: replaced hardcoded `text-muted` classes with
+  `text-body-secondary` and added CSS overrides using Bootstrap 5.3 CSS variables
+  (`--bs-body-color`, `--bs-secondary-color`) so all helper text adapts correctly
+  to both light and dark GLPI themes.
+- **Hardcoded UI strings fully extracted to i18n**: all remaining visible strings
+  (placeholders, help text, demo data, JS alerts and confirms) are now routed
+  through `__()` and included in all locale files (es_MX, en_US, en_GB, fr_FR).
+
+---
+
 ## [1.3.1] — 2026-03-13
 
 ### Added
@@ -82,6 +145,40 @@ Versioning follows [Semantic Versioning](https://semver.org/).
 - Locale count updated from 86 to 91 `msgid` entries across `es_MX`, `en_US`,
   `en_GB`, `fr_FR` and the `.pot` template.
 - `plugin.xml` updated with the `1.3.1` release entry.
+
+---
+
+## [1.3.0] — 2026-03-08
+
+### Added
+- **Signature preview**: new "Preview" button on the user profile tab opens the
+  final rendered PNG in a modal before downloading or sending. Uses
+  `download.php?preview=1` for inline display.
+- **Clickable variable badges**: `{nombre}`, `{empresa}`, `{fecha}` in the email
+  configuration panel are now clickable — click inserts the variable at the cursor
+  position in the last focused field (subject, body, or footer).
+- **Unsaved positions indicator**: the Positions tab shows an orange dot and a warning
+  banner when field positions have been modified but not yet saved.
+- **`plugin_signatures_update()`** in `setup.php`: ensures installations upgrading
+  from older versions receive new configuration keys (position defaults) without
+  needing a full reinstall.
+- **`PluginSignaturesConfig` class** (`inc/config.class.php`): centralizes all access
+  to `glpi_configs` for the plugin. Caches the config array for the duration of the
+  HTTP request; `invalidate()` is called after saving to guarantee fresh reads.
+- Sending feedback on "Download" and "Send" buttons: spinner replaces the icon and
+  the button is disabled on click to prevent double submission.
+
+### Fixed
+- `Content-Disposition` header in `download.php` now includes `filename*=UTF-8''...`
+  (RFC 6266) for correct handling of non-ASCII file names on all clients.
+- `catch (Throwable)` blocks in `send.php`, `send_test.php`, and `download.php` now
+  call `Toolbox::logError()` so errors are traceable in the GLPI log instead of being
+  silently discarded.
+
+### Changed
+- All `Config::getConfigurationValues('plugin_signatures')` calls across the plugin
+  now go through `PluginSignaturesConfig::getAll()` / `::get()`.
+- `plugin.xml` descriptions updated to reflect v1.3 features in all four languages.
 
 ---
 

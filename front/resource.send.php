@@ -25,7 +25,24 @@ if (!is_readable($file)) {
    exit('No encontrado');
 }
 
+$mtime   = filemtime($file);
+$etag    = '"' . md5($file . $mtime) . '"';
+$ifNone  = $_SERVER['HTTP_IF_NONE_MATCH']  ?? '';
+$ifMod   = $_SERVER['HTTP_IF_MODIFIED_SINCE'] ?? '';
+
 header('Cache-Control: private, max-age=3600');
+header('Last-Modified: ' . gmdate('D, d M Y H:i:s', $mtime) . ' GMT');
+header('ETag: ' . $etag);
+
+// 304 Not Modified si el cliente ya tiene la versión actual
+if (
+   ($ifNone !== '' && trim($ifNone) === $etag) ||
+   ($ifMod  !== '' && strtotime($ifMod) >= $mtime)
+) {
+   http_response_code(304);
+   exit;
+}
+
 header('Content-Type: image/png');
 header('Content-Length: ' . filesize($file));
 readfile($file);

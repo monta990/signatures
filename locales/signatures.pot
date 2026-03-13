@@ -1,12 +1,9 @@
-# Email Signatures plugin for GLPI
-# Copyright (C) 2025 Edwin Elias Alvarez
-# This file is distributed under the same license as the Email Signatures package.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: Email Signatures 1.3.1\n"
 "Report-Msgid-Bugs-To: https://sontechs.com\n"
-"POT-Creation-Date: 2026-03-12 00:00+0000\n"
+"POT-Creation-Date: 2026-03-13 15:20+0000\n"
 "PO-Revision-Date: 2026-03-08 00:00+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -14,229 +11,95 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: inc/user.class.php
-msgid "Email Signatures"
+msgid "No se pudo generar la firma. Revisa el log de GLPI para más detalles."
 msgstr ""
 
-#: inc/user.class.php
-msgid "Firma de correo"
-msgstr ""
-
-#: inc/user.class.php
-msgid "Generar firma para correo"
-msgstr ""
-
-#: inc/user.class.php
-msgid "No se encontraron las plantillas."
-msgstr ""
-
-#: inc/user.class.php
-msgid "Por favor valida que las plantillas existan en la configuración del complemento."
-msgstr ""
-
-#: inc/user.class.php
-#, php-format
-msgid "Generando firma para: %s"
-msgstr ""
-
-#: inc/user.class.php
-msgid "El envío por correo no está disponible."
-msgstr ""
-
-#: inc/user.class.php
-msgid "Configura el asunto y cuerpo del correo en la configuración del complemento para habilitarlo."
-msgstr ""
-
-#: inc/user.class.php
-msgid "Incluir código QR de WhatsApp"
-msgstr ""
-
-#: inc/user.class.php
-msgid "Este usuario no tiene número celular, el QR no estará disponible."
-msgstr ""
-
-#: inc/user.class.php
-msgid "Descargar firma"
-msgstr ""
-
-#: inc/user.class.php
-msgid "Enviar por correo"
-msgstr ""
-
-#: inc/signature.class.php
-msgid "Las plantillas no están correctamente cargadas validalo en configuración del complemento"
-msgstr ""
-
-#: inc/signature.class.php
-#, php-format
-msgid "No se encontró la fuente TTF: %s"
-msgstr ""
-
-#: inc/signature.class.php
-msgid "Extensión GD de PHP es requerida"
-msgstr ""
-
-#: inc/signature.class.php
-msgid "El código de país para Whatsapp no está configurado. Defínelo en la configuración del complemento."
-msgstr ""
-
-#: inc/signature.class.php
-msgid "El asunto del correo no está configurado. Defínelo en la configuración del complemento."
-msgstr ""
-
-#: inc/signature.class.php
-msgid "El cuerpo del correo no está configurado. Defínelo en la configuración del complemento."
-msgstr ""
-
-#: inc/signature.class.php
-#, php-format
-msgid "No se pudo cargar la plantilla: %s"
-msgstr ""
-
-#: inc/signature.class.php
-msgid "Entidad no válida"
-msgstr ""
-
-#: inc/signature.class.php
-msgid "No especificado"
-msgstr ""
-
-#: inc/signature.class.php
-msgid "Oficina:"
-msgstr ""
-
-#: inc/signature.class.php
-msgid "Ext:"
-msgstr ""
-
-#: front/send.php
-msgid "El usuario no tiene una dirección de correo configurada."
-msgstr ""
-
-#: front/send.php
-#, php-format
-msgid "Firma enviada correctamente a %s."
-msgstr ""
-
-#: front/send.php
-msgid "No se pudo enviar el correo. Verifica la configuración de correo saliente en GLPI."
-msgstr ""
-
-#: front/config.form.php
-msgid "Firma de Correo"
-msgstr ""
-
-#: front/config.form.php
-msgid "Configuración de firma para correo"
-msgstr ""
-
-#: front/config.form.php
 msgid "Plantilla con celular eliminada"
 msgstr ""
 
-#: front/config.form.php
 msgid "Plantilla sin celular eliminada"
 msgstr ""
 
-#: front/config.form.php
 msgid "Archivo demasiado grande (Máx. 300 KB)"
 msgstr ""
 
-#: front/config.form.php
 msgid "Formato inválido, solo PNG"
 msgstr ""
 
-#: front/config.form.php
+msgid ""
+"Aviso: la imagen tiene dimensiones %d×%d px. Se recomienda usar una imagen "
+"de aproximadamente 650×216 px para mejor resultado."
+msgstr ""
+
 msgid "Configuración guardada correctamente"
 msgstr ""
 
-#: front/config.form.php
-msgid "Actual"
+msgid "Firma de Correo"
 msgstr ""
 
-#: front/config.form.php
-msgid "Eliminar"
+msgid "Configuración de firma para correo"
 msgstr ""
 
-#: front/config.form.php
-msgid "Cargar nueva"
+msgid "General"
 msgstr ""
 
-#: front/config.form.php
-msgid "Guardar"
+msgid "Con celular"
 msgstr ""
 
-#: front/config.form.php
+msgid "Sin celular"
+msgstr ""
+
+msgid "Posiciones"
+msgstr ""
+
+msgid "Configuración general"
+msgstr ""
+
 msgid "Opciones del correo electrónico"
 msgstr ""
 
-#: front/config.form.php
 msgid "Variables disponibles"
 msgstr ""
 
-#: front/config.form.php
 msgid "Usa **texto** para negrita"
 msgstr ""
 
-#: front/config.form.php
+msgid "Haz clic en una variable para insertarla en el campo activo."
+msgstr ""
+
+msgid "Clic para insertar"
+msgstr ""
+
 msgid "Nombre completo del usuario"
 msgstr ""
 
-#: front/config.form.php
 msgid "Nombre de la empresa (configurado en General)"
 msgstr ""
 
-#: front/config.form.php
 msgid "Fecha del día en formato dd/mm/aaaa"
 msgstr ""
 
-#: front/config.form.php
-msgid "Puedes usar las variables {nombre}, {empresa} y {fecha}."
-msgstr ""
-
-#: front/config.form.php
 msgid "Asunto del correo"
 msgstr ""
 
-#: front/config.form.php
 msgid "Ej: Tu firma de correo corporativa"
 msgstr ""
 
-#: front/config.form.php
+msgid "Puedes usar las variables {nombre}, {empresa} y {fecha}."
+msgstr ""
+
 msgid "Cuerpo del correo"
 msgstr ""
 
-#: front/config.form.php
-msgid "Ej: Adjunto encontrarás tu firma de correo corporativa. Guárdala y úsala en tu cliente de correo."
+msgid ""
+"Ej: Adjunto encontrarás tu firma de correo corporativa. Guárdala y úsala en "
+"tu cliente de correo."
 msgstr ""
 
-#: front/config.form.php
 msgid "Pie del correo"
 msgstr ""
 
-#: front/config.form.php
 msgid "Ej: Este correo fue generado automáticamente por el sistema GLPI."
-msgstr ""
-
-msgid "Enviar correo de prueba"
-msgstr ""
-
-msgid "El correo se enviará a la dirección registrada en tu perfil de GLPI."
-msgstr ""
-
-msgid "Este es un correo de prueba enviado desde la configuración del plugin."
-msgstr ""
-
-msgid "Correo de prueba enviado a %s."
-msgstr ""
-
-msgid "No se pudo enviar el correo de prueba. Verifica la configuración de correo saliente en GLPI."
-msgstr ""
-
-msgid "Tu perfil de GLPI no tiene una dirección de correo configurada."
-msgstr ""
-
-msgid "No se pudo obtener el usuario actual."
 msgstr ""
 
 msgid "Servidor de correo de GLPI no configurado"
@@ -248,13 +111,31 @@ msgstr ""
 msgid "Envía un correo de prueba a tu dirección registrada en GLPI"
 msgstr ""
 
-msgid "Posiciones"
+msgid "Enviar correo de prueba"
 msgstr ""
 
-msgid "Arrastra cada campo a su posición. Usa los inputs de tamaño para ajustar el tamaño de fuente. Guarda con el botón Guardar."
+msgid "El correo se enviará a la dirección registrada en tu perfil de GLPI."
 msgstr ""
 
-msgid "No hay plantilla cargada para esta configuración. Carga una en la pestaña correspondiente."
+msgid "Plantilla con celular"
+msgstr ""
+
+msgid "Actual"
+msgstr ""
+
+msgid "Eliminar"
+msgstr ""
+
+msgid "Cargar nueva"
+msgstr ""
+
+msgid "Plantilla sin celular"
+msgstr ""
+
+msgid "No especificado"
+msgstr ""
+
+msgid "Nombre"
 msgstr ""
 
 msgid "Título"
@@ -272,10 +153,23 @@ msgstr ""
 msgid "Ext/Oficina"
 msgstr ""
 
+msgid "Facebook"
+msgstr ""
+
 msgid "Web"
 msgstr ""
 
 msgid "QR WhatsApp"
+msgstr ""
+
+msgid ""
+"No hay plantilla cargada para esta configuración. Carga una en la pestaña "
+"correspondiente."
+msgstr ""
+
+msgid ""
+"Arrastra cada campo a su posición. Usa los inputs de tamaño para ajustar el "
+"tamaño de fuente. Guarda con el botón Guardar."
 msgstr ""
 
 msgid "Campo"
@@ -284,7 +178,7 @@ msgstr ""
 msgid "Tamaño (px)"
 msgstr ""
 
-msgid "Posición"
+msgid "Posición X / Y"
 msgstr ""
 
 msgid "Restaurar posiciones por defecto"
@@ -296,16 +190,77 @@ msgstr ""
 msgid "Plantilla sin celular — Editor de posiciones"
 msgstr ""
 
-msgid "Se requiere PHP 8.1 o superior para instalar este complemento."
+msgid ""
+"Hay cambios en las posiciones sin guardar. Haz clic en Guardar para "
+"aplicarlos."
 msgstr ""
 
-msgid "La extensión GD de PHP es requerida para instalar este complemento."
+msgid "Guardar"
 msgstr ""
 
-msgid "No se pudo generar la firma. Revisa el log de GLPI para más detalles."
+msgid "No se pudo obtener el usuario actual."
+msgstr ""
+
+msgid "Correo de prueba enviado a %s."
+msgstr ""
+
+msgid "Firma enviada correctamente a %s."
+msgstr ""
+
+msgid ""
+"No se pudo enviar el correo de prueba. Verifica la configuración de correo "
+"saliente en GLPI."
+msgstr ""
+
+msgid ""
+"No se pudo enviar el correo. Verifica la configuración de correo saliente en"
+" GLPI."
+msgstr ""
+
+msgid "Email Signatures"
+msgstr ""
+
+msgid "Configuración incompleta"
+msgstr ""
+
+msgid "Firma de correo"
+msgstr ""
+
+msgid "Generar firma para correo"
+msgstr ""
+
+msgid "No se encontraron las plantillas."
+msgstr ""
+
+msgid ""
+"Por favor valida que las plantillas existan en la configuración del "
+"complemento."
+msgstr ""
+
+msgid "El envío por correo no está disponible."
+msgstr ""
+
+msgid ""
+"Configura el asunto y cuerpo del correo en la configuración del complemento "
+"para habilitarlo."
+msgstr ""
+
+msgid "Generando firma para: %s"
+msgstr ""
+
+msgid "Incluir código QR de WhatsApp"
+msgstr ""
+
+msgid "Este usuario no tiene número celular, el QR no estará disponible."
+msgstr ""
+
+msgid "Descargar firma"
 msgstr ""
 
 msgid "Vista previa"
+msgstr ""
+
+msgid "Enviar por correo"
 msgstr ""
 
 msgid "Vista previa de firma"
@@ -314,31 +269,137 @@ msgstr ""
 msgid "Generando vista previa..."
 msgstr ""
 
-msgid "Hay cambios en las posiciones sin guardar. Haz clic en Guardar para aplicarlos."
+msgid ""
+"Las plantillas no están correctamente cargadas validalo en configuración del"
+" complemento"
 msgstr ""
 
-msgid "Haz clic en una variable para insertarla en el campo activo."
+msgid "No se encontró la fuente TTF: %s"
 msgstr ""
 
-msgid "Clic para insertar"
+msgid "Extensión GD de PHP es requerida"
 msgstr ""
 
-#: front/config.form.php
-msgid "General"
+msgid ""
+"El código de país para Whatsapp no está configurado. Defínelo en la "
+"configuración del complemento."
 msgstr ""
 
-#: front/config.form.php
-msgid "Con celular"
+msgid ""
+"El asunto del correo no está configurado. Defínelo en la configuración del "
+"complemento."
 msgstr ""
 
-#: front/config.form.php
-msgid "Sin celular"
+msgid ""
+"El cuerpo del correo no está configurado. Defínelo en la configuración del "
+"complemento."
 msgstr ""
 
-#: front/config.form.php
-msgid "Configuración incompleta"
+msgid "Oficina:"
 msgstr ""
 
-#: front/config.form.php inc/user.class.php
-msgid "Aviso: la imagen tiene dimensiones %d×%d px. Se recomienda usar una imagen de aproximadamente 650×216 px para mejor resultado."
+msgid "Ext:"
+msgstr ""
+
+msgid "No se pudo cargar la plantilla: %s"
+msgstr ""
+
+msgid "Entidad no válida"
+msgstr ""
+
+msgid "Este es un correo de prueba enviado desde la configuración del plugin."
+msgstr ""
+
+msgid "El usuario no tiene una dirección de correo configurada."
+msgstr ""
+
+msgid "Se requiere PHP 8.1 o superior para instalar este complemento."
+msgstr ""
+
+msgid "La extensión GD de PHP es requerida para instalar este complemento."
+msgstr ""
+
+msgid ""
+"¿Restaurar todas las posiciones a los valores por defecto? Esta acción no se"
+" puede deshacer hasta guardar."
+msgstr ""
+
+msgid "Ej: SontechsMX"
+msgstr ""
+
+msgid "Ej: 52"
+msgstr ""
+
+msgid ""
+"Solo el código numérico, sin + ni espacios. Ej: 52 (México), para generar el"
+" enlace que lleva a Whatsapp en el QR."
+msgstr ""
+
+msgid "Nombre Apellido"
+msgstr ""
+
+msgid "correo@empresa.com"
+msgstr ""
+
+msgid "55 1234 5678"
+msgstr ""
+
+msgid "55 9876 5432"
+msgstr ""
+
+msgid "www.empresa.com"
+msgstr ""
+
+msgid "Oficina: "
+msgstr ""
+
+msgid "Ext: "
+msgstr ""
+
+msgid "Cambios sin guardar"
+msgstr ""
+
+msgid "Solo PNG permitido"
+msgstr ""
+
+msgid "Error al cargar la vista previa"
+msgstr ""
+
+msgid "Solo el nombre, sin URL ni @"
+msgstr ""
+
+msgid "Nombre de la página de Facebook"
+msgstr ""
+
+msgid "Código de país para QR de Whatsapp"
+msgstr ""
+
+msgid "Negrita"
+msgstr ""
+
+msgid "Cursiva"
+msgstr ""
+
+msgid "Subrayado"
+msgstr ""
+
+msgid "texto"
+msgstr ""
+
+msgid "negrita"
+msgstr ""
+
+msgid "cursiva"
+msgstr ""
+
+msgid "subrayado"
+msgstr ""
+
+msgid "Negrita — **texto**"
+msgstr ""
+
+msgid "Cursiva — *texto*"
+msgstr ""
+
+msgid "Subrayado — __texto__"
 msgstr ""

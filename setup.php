@@ -19,7 +19,7 @@ function plugin_init_signatures(): void {
 function plugin_version_signatures(): array {
    return [
       'name'         => 'Email Signatures',
-      'version'      => '1.3.1',
+      'version'      => '1.3.2',
       'author'       => 'Edwin Elias Alvarez',
       'license'      => 'GPLv2+',
       'homepage'     => 'https://sontechs.com',

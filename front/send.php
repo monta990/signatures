@@ -44,7 +44,9 @@ if ($isTest) {
         Html::redirect($backUrl);
     }
 
-    // Para la prueba: incluir QR si el admin tiene celular
+    // Para la prueba: el correo va al admin actual, el QR
+    // se decide según si el admin tiene celular — consistente
+    // con lo que vería un usuario sin celular vs con celular.
     $include_qr = !empty($user->fields['mobile']);
 
 /* ============================

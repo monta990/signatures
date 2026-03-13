@@ -30,6 +30,7 @@ The signature includes full name, title, email address, phone numbers, Facebook 
 - Live PNG preview before downloading or sending.
 - Clickable variable badges (`{nombre}`, `{empresa}`, `{fecha}`) for quick insertion into email fields.
 - Multilanguage: Spanish (Mexico), English (US), English (GB), French.
+- Inline text formatting in email body and footer: `**bold**`, `*italic*`, `__underline__` with a one-click B/I/U toolbar. Styles are compatible with Outlook and Gmail.
 - Compatible with GLPI 11.0+.
          ]]></en>
          <fr><![CDATA[
@@ -46,6 +47,7 @@ La signature inclut le nom complet, le titre, l'adresse e-mail, les numéros de 
 - Éditeur visuel de positions par glisser-déposer — sans modifier le PHP.
 - Aperçu PNG avant téléchargement ou envoi.
 - Multilingue : Español, English (US), English (GB), Français.
+- Mise en forme dans le corps et le pied du mail : `**gras**`, `*italique*`, `__souligné__` avec une barre B/I/U. Styles inline compatibles avec Outlook et Gmail.
 - Compatible avec GLPI 11.0+.
          ]]></fr>
          <es><![CDATA[
@@ -63,6 +65,7 @@ La firma incluye nombre completo, título, correo, teléfonos, página de Facebo
 - Vista previa del PNG antes de descargar o enviar.
 - Variables insertables con un clic: `{nombre}`, `{empresa}`, `{fecha}`.
 - Soporte multiidioma: Español (México), English (US), English (GB), Français.
+- Formato de texto en el cuerpo y pie del correo: `**negrita**`, `*cursiva*`, `__subrayado__` con barra de herramientas B/I/U. Estilos inline compatibles con Outlook y Gmail.
 - Compatible con GLPI 11.0+.
          ]]></es>
       </long>
@@ -80,9 +83,9 @@ La firma incluye nombre completo, título, correo, teléfonos, página de Facebo
    <versions>
 
       <version>
-         <num>1.3.1</num>
+         <num>1.3.2</num>
          <compatibility>~11.0.0</compatibility>
-         <download_url>https://github.com/monta990/signatures/releases/download/1.3.1/signatures-1.3.1.zip</download_url>
+         <download_url>https://github.com/monta990/signatures/releases/download/1.3.2/signatures-1.3.2.zip</download_url>
       </version>
 
    </versions>

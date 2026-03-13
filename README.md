@@ -1,7 +1,7 @@
 ![Email Signatures](banner.png)
 # Email Signatures — GLPI Plugin
 
-> **Version 1.3.1** · Compatible with GLPI 11.0+ · PHP 8.1+ · GPL-2.0-or-later  
+> **Version 1.3.2** · Compatible with GLPI 11.0+ · PHP 8.1+ · GPL-2.0-or-later  
 > Author: [Edwin Elias Alvarez](https://sontechs.com) ([@monta990](https://github.com/monta990))
 
 Generate personalized corporate PNG email signatures for every GLPI user.
@@ -45,6 +45,7 @@ downloaded directly or sent to the user's registered email address in one click.
 | **Email delivery** | Sends the PNG as an attachment using GLPI's outgoing mail system (`GLPIMailer`). |
 | **Admin test email** | Sends a sample to the administrator's own address with `[PRUEBA]` prefix and warning banner. |
 | **Signature preview** | Opens the final PNG in a modal before downloading or sending. |
+| **Inline email formatting** | Body and footer fields support `**bold**`, `*italic*` and `__underline__` markers — rendered as inline CSS styles compatible with Outlook and Gmail. A B / I / U toolbar wraps or unwraps selected text in one click. |
 | **Visual position editor** | Drag-and-drop fields over the live template image. Mouse and touch (tablet) support. |
 | **Scale-aware editor** | Field coordinates are stored in GD pixel space and translated to CSS on every tab-open and window resize, keeping overlays aligned at any screen width. |
 | **Font size per field** | Number input per field in the editor table; overlay updates live. |

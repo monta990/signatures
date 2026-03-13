@@ -166,10 +166,12 @@ class PluginSignaturesSignature {
        * ============================ */
       $pfx = $hasMobile ? 'sig_b1_' : 'sig_b2_';
 
-      $p = static function (string $key, int $default) use ($configsig, $pfx): int {
-         return isset($configsig[$pfx . $key]) && $configsig[$pfx . $key] !== ''
-                ? (int)$configsig[$pfx . $key]
-                : $default;
+      $_defaults = plugin_signatures_getDefaults();
+      $p = static function (string $key, int $default = 0) use ($configsig, $pfx, $_defaults): int {
+         if (isset($configsig[$pfx . $key]) && $configsig[$pfx . $key] !== '') {
+            return (int)$configsig[$pfx . $key];
+         }
+         return isset($_defaults[$pfx . $key]) ? (int)$_defaults[$pfx . $key] : $default;
       };
 
       /* ============================
@@ -258,7 +260,7 @@ class PluginSignaturesSignature {
       /* ============================
        * SALIDA FINAL
        * ============================ */
-      $out = GLPI_TMP_DIR . '/signature_' . $user->getID() . '.png';
+      $out = GLPI_TMP_DIR . '/signature_' . $user->getID() . '_' . uniqid('', true) . '.png';
       imagepng($img, $out);
       imagedestroy($img);
 
@@ -305,12 +307,24 @@ class PluginSignaturesSignature {
          $text = str_replace($tokens, $values, $text);
          // 2. HTML-escape (previene XSS si los valores contienen caracteres especiales)
          $html = htmlspecialchars($text, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
-         // 3. **negrita** → inline style (más compatible con Outlook que <strong>)
+         // 3. Marcado inline → inline styles (compatibles con Outlook)
          //    El contenido capturado ya está escapado por htmlspecialchars en el paso 2,
          //    así que es seguro insertarlo directamente como texto HTML.
+         //    Orden de evaluación: **bold** primero, luego *italic*, luego __underline__
+         //    para evitar que *texto* capture parte de **texto**.
          $html = preg_replace_callback(
             '/\*\*(.+?)\*\*/s',
             static fn(array $m): string => '<span style="font-weight:bold">' . $m[1] . '</span>',
+            $html
+         );
+         $html = preg_replace_callback(
+            '/\*(.+?)\*/s',
+            static fn(array $m): string => '<span style="font-style:italic">' . $m[1] . '</span>',
+            $html
+         );
+         $html = preg_replace_callback(
+            '/__(.+?)__/s',
+            static fn(array $m): string => '<span style="text-decoration:underline">' . $m[1] . '</span>',
             $html
          );
          // 4. Saltos de línea

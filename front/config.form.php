@@ -20,6 +20,11 @@ global $CFG_GLPI;
 
 $self = Plugin::getWebDir('signatures') . '/front/config.form.php';
 
+// Fix 7: volver al tab activo tras guardar
+$activeTab = in_array($_POST['active_tab'] ?? '', ['general','cel','nocel','positions'], true)
+   ? $_POST['active_tab']
+   : 'general';
+
 /* ========================== CONFIG ========================== */
 
 $maxSize     = 300 * 1024;
@@ -143,7 +148,14 @@ if (isset($_POST['save'])) {
    $posToSave = [];
    foreach ($posKeys as $key) {
       if (isset($_POST[$key]) && $_POST[$key] !== '') {
-         $posToSave[$key] = (int)$_POST[$key];
+         $val = (int)$_POST[$key];
+         // Coordenadas X/Y: 0..9999; tamaños de fuente: 1..200
+         if (str_ends_with($key, '_size')) {
+            $val = max(1, min(200, $val));
+         } else {
+            $val = max(0, min(9999, $val));
+         }
+         $posToSave[$key] = $val;
       }
    }
    if (!empty($posToSave)) {
@@ -153,7 +165,7 @@ if (isset($_POST['save'])) {
 
    PluginSignaturesConfig::invalidate();
    Session::addMessageAfterRedirect(__('Configuración guardada correctamente', 'signatures'), false, INFO);
-   Html::redirect($self);
+   Html::redirect($self . '#tab-' . $activeTab);
 }
 
 $config       = PluginSignaturesConfig::getAll();
@@ -169,7 +181,8 @@ Html::header(__('Firma de Correo', 'signatures'), $self, 'config', 'plugins');
 
 /* ========================== FORM ========================== */
 
-echo "<form method='post' action='{$self}' enctype='multipart/form-data'>";
+echo "<form method='post' action='{$self}' enctype='multipart/form-data'>
+   <input type='hidden' name='active_tab' id='active_tab_input' value='general'>";
 echo Html::hidden('_glpi_csrf_token', ['value' => Session::getNewCSRFToken()]);
 
 echo "<div class='card mt-2 rounded-0'>";
@@ -185,7 +198,7 @@ echo "</div>";
 /* ========================== TABS ========================== */
 
 echo "
-<ul class='nav nav-tabs mb-3' role='tablist'>
+<ul class='nav nav-tabs mb-3 sig-tab-nav' role='tablist'>
 
   <li class='nav-item'>
     <button class='nav-link active'
@@ -243,36 +256,32 @@ echo "<div class='card-body'>";
 echo "<div class='mb-4'>";
 echo "<label class='form-label fw-bold'>
         <i class='ti ti-brand-facebook me-2'></i>
-        Nombre de la página de Facebook
+        " . __('Nombre de la página de Facebook', 'signatures') . "
       </label>";
 echo "<input type='text'
              name='facebook_page'
              class='form-control'
              value='" . Html::cleanInputText($facebookPage) . "'
-             placeholder='Ej: SontechsMX'>";
-echo "<div class='form-text'>
-        Solo el nombre, sin URL ni @
-      </div>";
+             placeholder='" . htmlspecialchars(__('Ej: SontechsMX', 'signatures'), ENT_QUOTES, 'UTF-8') . "'>";
+echo "<div class='form-text'>" . __('Solo el nombre, sin URL ni @', 'signatures') . "</div>";
 echo "</div>";
 
 /* CÓDIGO PAÍS WHATSAPP */
 echo "<div class='mb-4'>";
 echo "<label class='form-label fw-bold'>
         <i class='ti ti-brand-whatsapp me-2'></i>
-        Código de país para QR de Whatsapp
+        " . __('Código de país para QR de Whatsapp', 'signatures') . "
       </label>";
 echo "<input type='text'
              name='whatsapp_country_code'
              class='form-control'
              value='" . Html::cleanInputText($countryCode) . "'
-             placeholder='Ej: 52'
+             placeholder='" . htmlspecialchars(__('Ej: 52', 'signatures'), ENT_QUOTES, 'UTF-8') . "'
              maxlength='5'
              inputmode='numeric'
              pattern='[0-9]*'
              oninput='this.value=this.value.replace(/[^0-9]/g,\"\")'>";
-echo "<div class='form-text'>
-        Solo el código numérico, sin + ni espacios. Ej: 52 (México), para generar el enlace que lleva a Whatsapp en el QR.
-      </div>";
+echo "<div class='form-text'>" . __('Solo el código numérico, sin + ni espacios. Ej: 52 (México), para generar el enlace que lleva a Whatsapp en el QR.', 'signatures') . "</div>";
 echo "</div>";
 
 echo "</div></div>"; // card-body + card general
@@ -294,7 +303,11 @@ echo "
       <i class='ti ti-variable me-1'></i>
       " . __('Variables disponibles', 'signatures') . "
       &nbsp;<code class='ms-2' style='font-size:0.82em;background:#c8e6fa;padding:1px 5px;border-radius:3px;'>
-        " . __('Usa **texto** para negrita', 'signatures') . "
+        <b>**" . __('negrita', 'signatures') . "**</b>
+        &nbsp;·&nbsp;
+        <i>*" . __('cursiva', 'signatures') . "*</i>
+        &nbsp;·&nbsp;
+        <u>__" . __('subrayado', 'signatures') . "__</u>
       </code>
     </span>
     <i class='ti ti-chevron-down text-info'></i>
@@ -345,6 +358,7 @@ echo "<label class='form-label fw-bold'>
       </label>";
 echo "<input type='text'
              name='email_subject'
+             id='sig-email-subject'
              class='form-control'
              value='" . Html::cleanInputText($emailSubject) . "'
              placeholder='" . __('Ej: Tu firma de correo corporativa', 'signatures') . "'>";
@@ -359,7 +373,21 @@ echo "<label class='form-label fw-bold'>
         <i class='ti ti-align-left me-2'></i>" .
         __('Cuerpo del correo', 'signatures') . "
       </label>";
-echo "<textarea name='email_body'
+echo "<div class='sig-format-toolbar mb-1 d-flex gap-1 align-items-center'>
+   <button type='button' class='btn btn-sm btn-outline-secondary sig-fmt-btn' data-wrap='**'
+           title='" . __('Negrita — **texto**', 'signatures') . "'>
+      <b>B</b>&nbsp;<small class='fw-normal opacity-75'>**</small>
+   </button>
+   <button type='button' class='btn btn-sm btn-outline-secondary sig-fmt-btn' data-wrap='*'
+           title='" . __('Cursiva — *texto*', 'signatures') . "'>
+      <i>I</i>&nbsp;<small class='fw-normal opacity-75'>*</small>
+   </button>
+   <button type='button' class='btn btn-sm btn-outline-secondary sig-fmt-btn' data-wrap='__'
+           title='" . __('Subrayado — __texto__', 'signatures') . "'>
+      <u>U</u>&nbsp;<small class='fw-normal opacity-75'>__</small>
+   </button>
+</div>";
+echo "<textarea name='email_body' id='sig-email-body'
                class='form-control'
                rows='4'
                placeholder='" . __('Ej: Adjunto encontrarás tu firma de correo corporativa. Guárdala y úsala en tu cliente de correo.', 'signatures') . "'>" .
@@ -376,7 +404,21 @@ echo "<label class='form-label fw-bold'>
         <i class='ti ti-section me-2'></i>" .
         __('Pie del correo', 'signatures') . "
       </label>";
-echo "<textarea name='email_footer'
+echo "<div class='sig-format-toolbar mb-1 d-flex gap-1 align-items-center'>
+   <button type='button' class='btn btn-sm btn-outline-secondary sig-fmt-btn' data-wrap='**'
+           title='" . __('Negrita — **texto**', 'signatures') . "'>
+      <b>B</b>&nbsp;<small class='fw-normal opacity-75'>**</small>
+   </button>
+   <button type='button' class='btn btn-sm btn-outline-secondary sig-fmt-btn' data-wrap='*'
+           title='" . __('Cursiva — *texto*', 'signatures') . "'>
+      <i>I</i>&nbsp;<small class='fw-normal opacity-75'>*</small>
+   </button>
+   <button type='button' class='btn btn-sm btn-outline-secondary sig-fmt-btn' data-wrap='__'
+           title='" . __('Subrayado — __texto__', 'signatures') . "'>
+      <u>U</u>&nbsp;<small class='fw-normal opacity-75'>__</small>
+   </button>
+</div>";
+echo "<textarea name='email_footer' id='sig-email-footer'
                class='form-control'
                rows='2'
                placeholder='" . __('Ej: Este correo fue generado automáticamente por el sistema GLPI.', 'signatures') . "'>" .
@@ -509,9 +551,9 @@ $_adminId  = (int)Session::getLoginUserID();
 $_adminUser = new User();
 $_adminUser->getFromDB($_adminId);
 
-$_uName     = $_adminUser->getFriendlyName() ?: 'Nombre Apellido';
-$_uEmail    = 'correo@empresa.com';
-$_uMobile   = $_adminUser->fields['mobile'] ?? '55 1234 5678';
+$_uName     = $_adminUser->getFriendlyName() ?: __('Nombre Apellido', 'signatures');
+$_uEmail    = __('correo@empresa.com', 'signatures');
+$_uMobile   = $_adminUser->fields['mobile'] ?? '';
 $_uPhone    = $_adminUser->fields['phone']  ?? '';
 $_uPhone2   = $_adminUser->fields['phone2'] ?? '';
 
@@ -521,7 +563,7 @@ if (!empty($_uEmails)) {
    $_uEmail = $_row['email'] ?? $_uEmail;
 }
 
-if (empty($_uMobile)) { $_uMobile = '55 1234 5678'; }
+if (empty($_uMobile)) { $_uMobile = __('55 1234 5678', 'signatures'); }
 
 $_uTitulo  = __('No especificado', 'signatures');
 if (!empty($_adminUser->fields['usertitles_id'])) {
@@ -535,14 +577,14 @@ if ($_entityPos->getFromDB((int)($_adminUser->fields['entities_id'] ?? 0))) {
    $_phoneEnt = (string)$_entityPos->getField('phonenumber');
    $_web      = (string)$_entityPos->getField('website');
 }
-if (empty($_phoneEnt)) { $_phoneEnt = '55 9876 5432'; }
-if (empty($_web))      { $_web = 'www.empresa.com'; }
+if (empty($_phoneEnt)) { $_phoneEnt = __('55 9876 5432', 'signatures'); }
+if (empty($_web))      { $_web = __('www.empresa.com', 'signatures'); }
 
 $_extraLabel = '';
 $_extraPhone = '';
-if ($_uPhone2 !== '')       { $_extraLabel = 'Oficina: '; $_extraPhone = $_uPhone2; }
-elseif ($_uPhone !== '')    { $_extraLabel = 'Ext: ';    $_extraPhone = $_uPhone; }
-if (empty($_extraPhone))    { $_extraLabel = 'Ext: '; $_extraPhone = '123'; }
+if ($_uPhone2 !== '')       { $_extraLabel = __('Oficina: ', 'signatures'); $_extraPhone = $_uPhone2; }
+elseif ($_uPhone !== '')    { $_extraLabel = __('Ext: ',    'signatures'); $_extraPhone = $_uPhone; }
+if (empty($_extraPhone))    { $_extraLabel = __('Ext: ', 'signatures'); $_extraPhone = '123'; }
 
 // ── URLs de fuentes y plantillas ──────────────────────────────────────
 $_pluginWebDir = Plugin::getWebDir('signatures');
@@ -605,7 +647,7 @@ $_renderEditor = static function (
       return;
    }
 
-   echo "<p class='text-muted small mb-2'>
+   echo "<p class='text-muted small mb-2 sig-editor-hint'>
       <i class='ti ti-hand-move me-1'></i>"
       . __('Arrastra cada campo a su posición. Usa los inputs de tamaño para ajustar el tamaño de fuente. Guarda con el botón Guardar.', 'signatures') .
    "</p>";
@@ -621,7 +663,8 @@ $_renderEditor = static function (
    echo "<div class='sig-editor-wrap' id='editor-{$baseId}' style='position:relative;display:inline-block;overflow:visible;'>";
    echo "<img src='{$bgUrl}&t={$cacheBustEditor}'
               id='img-{$baseId}'
-              style='display:block;max-width:100%;'
+              class='sig-bg'
+              style='display:block;max-width:100%;pointer-events:none;'
               draggable='false'>";
 
    foreach ($fields as [$fieldId, $label, $gdX, $gdY, $gdSize, $fontType, $color, $sample]) {
@@ -693,24 +736,35 @@ $_renderEditor = static function (
 
    // Tabla de controles de tamaño de fuente
    echo "<div class='mt-3'>";
-   echo "<table class='table table-sm table-bordered' style='max-width:420px'>";
+   echo "<table class='table table-sm table-bordered sig-pos-table' style='max-width:420px'>";
    echo "<thead><tr>
       <th>" . __('Campo', 'signatures') . "</th>
       <th style='width:100px'>" . __('Tamaño (px)', 'signatures') . "</th>
-      <th style='width:80px'>" . __('Posición', 'signatures') . "</th>
+      <th style='width:140px'>" . __('Posición X / Y', 'signatures') . "</th>
    </tr></thead><tbody>";
 
    foreach ($fields as [$fieldId, $label, $gdX, $gdY, $gdSize]) {
       $inputBase = "sig_{$baseId}_{$fieldId}";
       if ($fieldId === 'qr') {
          // #4: QR aparece en la tabla con su posición X,Y pero sin input de tamaño de fuente
-         echo "<tr>
+      echo "<tr>
             <td><small>{$label}</small></td>
             <td><small class='text-muted'>—</small></td>
             <td>
-               <small class='text-muted sig-pos-display' id='pos-{$baseId}-{$fieldId}'>
-                  {$gdX},{$gdY}
-               </small>
+               <div class='d-flex gap-1 align-items-center'>
+                  <input type='number' min='0'
+                         class='form-control form-control-sm sig-pos-input sig-pos-input-x'
+                         data-base='{$baseId}' data-field='{$fieldId}'
+                         id='pos-{$baseId}-{$fieldId}-x'
+                         placeholder='X'
+                         value='{$gdX}' style='width:60px;'>
+                  <input type='number' min='0'
+                         class='form-control form-control-sm sig-pos-input sig-pos-input-y'
+                         data-base='{$baseId}' data-field='{$fieldId}'
+                         id='pos-{$baseId}-{$fieldId}-y'
+                         placeholder='Y'
+                         value='{$gdY}' style='width:60px;'>
+               </div>
             </td>
          </tr>";
          continue;
@@ -724,9 +778,20 @@ $_renderEditor = static function (
                    value='{$gdSize}' style='width:70px;'>
          </td>
          <td>
-            <small class='text-muted sig-pos-display' id='pos-{$baseId}-{$fieldId}'>
-               {$gdX},{$gdY}
-            </small>
+            <div class='d-flex gap-1 align-items-center'>
+               <input type='number' min='0'
+                      class='form-control form-control-sm sig-pos-input sig-pos-input-x'
+                      data-base='{$baseId}' data-field='{$fieldId}'
+                      id='pos-{$baseId}-{$fieldId}-x'
+                      placeholder='X'
+                      value='{$gdX}' style='width:60px;'>
+               <input type='number' min='0'
+                      class='form-control form-control-sm sig-pos-input sig-pos-input-y'
+                      data-base='{$baseId}' data-field='{$fieldId}'
+                      id='pos-{$baseId}-{$fieldId}-y'
+                      placeholder='Y'
+                      value='{$gdY}' style='width:60px;'>
+            </div>
          </td>
       </tr>";
    }
@@ -808,6 +873,12 @@ $_defaults_js = json_encode([
 $_fontBlackUrlJs = htmlspecialchars($_fontBlackUrl, ENT_QUOTES, 'UTF-8');
 $_fontRomanUrlJs = htmlspecialchars($_fontRomanUrl, ENT_QUOTES, 'UTF-8');
 
+// Strings traducidos para JS — json_encode NO funciona dentro de heredoc
+$_i18n_confirmReset   = json_encode(__('¿Restaurar todas las posiciones a los valores por defecto? Esta acción no se puede deshacer hasta guardar.', 'signatures'));
+$_i18n_unsavedChanges = json_encode(__('Cambios sin guardar', 'signatures'));
+$_i18n_onlyPng           = json_encode(__('Solo PNG permitido', 'signatures'));
+$_i18n_formatPlaceholder = json_encode(__('texto', 'signatures'));
+
 echo <<<HTML
 <style>
 @font-face {
@@ -825,10 +896,44 @@ echo <<<HTML
 #btn-save-config, #btn-save-config:hover { color: #000 !important; }
 .sig-editor-wrap { cursor: default; }
 .sig-var-badge:hover { background:#b8d8ff !important; outline:1px solid #6ab0ff; }
+.sig-format-toolbar .sig-fmt-btn { padding:1px 7px; font-size:0.82em; line-height:1.4; }
+
+/* ── Dark-mode text fixes ─────────────────────────────────────────────
+   Bootstrap text-muted / form-text usan --bs-secondary-color que
+   en algunos temas GLPI queda muy bajo en contraste.
+   Usamos color: inherit con opacidad para adaptarse a cualquier tema. */
+.form-text {
+   color: var(--bs-secondary-color, var(--bs-body-color));
+   opacity: 0.80;
+}
+.sig-tab-nav .nav-link {
+   color: var(--bs-nav-tabs-link-color, var(--bs-body-color));
+}
+.sig-tab-nav .nav-link.active {
+   color: var(--bs-nav-tabs-link-active-color, var(--bs-body-color));
+   font-weight: 600;
+}
+/* Tabla del editor: labels de campo y guiones de QR */
+.sig-pos-table td,
+.sig-pos-table th,
+.sig-pos-table small {
+   color: var(--bs-body-color);
+}
+/* Hint de ayuda dentro del editor */
+.sig-editor-hint {
+   color: var(--bs-secondary-color, var(--bs-body-color));
+   opacity: 0.80;
+}
 </style>
 <script>
 const ASCENT      = 0.72;
 const SIG_DEFAULTS = {$_defaults_js};
+const SIG_I18N = {
+   confirmReset:      {$_i18n_confirmReset},
+   unsavedChanges:    {$_i18n_unsavedChanges},
+   onlyPng:           {$_i18n_onlyPng},
+   formatPlaceholder: {$_i18n_formatPlaceholder}
+};
 
 // ── #2 Escala: convierte coordenadas GD ↔ CSS según tamaño visible ─────
 // La imagen base tiene ~650px de ancho natural pero se muestra más pequeña.
@@ -847,6 +952,7 @@ function applyScale(baseId) {
    const scale = getScale(wrap);
    wrap.dataset.scale = scale;
 
+   const imgEl = wrap.querySelector('img.sig-bg');
    wrap.querySelectorAll('.sig-field').forEach(el => {
       const gdX  = parseFloat(el.dataset.gdX ?? el.offsetLeft);
       const gdY  = parseFloat(el.dataset.gdY ?? el.offsetTop);
@@ -866,6 +972,15 @@ function applyScale(baseId) {
          if (icon) icon.style.fontSize = Math.round(px * 0.45) + 'px';
       } else {
          el.style.fontSize = (size * scale) + 'px';
+      }
+
+      // Guardar límites GD mientras el canvas es visible (clientWidth > 0)
+      // para que el clamp en la tabla de posiciones funcione aunque el canvas esté oculto
+      if (imgEl && imgEl.clientWidth > 0) {
+         const maxCssX = Math.max(0, imgEl.clientWidth  - el.offsetWidth);
+         const maxCssY = Math.max(0, imgEl.clientHeight - el.offsetHeight);
+         el.dataset.maxGdX = Math.round(maxCssX / scale);
+         el.dataset.maxGdY = Math.round(maxCssY / scale) + (isQr ? 0 : Math.round(size * ASCENT));
       }
    });
 }
@@ -893,6 +1008,29 @@ document.addEventListener('DOMContentLoaded', function () {
    if (pane && pane.classList.contains('show')) {
       ['b1', 'b2'].forEach(id => applyScale(id));
    }
+
+   // Fix 7: activar tab desde hash de URL al cargar (tras redirect post-save)
+   const hash = window.location.hash;
+   if (hash) {
+      const tabId = hash.replace('#', '');
+      const targetPane = document.getElementById(tabId);
+      if (targetPane) {
+         // Encontrar el botón del tab correspondiente y activarlo
+         const tabTrigger = document.querySelector('[data-bs-target="#' + tabId + '"]');
+         if (tabTrigger && window.bootstrap) {
+            new bootstrap.Tab(tabTrigger).show();
+         }
+      }
+   }
+
+   // Fix 7: sincronizar hidden active_tab al cambiar de tab
+   document.querySelectorAll('[data-bs-toggle="tab"]').forEach(btn => {
+      btn.addEventListener('shown.bs.tab', function () {
+         const target = (this.dataset.bsTarget || '').replace('#tab-', '');
+         const inp = document.getElementById('active_tab_input');
+         if (inp && target) inp.value = target;
+      });
+   });
 });
 
 window.addEventListener('resize', () => {
@@ -910,7 +1048,7 @@ function markPositionsDirty() {
       const dot = document.createElement('span');
       dot.className = 'sig-dirty-dot badge bg-warning text-dark ms-1 p-1';
       dot.style.fontSize = '0.6em';
-      dot.title = 'Cambios sin guardar';
+      dot.title = SIG_I18N.unsavedChanges;
       dot.textContent = '●';
       tabBtn.appendChild(dot);
    }
@@ -957,8 +1095,11 @@ function syncInputs(el, cssLeft, cssTop) {
    if (inpX) inpX.value = gdX;
    if (inpY) inpY.value = gdY;
 
-   const pos = document.getElementById('pos-' + base + '-' + field);
-   if (pos) pos.textContent = gdX + ',' + gdY;
+   // Actualizar inputs editables de la tabla
+   const posX = document.getElementById('pos-' + base + '-' + field + '-x');
+   const posY = document.getElementById('pos-' + base + '-' + field + '-y');
+   if (posX) posX.value = gdX;
+   if (posY) posY.value = gdY;
 }
 
 // ── #10 Drag & drop con soporte mouse Y touch ──────────────────────────
@@ -985,9 +1126,13 @@ function syncInputs(el, cssLeft, cssTop) {
    function onMove(e) {
       if (!dragging) return;
       e.preventDefault();
-      const c    = getCoords(e);
-      const newL = Math.max(0, startL + c.x - ox);
-      const newT = Math.max(0, startT + c.y - oy);
+      const c      = getCoords(e);
+      const editor = dragging.closest('.sig-editor-wrap');
+      const img    = editor ? editor.querySelector('img.sig-bg') : null;
+      const maxL   = img ? Math.max(0, img.clientWidth  - dragging.offsetWidth)  : 9999;
+      const maxT   = img ? Math.max(0, img.clientHeight - dragging.offsetHeight) : 9999;
+      const newL   = Math.min(maxL, Math.max(0, startL + c.x - ox));
+      const newT   = Math.min(maxT, Math.max(0, startT + c.y - oy));
       dragging.style.left = newL + 'px';
       dragging.style.top  = newT + 'px';
       syncInputs(dragging, newL, newT);
@@ -1032,10 +1177,81 @@ document.addEventListener('input', e => {
    markPositionsDirty();
 });
 
+// ── Edición manual de posición X/Y ────────────────────────────────────
+document.addEventListener('input', e => {
+   const inp = e.target;
+   if (!inp.classList.contains('sig-pos-input')) return;
+   const base  = inp.dataset.base;
+   const field = inp.dataset.field;
+   const isX   = inp.classList.contains('sig-pos-input-x');
+
+   const el    = document.getElementById('field-' + base + '-' + field);
+   if (!el) return;
+   const editor = el.closest('.sig-editor-wrap');
+   const scale  = parseFloat(editor?.dataset.scale || '1') || 1;
+   const isQr   = el.dataset.isQr === '1';
+   const size   = isQr ? 0 : parseInt(el.dataset.fontSize || '11');
+
+   // Usar límites pre-calculados por applyScale() (guardados en dataset)
+   // cuando el canvas está en un tab oculto (clientWidth = 0)
+   const maxGdX = el.dataset.maxGdX !== undefined
+      ? parseInt(el.dataset.maxGdX)
+      : (() => {
+           const img = editor ? editor.querySelector('img.sig-bg') : null;
+           const maxCssX = img ? Math.max(0, img.clientWidth - el.offsetWidth) : 9999;
+           return Math.round(maxCssX / scale);
+        })();
+   const maxGdY = el.dataset.maxGdY !== undefined
+      ? parseInt(el.dataset.maxGdY)
+      : (() => {
+           const img = editor ? editor.querySelector('img.sig-bg') : null;
+           const maxCssY = img ? Math.max(0, img.clientHeight - el.offsetHeight) : 9999;
+           return Math.round(maxCssY / scale) + (isQr ? 0 : Math.round(size * ASCENT));
+        })();
+
+   // Leer los dos inputs de posición
+   const posXInp = document.getElementById('pos-' + base + '-' + field + '-x');
+   const posYInp = document.getElementById('pos-' + base + '-' + field + '-y');
+   let gdX = parseInt(posXInp?.value) || 0;
+   let gdY = parseInt(posYInp?.value) || 0;
+
+   // Clampear contra límites reales (descontando tamaño del elemento)
+   gdX = Math.min(maxGdX, Math.max(0, gdX));
+   gdY = Math.min(maxGdY, Math.max(0, gdY));
+
+   // Reflejar valor clampeado en el input que se editó
+   if (isX && posXInp) posXInp.value = gdX;
+   else if (!isX && posYInp) posYInp.value = gdY;
+
+   // Actualizar hidden inputs
+   const inpX = document.getElementById('inp-' + base + '-' + field + '-x');
+   const inpY = document.getElementById('inp-' + base + '-' + field + '-y');
+   if (inpX) inpX.value = gdX;
+   if (inpY) inpY.value = gdY;
+
+   // Actualizar data attributes del elemento
+   el.dataset.gdX = gdX;
+   el.dataset.gdY = gdY;
+
+   // Mover el elemento en el canvas (GD → CSS)
+   const cssL = gdX * scale;
+   const cssT = isQr
+      ? gdY * scale
+      : Math.max(0, (gdY - size * ASCENT) * scale);
+   el.style.left = cssL + 'px';
+   el.style.top  = cssT + 'px';
+
+   markPositionsDirty();
+});
+
 // ── Reset a defaults ────────────────────────────────────────────────────
 document.addEventListener('click', e => {
    const btn = e.target.closest('.sig-reset-btn');
    if (!btn) return;
+
+   // Fix 4: confirmación antes de resetear
+   if (!confirm(SIG_I18N.confirmReset)) return;
+
    const base  = btn.dataset.base;
    const defs  = SIG_DEFAULTS[base];
    if (!defs) return;
@@ -1080,12 +1296,65 @@ document.addEventListener('click', e => {
    markPositionsDirty();
 });
 
+
+// ── Botones de formato B / I / U ──────────────────────────────────────
+document.addEventListener('click', e => {
+   const btn = e.target.closest('.sig-fmt-btn');
+   if (!btn) return;
+   const wrap = btn.dataset.wrap;
+   const wLen = wrap.length;
+   // Campo activo: textarea con foco, o el último que tuvo foco
+   const ta = document.activeElement && document.activeElement.tagName === 'TEXTAREA'
+      ? document.activeElement
+      : window._sigLastTextarea;
+   if (!ta) return;
+   ta.focus();
+
+   const start  = ta.selectionStart;
+   const end    = ta.selectionEnd;
+   const sel    = ta.value.substring(start, end);
+   const before = ta.value.substring(start - wLen, start);
+   const after  = ta.value.substring(end, end + wLen);
+
+   // Toggle: quitar marcadores si ya existen dentro O fuera de la selección
+   const wrappedInside  = sel.startsWith(wrap) && sel.endsWith(wrap) && sel.length >= wLen * 2 + 1;
+   const wrappedOutside = before === wrap && after === wrap;
+
+   let newStart, newEnd;
+   if (wrappedInside) {
+      // Quitar marcadores que están DENTRO de la selección
+      const inner = sel.slice(wLen, sel.length - wLen);
+      ta.setRangeText(inner, start, end, 'preserve');
+      newStart = start;
+      newEnd   = start + inner.length;
+   } else if (wrappedOutside) {
+      // Quitar marcadores que están FUERA de la selección
+      ta.setRangeText(sel, start - wLen, end + wLen, 'preserve');
+      newStart = start - wLen;
+      newEnd   = newStart + sel.length;
+   } else {
+      // Aplicar: envolver selección (o placeholder si no hay selección)
+      const inner = sel || SIG_I18N.formatPlaceholder;
+      ta.setRangeText(wrap + inner + wrap, start, end, 'preserve');
+      newStart = start + wLen;
+      newEnd   = newStart + inner.length;
+   }
+
+   ta.setSelectionRange(newStart, newEnd);
+   markPositionsDirty && markPositionsDirty();
+});
+
+// Recordar último textarea con foco
+document.querySelectorAll('textarea[name="email_body"], textarea[name="email_footer"]')
+   .forEach(ta => ta.addEventListener('focus', () => { window._sigLastTextarea = ta; }));
+
+
 // ── Preview de plantillas (tabs Con/Sin celular) ──────────────────────
 function preview(input, imgId, wrapId) {
    const file = input.files[0];
    if (!file) return;
    if (file.type !== 'image/png') {
-      alert('Solo PNG permitido');
+      alert(SIG_I18N.onlyPng);
       input.value = '';
       return;
    }

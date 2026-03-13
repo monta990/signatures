@@ -124,7 +124,7 @@ class PluginSignaturesUser extends CommonGLPI {
              </div>";
       }
 
-      echo "<p class='text-muted mb-3'>" .
+      echo "<p class='text-body-secondary mb-3'>" .
                sprintf(
                   __('Generando firma para: %s', 'signatures'),
                   $user->getFriendlyName()
@@ -146,7 +146,7 @@ class PluginSignaturesUser extends CommonGLPI {
                   <i class='ti ti-brand-whatsapp ms-1'></i></label>
                </div>";
       } else {
-         echo "<p class='text-muted'><i class='ti ti-info-circle me-1'></i>" .
+         echo "<p class='text-body-secondary'><i class='ti ti-info-circle me-1'></i>" .
               __('Este usuario no tiene número celular, el QR no estará disponible.', 'signatures') .
               "</p>";
       }
@@ -225,8 +225,12 @@ class PluginSignaturesUser extends CommonGLPI {
       /* ===========================
        * JS: checkbox + preview + feedback botones
        * =========================== */
+      $_i18n_previewError = json_encode(__('Error al cargar la vista previa', 'signatures'));
       echo <<<HTML
 <script>
+const SIG_USER_I18N = {
+   previewError: {$_i18n_previewError}
+};
 // Sincronizar checkbox QR con ambos forms
 (function() {
    const chk = document.getElementById('qr_check');
@@ -323,7 +327,7 @@ class PluginSignaturesUser extends CommonGLPI {
       };
       img.onerror = () => {
          loading.style.display = 'none';
-         img.alt               = 'Error al cargar la vista previa';
+         img.alt               = SIG_USER_I18N.previewError;
          img.style.display     = '';
       };
       img.src = url;
