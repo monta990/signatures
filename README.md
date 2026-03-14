@@ -1,7 +1,7 @@
 ![Email Signatures](banner.png)
 # Email Signatures — GLPI Plugin
 
-> **Version 1.3.3** · Compatible with GLPI 11.0+ · PHP 8.1+ · GPL-2.0-or-later  
+> Compatible with GLPI 11.0+ · PHP 8.1+ · GPL-2.0-or-later  
 > Author: [Edwin Elias Alvarez](https://sontechs.com) ([@monta990](https://github.com/monta990))
 
 Generate personalized corporate PNG email signatures for every GLPI user.
@@ -473,7 +473,7 @@ GPL-2.0-or-later — see [LICENSE](LICENSE).
 ![Email Signatures](banner.png)
 # Email Signatures — Plugin GLPI (Español)
 
-> **Versión 1.3.3** · Compatible con GLPI 11.0+ · PHP 8.1+ · GPL-2.0-or-later  
+> Compatible con GLPI 11.0+ · PHP 8.1+ · GPL-2.0-or-later  
 > Autor: [Edwin Elias Alvarez](https://sontechs.com) ([@monta990](https://github.com/monta990))
 
 Genera firmas de correo corporativas en PNG personalizadas para cada usuario de GLPI.
