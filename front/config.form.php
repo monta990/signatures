@@ -119,22 +119,6 @@ if (isset($_POST['save'])) {
          Html::redirect($self);
       }
 
-      // #14 Validar dimensiones: avisar si difieren notablemente de 650×216
-      $imgInfo = getimagesize($tmp);
-      if ($imgInfo !== false) {
-         [$imgW, $imgH] = $imgInfo;
-         if ($imgW < 400 || $imgH < 100 || $imgW > 2000 || $imgH > 800) {
-            Session::addMessageAfterRedirect(
-               sprintf(
-                  __('Aviso: la imagen tiene dimensiones %d×%d px. Se recomienda usar una imagen de aproximadamente 650×216 px para mejor resultado.', 'signatures'),
-                  $imgW, $imgH
-               ),
-               false,
-               WARNING
-            );
-         }
-      }
-
       move_uploaded_file($tmp, $dest);
       chmod($dest, 0644);
    }
@@ -497,6 +481,7 @@ if ($hasbase1) {
 echo "<label class='fw-bold'>" . __('Cargar nueva', 'signatures') . "</label>";
 echo "<input type='file' name='base1' class='form-control' accept='image/png'
        onchange='preview(this,\"new-base1-preview\",\"wrap1\")'>";
+echo "<div class='form-text'>" . __('Solo PNG · Máx. 300 KB · Dimensiones recomendadas: 650×250 px', 'signatures') . "</div>";
 echo "<div id='wrap1' class='d-none mt-2'>
         <img id='new-base1-preview' style='max-width:100%;border:1px dashed #999'>
       </div>";
@@ -534,6 +519,7 @@ if ($hasbase2) {
 echo "<label class='fw-bold'>" . __('Cargar nueva', 'signatures') . "</label>";
 echo "<input type='file' name='base2' class='form-control' accept='image/png'
        onchange='preview(this,\"new-base2-preview\",\"wrap2\")'>";
+echo "<div class='form-text'>" . __('Solo PNG · Máx. 300 KB · Dimensiones recomendadas: 650×250 px', 'signatures') . "</div>";
 echo "<div id='wrap2' class='d-none mt-2'>
         <img id='new-base2-preview' style='max-width:100%;border:1px dashed #999'>
       </div>";
@@ -937,6 +923,7 @@ const SIG_I18N = {
 
 // ── #2 Escala: convierte coordenadas GD ↔ CSS según tamaño visible ─────
 // La imagen base tiene ~650px de ancho natural pero se muestra más pequeña.
+// Las dimensiones recomendadas de plantilla son 650×250 px.
 // Todos los campos almacenan sus coords en espacio GD (naturalWidth).
 // Al abrir el tab, applyScale() los reposiciona al tamaño CSS real.
 function getScale(wrap) {

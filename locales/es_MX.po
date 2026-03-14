@@ -28,13 +28,6 @@ msgstr "Archivo demasiado grande (Máx. 300 KB)"
 msgid "Formato inválido, solo PNG"
 msgstr "Formato inválido, solo se permiten archivos PNG"
 
-msgid ""
-"Aviso: la imagen tiene dimensiones %d×%d px. Se recomienda usar una imagen "
-"de aproximadamente 650×216 px para mejor resultado."
-msgstr ""
-"Aviso: la imagen tiene dimensiones %d×%d px. Se recomienda usar una imagen "
-"de aproximadamente 650×216 px para mejor resultado."
-
 msgid "Configuración guardada correctamente"
 msgstr "Configuración guardada correctamente"
 
@@ -436,3 +429,6 @@ msgstr "Cursiva — *texto*"
 
 msgid "Subrayado — __texto__"
 msgstr "Subrayado — __texto__"
+
+msgid "Solo PNG · Máx. 300 KB · Dimensiones recomendadas: 650×250 px"
+msgstr "Solo PNG · Máx. 300 KB · Dimensiones recomendadas: 650×250 px"

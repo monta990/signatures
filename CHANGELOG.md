@@ -6,6 +6,20 @@ Versioning follows [Semantic Versioning](https://semver.org/).
 
 ---
 
+## [1.3.3] — 2026-03-14
+
+### Changed
+- **Upload validation simplified**: removed the non-blocking dimension warning that
+  fired when a template's width or height fell outside the 400–2000 × 100–800 px
+  range. The only hard server-side limit is now **file size (300 KB)**. MIME type
+  validation (PNG only) is still enforced and remains a blocking check.
+- **Recommended template dimensions updated to 650×250 px**: all UI hints, README,
+  and documentation previously referenced ~650×216 px. The new recommended size is
+  **650×250 px**, displayed as a non-blocking helper text below each template upload
+  input ("Solo PNG · Máx. 300 KB · Dimensiones recomendadas: 650×250 px").
+
+---
+
 ## [1.3.2] — 2026-03-13
 
 ### Added

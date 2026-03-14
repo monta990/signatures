@@ -1,7 +1,7 @@
 ![Email Signatures](banner.png)
 # Email Signatures — GLPI Plugin
 
-> **Version 1.3.2** · Compatible with GLPI 11.0+ · PHP 8.1+ · GPL-2.0-or-later  
+> **Version 1.3.3** · Compatible with GLPI 11.0+ · PHP 8.1+ · GPL-2.0-or-later  
 > Author: [Edwin Elias Alvarez](https://sontechs.com) ([@monta990](https://github.com/monta990))
 
 Generate personalized corporate PNG email signatures for every GLPI user.
@@ -51,7 +51,7 @@ downloaded directly or sent to the user's registered email address in one click.
 | **Font size per field** | Number input per field in the editor table; overlay updates live. |
 | **Clickable variable badges** | `{nombre}`, `{empresa}`, `{fecha}` insert at the cursor in the last focused email field. |
 | **Unsaved changes indicator** | Orange dot on the Positions tab + warning banner when positions are changed but not yet saved. |
-| **PNG dimension advisory** | Server checks dimensions with `getimagesize()` on upload and shows a non-blocking advisory if outside the recommended ~650×216 px range. |
+| **Upload validation** | Only PNG files up to 300 KB are accepted (hard limit). Recommended dimensions are 650×250 px, shown as a hint below the file input. |
 | **Incomplete config badge** | Orange `!` badge on the user profile tab when the relevant template is missing or email is not configured. |
 | **Independent delete forms** | Delete-template buttons use their own `<form>` with dedicated CSRF tokens, decoupled from the main config form. |
 | **CSRF protection** | All POST endpoints use GLPI's built-in CSRF token validation. |
@@ -79,7 +79,7 @@ downloaded directly or sent to the user's registered email address in one click.
 
 ### Via ZIP (recommended)
 
-1. Download `signatures-1.3.1.zip` from the [GitHub releases page](https://github.com/monta990/signatures/releases).
+1. Download `signatures-1.3.3.zip` from the [GitHub releases page](https://github.com/monta990/signatures/releases).
 2. In GLPI, go to **Setup → Plugins**.
 3. Click **Upload a plugin**.
 4. Select the ZIP and confirm.
@@ -90,7 +90,7 @@ downloaded directly or sent to the user's registered email address in one click.
 
 ```bash
 cd /var/www/glpi/plugins
-unzip signatures-1.3.1.zip
+unzip signatures-1.3.3.zip
 # The folder must be named exactly "signatures"
 ```
 
@@ -169,12 +169,12 @@ their GLPI profile.
 | Element | Description |
 |---|---|
 | **Current template** | Shows the active `base.png` at full responsive width. Click the image to download it. |
-| **Upload new** | PNG only, max 300 KB. MIME validated with `finfo`. A browser preview is shown before saving. The server shows a non-blocking WARNING if dimensions are outside the recommended range (~650×216 px). |
+| **Upload new** | PNG only, max 300 KB (hard limit enforced server-side). MIME validated with `finfo`. A browser preview is shown before saving. Recommended dimensions: 650×250 px (shown as a hint). |
 | **Delete** | Removes `base.png` from disk. Uses a dedicated mini-form with its own CSRF token so the main configuration is not affected. |
 
 **Template design tips:**
 
-- Recommended size: **650 × 216 px** at 96 dpi.
+- Recommended size: **650 × 250 px** at 96 dpi.
 - Leave blank or light-colored areas where text fields will appear (name, title, etc.).
 - PNG with transparency is supported.
 - Avoid placing important graphic elements in the text regions; they will be covered.
@@ -214,7 +214,7 @@ the page whenever positions have been changed but not yet saved.
 #### Coordinate system
 
 All coordinates are stored and displayed in **GD pixel space** (the natural pixel
-size of the PNG template, typically 650×216 px). When the tab opens or the window
+size of the PNG template, typically 650×250 px). When the tab opens or the window
 is resized, `applyScale()` multiplies the GD coordinates by
 `img.clientWidth / img.naturalWidth` to get CSS pixel positions for the overlays.
 When a field is dragged, `syncInputs()` divides the CSS position back by the same
@@ -384,7 +384,7 @@ Access checks use `Session::haveRight('config', UPDATE)` and
 | `en_GB` | English (United Kingdom) |
 | `fr_FR` | French (France) |
 
-The `.pot` template contains **91 strings** as of v1.3.1.
+The `.pot` template contains **121 strings** as of v1.3.3.
 All four `.po` source files and compiled `.mo` binaries are included in the package.
 
 To add a new language:
@@ -448,7 +448,9 @@ signatures/
 
 | Version | Date | Summary |
 |---|---|---|
-| **1.3.1** | 2026-03-12 | Touch drag-and-drop · Scale-aware position editor · QR in positions table · `buildMailPayload()` · Upload dimension advisory · Incomplete config badge · Independent delete forms · `filemtime()` cache-buster · Spinner on Save · XSS fix in `buildEmailHtml` · `ob_end_clean()` on all error paths · Bidirectional name auto-fit · `imagecopyresampled` for QR · AvenirBook.ttf removed |
+| **1.3.3** | 2026-03-14 | Upload simplified: 300 KB hard limit only, no dimension blocking · Recommended template size 650×250 px |
+| **1.3.2** | 2026-03-13 | Inline email formatting (`**bold**`, `*italic*`, `__underline__`) · B/I/U toolbar · Position editor improvements · Dark mode fixes |
+| **1.3.1** | 2026-03-12 | Touch drag-and-drop · Scale-aware position editor · QR in positions table · `buildMailPayload()` · Incomplete config badge · Independent delete forms · `filemtime()` cache-buster · Spinner on Save · XSS fix in `buildEmailHtml` · `ob_end_clean()` on all error paths · Bidirectional name auto-fit · `imagecopyresampled` for QR · AvenirBook.ttf removed |
 | 1.3.0 | 2026-03-08 | Signature preview modal · Clickable variable badges · Unsaved positions dot/banner · `PluginSignaturesConfig` class · `plugin_signatures_update()` |
 | 1.2.0 | 2026-03-08 | Visual position editor (drag-and-drop) · `getDefaults()` · Restore defaults · `sanitizeFilename()` · `buildEmailHtml()` |
 | 1.1.0 | 2026-03-07 | Email delivery · Email config (subject/body/footer/variables) · Test email · `en_GB` locale |
@@ -471,7 +473,7 @@ GPL-2.0-or-later — see [LICENSE](LICENSE).
 ![Email Signatures](banner.png)
 # Email Signatures — Plugin GLPI (Español)
 
-> **Versión 1.3.1** · Compatible con GLPI 11.0+ · PHP 8.1+ · GPL-2.0-or-later  
+> **Versión 1.3.3** · Compatible con GLPI 11.0+ · PHP 8.1+ · GPL-2.0-or-later  
 > Autor: [Edwin Elias Alvarez](https://sontechs.com) ([@monta990](https://github.com/monta990))
 
 Genera firmas de correo corporativas en PNG personalizadas para cada usuario de GLPI.
@@ -512,7 +514,7 @@ pueden descargar directamente o enviar al correo del usuario con un solo clic.
 | **Tamaño de fuente por campo** | Input numérico en la tabla del editor, actualización en vivo. |
 | **Badges de variables** | Inserción al cursor con un clic. |
 | **Indicador de cambios** | Punto naranja + banner cuando hay posiciones sin guardar. |
-| **Aviso de dimensiones** | Advertencia no bloqueante si las dimensiones de la plantilla se alejan de ~650×216 px. |
+| **Validación de upload** | Solo PNG hasta 300 KB (límite duro). Dimensiones recomendadas: 650×250 px, mostradas como hint debajo del input. |
 | **Badge de config incompleta** | `!` naranja en la pestaña del perfil si falta plantilla o config de correo. |
 | **Formularios de eliminación independientes** | Botones "Eliminar" desacoplados del form principal, con CSRF propio. |
 | **Multiidioma** | es_MX · en_US · en_GB · fr_FR |
@@ -536,7 +538,7 @@ pueden descargar directamente o enviar al correo del usuario con un solo clic.
 
 ### Vía ZIP
 
-1. Descarga `signatures-1.3.1.zip` desde [GitHub releases](https://github.com/monta990/signatures/releases).
+1. Descarga `signatures-1.3.3.zip` desde [GitHub releases](https://github.com/monta990/signatures/releases).
 2. En GLPI: **Configuración → Complementos → Subir un complemento**.
 3. Selecciona el ZIP.
 4. Haz clic en **Instalar** y luego en **Habilitar**.
@@ -545,7 +547,7 @@ pueden descargar directamente o enviar al correo del usuario con un solo clic.
 
 ```bash
 cd /var/www/glpi/plugins
-unzip signatures-1.3.1.zip
+unzip signatures-1.3.3.zip
 # El directorio debe llamarse exactamente "signatures"
 ```
 
@@ -584,10 +586,10 @@ prefijo `[PRUEBA]` al correo del administrador.
 Gestiona `base.png` (plantilla para usuarios con número celular).
 
 - Vista previa de la plantilla actual. Clic → descarga.
-- Subir nueva: PNG, máx. 300 KB, validación MIME, aviso si dimensiones fuera de rango.
+- Subir nueva: PNG, máx. 300 KB (límite duro). Validación MIME con `finfo`. Dimensiones recomendadas: 650×250 px.
 - Eliminar: formulario independiente con CSRF propio.
 
-**Recomendación de diseño:** ~650×216 px, 96 dpi. Deja áreas en blanco para los campos.
+**Recomendación de diseño:** 650×250 px, 96 dpi. Deja áreas en blanco para los campos.
 
 ### Pestaña Sin celular
 

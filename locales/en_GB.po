@@ -28,13 +28,6 @@ msgstr "File too large (Max. 300 KB)"
 msgid "Formato inválido, solo PNG"
 msgstr "Invalid format, only PNG files are permitted"
 
-msgid ""
-"Aviso: la imagen tiene dimensiones %d×%d px. Se recomienda usar una imagen "
-"de aproximadamente 650×216 px para mejor resultado."
-msgstr ""
-"Warning: image dimensions are %d×%d px. Recommended size is approximately "
-"650×216 px for best results."
-
 msgid "Configuración guardada correctamente"
 msgstr "Configuration saved successfully"
 
@@ -425,3 +418,6 @@ msgstr "Italic — *text*"
 
 msgid "Subrayado — __texto__"
 msgstr "Underline — __text__"
+
+msgid "Solo PNG · Máx. 300 KB · Dimensiones recomendadas: 650×250 px"
+msgstr "PNG only · Max. 300 KB · Recommended dimensions: 650×250 px"

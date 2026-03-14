@@ -30,13 +30,6 @@ msgstr "Fichier trop volumineux (Max. 300 Ko)"
 msgid "Formato inválido, solo PNG"
 msgstr "Format invalide, seuls les fichiers PNG sont acceptés"
 
-msgid ""
-"Aviso: la imagen tiene dimensiones %d×%d px. Se recomienda usar una imagen "
-"de aproximadamente 650×216 px para mejor resultado."
-msgstr ""
-"Avertissement : les dimensions de l'image sont %d×%d px. La taille "
-"recommandée est d'environ 650×216 px pour un meilleur résultat."
-
 msgid "Configuración guardada correctamente"
 msgstr "Configuration enregistrée avec succès"
 
@@ -438,3 +431,6 @@ msgstr "Italique — *texte*"
 
 msgid "Subrayado — __texto__"
 msgstr "Souligné — __texte__"
+
+msgid "Solo PNG · Máx. 300 KB · Dimensiones recomendadas: 650×250 px"
+msgstr "PNG uniquement · Max. 300 Ko · Dimensions recommandées : 650×250 px"
