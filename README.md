@@ -2,7 +2,7 @@
 # Email Signatures — GLPI Plugin
 
 > Compatible with GLPI 11.0+ · PHP 8.1+ · GPL-2.0-or-later  
-> Author: [Edwin Elias Alvarez](https://sontechs.com) ([@monta990](https://github.com/monta990))
+> Author: [Edwin Elias Alvarez] ([@monta990](https://github.com/monta990))
 
 Generate personalized corporate PNG email signatures for every GLPI user.
 Each signature is rendered dynamically over a configurable PNG template using PHP GD
@@ -466,7 +466,14 @@ GPL-2.0-or-later — see [LICENSE](LICENSE).
 
 ---
 
-*Generated and maintained by [Sontechs](https://sontechs.com).*
+## Buy me a coffee :)
+If you like my work, you can support me by a donate here:
+
+<a href="https://www.buymeacoffee.com/monta990" target="_blank"><img src="https://cdn.buymeacoffee.com/buttons/default-yellow.png" alt="Buy Me A Coffee" height="51px" width="210px"></a>
+
+---
+
+*Generated and maintained by [monta990].*
 
 ---
 ---
@@ -474,7 +481,7 @@ GPL-2.0-or-later — see [LICENSE](LICENSE).
 # Email Signatures — Plugin GLPI (Español)
 
 > Compatible con GLPI 11.0+ · PHP 8.1+ · GPL-2.0-or-later  
-> Autor: [Edwin Elias Alvarez](https://sontechs.com) ([@monta990](https://github.com/monta990))
+> Autor: [Edwin Elias Alvarez] ([@monta990](https://github.com/monta990))
 
 Genera firmas de correo corporativas en PNG personalizadas para cada usuario de GLPI.
 La firma se renderiza dinámicamente sobre una plantilla PNG configurable usando PHP GD
@@ -692,4 +699,11 @@ URL `https://wa.me/{pais}{celular}` → `TCPDF2DBarcode` genera PNG temporal →
 
 ---
 
-*Generado y mantenido por [Sontechs](https://sontechs.com).*
+## Comprame un cafe :)
+Si te gusta nmi trabajo, me puedes apoyar con una donación:
+
+<a href="https://www.buymeacoffee.com/monta990" target="_blank"><img src="https://cdn.buymeacoffee.com/buttons/default-yellow.png" alt="Buy Me A Coffee" height="51px" width="210px"></a>
+
+---
+
+*Generado y mantenido por [Edwin Elias Alvarez].*
