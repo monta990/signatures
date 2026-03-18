@@ -473,10 +473,10 @@ If you like my work, you can support me by a donate here:
 
 ---
 
-*Generated and maintained by [monta990].*
+*Generated and maintained by ([@monta990](https://github.com/monta990)).*
 
 ---
----
+
 ![Email Signatures](banner.png)
 # Email Signatures — Plugin GLPI (Español)
 
@@ -706,4 +706,4 @@ Si te gusta nmi trabajo, me puedes apoyar con una donación:
 
 ---
 
-*Generado y mantenido por [Edwin Elias Alvarez].*
+*Generado y mantenido por ([@monta990](https://github.com/monta990)).*
