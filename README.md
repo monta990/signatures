@@ -703,4 +703,4 @@ GPL v2 o posterior. Ver [LICENSE](https://www.gnu.org/licenses/old-licenses/gpl-
 
 ## Problemas
 
-Reporta errores o solicita funcionalidades en el [issue tracker](https://github.com/monta990/mailblast/issues).
+Reporta errores o solicita funcionalidades en el [issue tracker](https://github.com/monta990/signatures/issues).
