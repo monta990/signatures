@@ -433,8 +433,6 @@ signatures/
 
 ## Changelog
 
-| 1.0.0 | 2026-02-26 | Initial release |
-
 See [CHANGELOG.md](CHANGELOG.md).
 
 ---
@@ -450,12 +448,15 @@ If you like my work, you can support me by a donate here:
 
 <a href="https://www.buymeacoffee.com/monta990" target="_blank"><img src="https://cdn.buymeacoffee.com/buttons/default-yellow.png" alt="Buy Me A Coffee" height="51px" width="210px"></a>
 
-
 ---
 
 ## License
 
 GPL-2.0-or-later — see [LICENSE](LICENSE).
+
+## Issues
+
+Report bugs or request features on the [issue tracker](https://github.com/monta990/signatures/issues).
 
 ---
 
