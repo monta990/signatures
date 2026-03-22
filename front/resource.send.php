@@ -1,6 +1,10 @@
 <?php
 declare(strict_types=1);
 
+if (!defined('GLPI_ROOT')) {
+   die('Direct access not allowed');
+}
+
 Session::checkRight('config', READ);
 
 $resource = $_GET['resource'] ?? '';
@@ -16,13 +20,13 @@ switch ($resource) {
       break;
 
    default:
-      http_response_code(404);
-      exit('Recurso inválido');
+      http_response_code(400);
+      exit(__('Recurso inválido', 'signatures'));
 }
 
 if (!is_readable($file)) {
    http_response_code(404);
-   exit('No encontrado');
+   exit(__('Plantilla no encontrada', 'signatures'));
 }
 
 $mtime   = filemtime($file);

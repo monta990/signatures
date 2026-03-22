@@ -47,4 +47,14 @@ class PluginSignaturesConfig {
    public static function invalidate(): void {
       self::$cache = null;
    }
+
+   /**
+    * Devuelve los valores por defecto del plugin.
+    * Delega en plugin_signatures_getDefaults() (setup.php) como única fuente de verdad.
+    *
+    * @return array<string,mixed>
+    */
+   public static function getDefaults(): array {
+      return plugin_signatures_getDefaults();
+   }
 }

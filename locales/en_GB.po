@@ -421,3 +421,9 @@ msgstr "Underline — __text__"
 
 msgid "Solo PNG · Máx. 300 KB · Dimensiones recomendadas: 650×250 px"
 msgstr "PNG only · Max. 300 KB · Recommended dimensions: 650×250 px"
+
+msgid "Recurso inválido"
+msgstr "Invalid resource"
+
+msgid "Plantilla no encontrada"
+msgstr "Template not found"

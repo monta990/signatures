@@ -37,7 +37,7 @@ class PluginSignaturesUser extends CommonGLPI {
       }
 
       return [
-         'signatures' => "<span class='d-flex align-items-center'>
+         1 => "<span class='d-flex align-items-center'>
                              <i class='ti ti-mail me-2'></i>" .
                              __('Firma de correo', 'signatures') .
                              $badge .

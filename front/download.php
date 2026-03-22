@@ -34,6 +34,11 @@ $include_qr = !empty($_GET['include_qr']);
 $isPreview  = !empty($_GET['preview']);   // true → inline en el browser (modal)
 
 /* ============================
+ * URL DE RETORNO CONFIABLE
+ * ============================ */
+$backUrl = User::getFormURLWithID($userid) . '&forcetab=PluginSignaturesUser$1';
+
+/* ============================
  * VALIDACIONES DEL PLUGIN
  * ============================ */
 $errors = PluginSignaturesSignature::checkRequirements($include_qr);
@@ -42,7 +47,7 @@ if (!empty($errors)) {
       Session::addMessageAfterRedirect($msg, false, ERROR);
    }
    if (ob_get_length()) ob_end_clean();
-   Html::redirect($_SERVER['HTTP_REFERER'] ?? $CFG_GLPI['root_doc']);
+   Html::redirect($backUrl);
 }
 
 /* ============================
@@ -51,14 +56,14 @@ if (!empty($errors)) {
 try {
    $file = PluginSignaturesSignature::generatePNG($user, $include_qr);
 } catch (\Throwable $e) {
-   Toolbox::logError('signatures plugin – generatePNG: ' . $e->getMessage());
+   Toolbox::logError('signatures plugin - generatePNG: ' . $e->getMessage());
    Session::addMessageAfterRedirect(
       __('No se pudo generar la firma. Revisa el log de GLPI para más detalles.', 'signatures'),
       false,
       ERROR
    );
    if (ob_get_length()) ob_end_clean();
-   Html::redirect($_SERVER['HTTP_REFERER'] ?? $CFG_GLPI['root_doc']);
+   Html::redirect($backUrl);
 }
 
 /* ============================

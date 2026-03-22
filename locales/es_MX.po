@@ -432,3 +432,9 @@ msgstr "Subrayado — __texto__"
 
 msgid "Solo PNG · Máx. 300 KB · Dimensiones recomendadas: 650×250 px"
 msgstr "Solo PNG · Máx. 300 KB · Dimensiones recomendadas: 650×250 px"
+
+msgid "Recurso inválido"
+msgstr "Recurso inválido"
+
+msgid "Plantilla no encontrada"
+msgstr "Plantilla no encontrada"

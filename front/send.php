@@ -25,8 +25,7 @@ Session::checkLoginUser();
 
 global $CFG_GLPI;
 
-$isTest  = (($_POST['is_test'] ?? '0') === '1');
-$backUrl = $_SERVER['HTTP_REFERER'] ?? $CFG_GLPI['root_doc'];
+$isTest = (($_POST['is_test'] ?? '0') === '1');
 
 /* ============================
  * MODO PRUEBA — requiere config UPDATE
@@ -41,8 +40,11 @@ if ($isTest) {
             false,
             ERROR
         );
-        Html::redirect($backUrl);
+        Html::redirect($_SERVER['HTTP_REFERER'] ?? $CFG_GLPI['root_doc']);
     }
+
+    // URL de retorno: config page (venimos de ahí)
+    $backUrl = $_SERVER['HTTP_REFERER'] ?? $CFG_GLPI['root_doc'];
 
     // Para la prueba: el correo va al admin actual, el QR
     // se decide según si el admin tiene celular — consistente
@@ -65,6 +67,9 @@ if ($isTest) {
     if (!$user->getFromDB($userid)) {
         Html::redirect($CFG_GLPI['root_doc']);
     }
+
+    // URL de retorno calculada desde el userid — no depende de HTTP_REFERER
+    $backUrl = User::getFormURLWithID($userid) . '&forcetab=PluginSignaturesUser$1';
 
     $include_qr = !empty($_POST['include_qr']);
 }

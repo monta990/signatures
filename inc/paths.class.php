@@ -1,24 +1,28 @@
 <?php
 declare(strict_types=1);
 
+if (!defined('GLPI_ROOT')) {
+   die('Direct access not allowed');
+}
+
 class PluginSignaturesPaths {
-    
-    /**
-    * Directorio físico del plugin si esta en plugins (legacy) o marketplace glpi 10+)
+
+   /**
+    * Directorio físico del plugin si está en plugins (legacy) o marketplace (GLPI 10+).
     */
-    public static function pluginDir(): string {
-    
-       foreach (GLPI_PLUGINS_DIRECTORIES as $dir) {
-    
-          $path = $dir . '/signatures';
-    
-          if (is_dir($path)) {
-             return $path;
-          }
-       }
-    
-       throw new RuntimeException('No se encontró el directorio del complemento Signatures');
-    }
+   public static function pluginDir(): string {
+
+      foreach (GLPI_PLUGINS_DIRECTORIES as $dir) {
+
+         $path = $dir . '/signatures';
+
+         if (is_dir($path)) {
+            return $path;
+         }
+      }
+
+      throw new RuntimeException('No se encontró el directorio del complemento Signatures');
+   }
 
    /**
     * Directorio físico (files/)
@@ -44,20 +48,19 @@ class PluginSignaturesPaths {
    /**
     * Ruta física de las fuentes
     */
-    public static function getFontAvenirBlack(): string {
-       return self::pluginDir() . '/fonts/AvenirBlack.ttf';
-    }
-    
-    public static function getFontAvenirRoman(): string {
-       return self::pluginDir() . '/fonts/AvenirRoman.ttf';
-    }
+   public static function getFontAvenirBlack(): string {
+      return self::pluginDir() . '/fonts/AvenirBlack.ttf';
+   }
 
-    public static function base1Url(): string {
-       return Plugin::getWebDir('signatures') . '/front/resource.send.php?resource=base1';
-    }
-    
-    public static function base2Url(): string {
-       return Plugin::getWebDir('signatures') . '/front/resource.send.php?resource=base2';
-    }
+   public static function getFontAvenirRoman(): string {
+      return self::pluginDir() . '/fonts/AvenirRoman.ttf';
+   }
 
+   public static function base1Url(): string {
+      return Plugin::getWebDir('signatures') . '/front/resource.send.php?resource=base1';
+   }
+
+   public static function base2Url(): string {
+      return Plugin::getWebDir('signatures') . '/front/resource.send.php?resource=base2';
+   }
 }

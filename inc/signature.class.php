@@ -166,7 +166,7 @@ class PluginSignaturesSignature {
        * ============================ */
       $pfx = $hasMobile ? 'sig_b1_' : 'sig_b2_';
 
-      $_defaults = plugin_signatures_getDefaults();
+      $_defaults = PluginSignaturesConfig::getDefaults();
       $p = static function (string $key, int $default = 0) use ($configsig, $pfx, $_defaults): int {
          if (isset($configsig[$pfx . $key]) && $configsig[$pfx . $key] !== '') {
             return (int)$configsig[$pfx . $key];

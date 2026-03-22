@@ -77,10 +77,16 @@ La firma incluye nombre completo, título, correo, teléfonos, página de Facebo
    <readme>https://github.com/monta990/signatures/blob/main/README.md</readme>
 
    <authors>
-      <author>Edwin Elias Alvarez</author>
+      <author>Edwin Elias Alvarez (monta990)</author>
    </authors>
 
    <versions>
+
+      <version>
+         <num>1.3.4</num>
+         <compatibility>~11.0.0</compatibility>
+         <download_url>https://github.com/monta990/signatures/releases/download/1.3.4/signatures-1.3.4.zip</download_url>
+      </version>
 
       <version>
          <num>1.3.3</num>

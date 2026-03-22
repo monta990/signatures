@@ -434,3 +434,9 @@ msgstr "Souligné — __texte__"
 
 msgid "Solo PNG · Máx. 300 KB · Dimensiones recomendadas: 650×250 px"
 msgstr "PNG uniquement · Max. 300 Ko · Dimensions recommandées : 650×250 px"
+
+msgid "Recurso inválido"
+msgstr "Ressource invalide"
+
+msgid "Plantilla no encontrada"
+msgstr "Modèle introuvable"

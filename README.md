@@ -1,8 +1,8 @@
-![Email Signatures](banner.png)
+![Email Signatures](logo.png)
 # Email Signatures — GLPI Plugin
 
 > Compatible with GLPI 11.0+ · PHP 8.1+ · GPL-2.0-or-later  
-> Author: [Edwin Elias Alvarez] ([@monta990](https://github.com/monta990))
+> Author: [Edwin Elias Alvarez](https://sontechs.com) ([@monta990](https://github.com/monta990))
 
 Generate personalized corporate PNG email signatures for every GLPI user.
 Each signature is rendered dynamically over a configurable PNG template using PHP GD
@@ -429,11 +429,9 @@ signatures/
 │   ├── base.png                 Active template for users WITH mobile
 │   └── base2.png                Active template for users WITHOUT mobile
 ├── .gitattributes               Enforces LF line endings
-├── banner.png                   Wide image for marketplace listing
 ├── CHANGELOG.md
 ├── LICENSE
 ├── logo.png                     128×128 plugin icon
-├── logo_small.png               Small plugin icon
 ├── plugin.xml                   GLPI marketplace manifest
 ├── README.md                    This file
 └── setup.php                    Registration, install/uninstall/update hooks
@@ -473,15 +471,14 @@ If you like my work, you can support me by a donate here:
 
 ---
 
-*Generated and maintained by ([@monta990](https://github.com/monta990)).*
+*Generated and maintained by [Sontechs](https://sontechs.com).*
 
 ---
-
-![Email Signatures](banner.png)
+![Email Signatures](logo.png)
 # Email Signatures — Plugin GLPI (Español)
 
 > Compatible con GLPI 11.0+ · PHP 8.1+ · GPL-2.0-or-later  
-> Autor: [Edwin Elias Alvarez] ([@monta990](https://github.com/monta990))
+> Autor: [Edwin Elias Alvarez](https://sontechs.com) ([@monta990](https://github.com/monta990))
 
 Genera firmas de correo corporativas en PNG personalizadas para cada usuario de GLPI.
 La firma se renderiza dinámicamente sobre una plantilla PNG configurable usando PHP GD
@@ -706,4 +703,4 @@ Si te gusta mi trabajo, me puedes apoyar con una donación:
 
 ---
 
-*Generado y mantenido por ([@monta990](https://github.com/monta990)).*
+*Generado y mantenido por [Sontechs](https://sontechs.com).*

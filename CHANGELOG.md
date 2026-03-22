@@ -6,6 +6,50 @@ Versioning follows [Semantic Versioning](https://semver.org/).
 
 ---
 
+## [1.3.4] — 2026-03-22
+
+### Fixed
+- **`inc/paths.class.php` — missing `GLPI_ROOT` guard**: added the standard
+  `if (!defined('GLPI_ROOT')) die(...)` guard. It was the only file in `inc/` without
+  it, leaving the class directly accessible via HTTP.
+- **`inc/paths.class.php` — inconsistent indentation**: `pluginDir()` and the font/URL
+  methods used 4-space indent while the rest of the file used 3-space (GLPI style).
+  All methods now use 3-space indent uniformly.
+- **`inc/paths.class.php` — typo in docblock**: `"si esta en plugins"` corrected to
+  `"si está en plugins"` (missing accent).
+- **`front/resource.send.php` — hardcoded untranslatable strings**: `exit('Recurso
+  inválido')` and `exit('No encontrado')` replaced with `exit(__(..., 'signatures'))`.
+  Both strings added to POT and all locale files (es_MX, en_US, en_GB, fr_FR).
+- **`front/download.php` — unreliable `HTTP_REFERER` fallback**: error redirects now
+  use a computed URL (`User::getFormURLWithID()` + `forcetab`) instead of the
+  `HTTP_REFERER` header, which can be absent when browsers enforce referrer policies.
+- **`front/send.php` — unreliable `HTTP_REFERER` fallback**: same fix applied in normal
+  send mode. Test mode keeps `HTTP_REFERER` as fallback since it always originates from
+  the config page (no userid available there).
+- **Log prefix inconsistency**: `download.php` used an em-dash (`–`) in
+  `'signatures plugin – generatePNG'` while `send.php` used a hyphen (`-`). Both now
+  use a hyphen consistently.
+- **`inc/signature.class.php` — direct call to global function**: `generatePNG()` called
+  `plugin_signatures_getDefaults()` (global function from `setup.php`) directly, bypassing
+  `PluginSignaturesConfig`. Replaced with `PluginSignaturesConfig::getDefaults()`, which
+  delegates to `setup.php` as the single source of truth. Added `getDefaults()` static
+  method to `inc/config.class.php`.
+- **`inc/user.class.php` — non-standard tab key**: `getTabNameForItem()` returned an
+  associative key `['signatures' => ...]`. GLPI expects integer keys; changed to
+  `[1 => ...]`.
+
+### Changed
+- **Upload validation simplified**: removed the non-blocking dimension warning that
+  fired when a template's width or height fell outside the 400–2000 × 100–800 px
+  range. The only hard server-side limit is now **file size (300 KB)**. MIME type
+  validation (PNG only) is still enforced and remains a blocking check.
+- **Recommended template dimensions updated to 650×250 px**: all UI hints, README,
+  and documentation previously referenced ~650×216 px. The new recommended size is
+  **650×250 px**, displayed as a non-blocking helper text below each template upload
+  input ("Solo PNG · Máx. 300 KB · Dimensiones recomendadas: 650×250 px").
+
+---
+
 ## [1.3.3] — 2026-03-14
 
 ### Changed
