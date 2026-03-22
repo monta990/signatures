@@ -5,7 +5,7 @@
 <h1 align="center">Email Signatures</h1>
 
 <p align="center">
-  <strong>GLPI plugin — Generate personalized corporate PNG email signatures for every GLPI user.</strong>
+  <strong>GLPI plugin — Generate personalized corporate PNG email signatures for every GLPI user</strong>
 </p>
    
 <p align="center">
