@@ -52,8 +52,8 @@ Each signature is rendered dynamically over a configurable PNG template using PH
 
 | Requirement | Minimum |
 |---|---|
-| GLPI | 11.0 |
-| PHP | 8.1 |
+| GLPI | ≥ 11.0.0 |
+| PHP | ≥ 8.2 |
 | PHP ext: **GD** | Required — image generation |
 | PHP ext: **fileinfo** | Required — MIME validation on template upload |
 | PHP ext: **mbstring** | Recommended (used internally by GLPI) |
@@ -460,31 +460,27 @@ Report bugs or request features on the [issue tracker](https://github.com/monta9
 
 ---
 
-<p align="center"><img src="logo.png" alt="Email Signatures"></p>
-# Email Signatures — Plugin GLPI (Español)
+<p align="center">
+  <img src="logo.png" alt="Email Signatures">
+</p>
 
-> Compatible con GLPI 11.0+ · PHP 8.1+ · GPL-2.0-or-later  
-> Autor: [Edwin Elias Alvarez](https://sontechs.com) ([@monta990](https://github.com/monta990))
+<h1 align="center">Email Signatures</h1>
 
-Genera firmas de correo corporativas en PNG personalizadas para cada usuario de GLPI.
-La firma se renderiza dinámicamente sobre una plantilla PNG configurable usando PHP GD
-y fuentes TTF Avenir, con código QR de WhatsApp opcional. Las firmas terminadas se
-pueden descargar directamente o enviar al correo del usuario con un solo clic.
+<p align="center">
+  <strong>GLPI plugin — Genera firmas de correo corporativas en PNG personalizadas para cada usuario de GLPI</strong>
+</p>
+   
+<p align="center">
+  <img src="https://img.shields.io/badge/GLPI-11.0%2B-blue?style=flat-square" alt="GLPI compatibility">
+  <img src="https://img.shields.io/badge/License-GPL%20v2%2B-green?style=flat-square" alt="License">
+  <img src="https://img.shields.io/badge/PHP-%3E%3D8.2-purple?style=flat-square" alt="PHP">
+</p>
 
 ---
 
-## Tabla de contenido
+## Overview
 
-1. [Características](#características)
-2. [Requisitos](#requisitos)
-3. [Instalación](#instalación)
-4. [Desinstalación](#desinstalación)
-5. [Configuración](#configuración-1)
-6. [Variables de correo](#variables-de-correo-1)
-7. [Uso de la firma](#uso-de-la-firma)
-8. [Cómo funciona la generación](#cómo-funciona-la-generación)
-9. [Control de acceso](#control-de-acceso)
-10. [Localización](#localización)
+La firma se renderiza dinámicamente sobre una plantilla PNG configurable usando PHP GD y fuentes TTF Avenir, con código QR de WhatsApp opcional. Las firmas terminadas se pueden descargar directamente o enviar al correo del usuario con un solo clic.
 
 ---
 
@@ -515,8 +511,8 @@ pueden descargar directamente o enviar al correo del usuario con un solo clic.
 
 | Requisito | Mínimo |
 |---|---|
-| GLPI | 11.0 |
-| PHP | 8.1 |
+| GLPI | ≥ 11.0.0 |
+| PHP | ≥ 8.2 |
 | Ext PHP: **GD** | Requerida |
 | Ext PHP: **fileinfo** | Requerida |
 | TCPDF | Incluido en GLPI |
