@@ -6,6 +6,7 @@
 
 <p align="center">
   <strong>GLPI plugin — Generate personalized corporate PNG email signatures for every GLPI user.</strong>
+</p>
    
 <p align="center">
   <img src="https://img.shields.io/badge/GLPI-11.0%2B-blue?style=flat-square" alt="GLPI compatibility">
