@@ -1,4 +1,4 @@
-![Email Signatures](logo.png)
+<p align="center"><img src="logo.png" alt="Email Signatures"></p>
 # Email Signatures — GLPI Plugin
 
 > Compatible with GLPI 11.0+ · PHP 8.1+ · GPL-2.0-or-later  
@@ -474,7 +474,7 @@ If you like my work, you can support me by a donate here:
 *Generated and maintained by [Sontechs](https://sontechs.com).*
 
 ---
-![Email Signatures](logo.png)
+<p align="center"><img src="logo.png" alt="Email Signatures"></p>
 # Email Signatures — Plugin GLPI (Español)
 
 > Compatible con GLPI 11.0+ · PHP 8.1+ · GPL-2.0-or-later  
