@@ -14,11 +14,11 @@
   <img src="https://img.shields.io/badge/PHP-%3E%3D8.2-purple?style=flat-square" alt="PHP">
 </p>
 
+---
+
 ## Overview
 
 Each signature is rendered dynamically over a configurable PNG template using PHP GD and Avenir TTF fonts, with an optional WhatsApp QR code. Finished signatures can be downloaded directly or sent to the user's registered email address in one click.
-
-**Requires GLPI 11.0 or later.**
 
 ---
 
