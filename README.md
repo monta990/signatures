@@ -431,19 +431,25 @@ signatures/
 
 ---
 
-## Changelog highlights
+## Changelog
 
-| Version | Date | Summary |
-|---|---|---|
-| **1.3.3** | 2026-03-14 | Upload simplified: 300 KB hard limit only, no dimension blocking · Recommended template size 650×250 px |
-| **1.3.2** | 2026-03-13 | Inline email formatting (`**bold**`, `*italic*`, `__underline__`) · B/I/U toolbar · Position editor improvements · Dark mode fixes |
-| **1.3.1** | 2026-03-12 | Touch drag-and-drop · Scale-aware position editor · QR in positions table · `buildMailPayload()` · Incomplete config badge · Independent delete forms · `filemtime()` cache-buster · Spinner on Save · XSS fix in `buildEmailHtml` · `ob_end_clean()` on all error paths · Bidirectional name auto-fit · `imagecopyresampled` for QR · AvenirBook.ttf removed |
-| 1.3.0 | 2026-03-08 | Signature preview modal · Clickable variable badges · Unsaved positions dot/banner · `PluginSignaturesConfig` class · `plugin_signatures_update()` |
-| 1.2.0 | 2026-03-08 | Visual position editor (drag-and-drop) · `getDefaults()` · Restore defaults · `sanitizeFilename()` · `buildEmailHtml()` |
-| 1.1.0 | 2026-03-07 | Email delivery · Email config (subject/body/footer/variables) · Test email · `en_GB` locale |
 | 1.0.0 | 2026-02-26 | Initial release |
 
-Full details in [CHANGELOG.md](CHANGELOG.md).
+See [CHANGELOG.md](CHANGELOG.md).
+
+---
+
+## Autor
+
+Edwin Elias Alvarez — [Github](https://github.com/monta990).
+
+---
+
+## Buy me a coffee :)
+If you like my work, you can support me by a donate here:
+
+<a href="https://www.buymeacoffee.com/monta990" target="_blank"><img src="https://cdn.buymeacoffee.com/buttons/default-yellow.png" alt="Buy Me A Coffee" height="51px" width="210px"></a>
+
 
 ---
 
@@ -453,16 +459,6 @@ GPL-2.0-or-later — see [LICENSE](LICENSE).
 
 ---
 
-## Buy me a coffee :)
-If you like my work, you can support me by a donate here:
-
-<a href="https://www.buymeacoffee.com/monta990" target="_blank"><img src="https://cdn.buymeacoffee.com/buttons/default-yellow.png" alt="Buy Me A Coffee" height="51px" width="210px"></a>
-
----
-
-*Generated and maintained by [Sontechs](https://sontechs.com).*
-
----
 <p align="center"><img src="logo.png" alt="Email Signatures"></p>
 # Email Signatures — Plugin GLPI (Español)
 
