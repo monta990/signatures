@@ -700,7 +700,7 @@ URL `https://wa.me/{pais}{celular}` → `TCPDF2DBarcode` genera PNG temporal →
 ---
 
 ## Comprame un cafe :)
-Si te gusta nmi trabajo, me puedes apoyar con una donación:
+Si te gusta mi trabajo, me puedes apoyar con una donación:
 
 <a href="https://www.buymeacoffee.com/monta990" target="_blank"><img src="https://cdn.buymeacoffee.com/buttons/default-yellow.png" alt="Buy Me A Coffee" height="51px" width="210px"></a>
 
