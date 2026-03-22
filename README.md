@@ -1,4 +1,3 @@
-<p align="center"><img src="logo.png" alt="Email Signatures"></p>
 <p align="center">
   <img src="logo.png" alt="Email Signatures">
 </p>
