@@ -1,13 +1,23 @@
 <p align="center"><img src="logo.png" alt="Email Signatures"></p>
-# Email Signatures — GLPI Plugin
+<p align="center">
+  <img src="logo.png" alt="Email Signatures">
+</p>
 
-> Compatible with GLPI 11.0+ · PHP 8.1+ · GPL-2.0-or-later  
-> Author: [Edwin Elias Alvarez](https://sontechs.com) ([@monta990](https://github.com/monta990))
+<h1 align="center">Email Signatures</h1>
 
-Generate personalized corporate PNG email signatures for every GLPI user.
+<p align="center">
+  <strong>GLPI plugin — Generate personalized corporate PNG email signatures for every GLPI user.</strong>
+   
 Each signature is rendered dynamically over a configurable PNG template using PHP GD
 and Avenir TTF fonts, with an optional WhatsApp QR code. Finished signatures can be
 downloaded directly or sent to the user's registered email address in one click.
+</p>
+
+<p align="center">
+  <img src="https://img.shields.io/badge/GLPI-11.0%2B-blue?style=flat-square" alt="GLPI compatibility">
+  <img src="https://img.shields.io/badge/License-GPL%20v2%2B-green?style=flat-square" alt="License">
+  <img src="https://img.shields.io/badge/PHP-%3E%3D8.2-purple?style=flat-square" alt="PHP">
+</p>
 
 ---
 
