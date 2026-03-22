@@ -682,11 +682,31 @@ URL `https://wa.me/{pais}{celular}` → `TCPDF2DBarcode` genera PNG temporal →
 
 ---
 
+## Cambios
+
+Ver [CHANGELOG.md](CHANGELOG.md).
+
+---
+
+## Autor
+
+**Edwin Elias Alvarez** — [GitHub](https://github.com/monta990)
+
+---
+
 ## Comprame un cafe :)
 Si te gusta mi trabajo, me puedes apoyar con una donación:
 
 <a href="https://www.buymeacoffee.com/monta990" target="_blank"><img src="https://cdn.buymeacoffee.com/buttons/default-yellow.png" alt="Buy Me A Coffee" height="51px" width="210px"></a>
 
 ---
+
+## Licencia
+
+GPL v2 o posterior. Ver [LICENSE](https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
+
+## Problemas
+
+Reporta errores o solicita funcionalidades en el [issue tracker](https://github.com/monta990/mailblast/issues).
 
 *Generado y mantenido por [Sontechs](https://sontechs.com).*
