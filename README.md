@@ -7,38 +7,17 @@
 <p align="center">
   <strong>GLPI plugin — Generate personalized corporate PNG email signatures for every GLPI user.</strong>
    
-Each signature is rendered dynamically over a configurable PNG template using PHP GD
-and Avenir TTF fonts, with an optional WhatsApp QR code. Finished signatures can be
-downloaded directly or sent to the user's registered email address in one click.
-</p>
-
 <p align="center">
   <img src="https://img.shields.io/badge/GLPI-11.0%2B-blue?style=flat-square" alt="GLPI compatibility">
   <img src="https://img.shields.io/badge/License-GPL%20v2%2B-green?style=flat-square" alt="License">
   <img src="https://img.shields.io/badge/PHP-%3E%3D8.2-purple?style=flat-square" alt="PHP">
 </p>
 
----
+## Overview
 
-## Table of Contents
+Each signature is rendered dynamically over a configurable PNG template using PHP GD and Avenir TTF fonts, with an optional WhatsApp QR code. Finished signatures can be downloaded directly or sent to the user's registered email address in one click.
 
-1. [Features](#features)
-2. [Requirements](#requirements)
-3. [Installation](#installation)
-4. [Uninstallation](#uninstallation)
-5. [Configuration](#configuration)
-   - [General tab](#general-tab)
-   - [With mobile tab](#with-mobile-tab-con-celular)
-   - [Without mobile tab](#without-mobile-tab-sin-celular)
-   - [Positions tab](#positions-tab)
-6. [Email variables](#email-variables)
-7. [Using the signature — user side](#using-the-signature--user-side)
-8. [How signature generation works](#how-signature-generation-works)
-9. [Access control and permissions](#access-control-and-permissions)
-10. [Localization](#localization)
-11. [File structure](#file-structure)
-12. [Changelog highlights](#changelog-highlights)
-13. [License](#license)
+**Requires GLPI 11.0 or later.**
 
 ---
 
