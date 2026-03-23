@@ -58,7 +58,7 @@ try {
 } catch (\Throwable $e) {
    Toolbox::logError('signatures plugin - generatePNG: ' . $e->getMessage());
    Session::addMessageAfterRedirect(
-      __('No se pudo generar la firma. Revisa el log de GLPI para más detalles.', 'signatures'),
+      __('Could not generate the signature. Check the GLPI log for details.', 'signatures'),
       false,
       ERROR
    );

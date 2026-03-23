@@ -45,13 +45,13 @@ if (!is_dir($baseDir)) {
 
 if (isset($_POST['delete_base1']) && $hasbase1) {
    unlink($base1File);
-   Session::addMessageAfterRedirect(__('Plantilla con celular eliminada', 'signatures'), false, INFO);
+   Session::addMessageAfterRedirect(__('Mobile template deleted', 'signatures'), false, INFO);
    Html::redirect($self);
 }
 
 if (isset($_POST['delete_base2']) && $hasbase2) {
    unlink($base2File);
-   Session::addMessageAfterRedirect(__('Plantilla sin celular eliminada', 'signatures'), false, INFO);
+   Session::addMessageAfterRedirect(__('No-mobile template deleted', 'signatures'), false, INFO);
    Html::redirect($self);
 }
 
@@ -110,12 +110,12 @@ if (isset($_POST['save'])) {
       finfo_close($finfo);
 
       if ($size > $maxSize) {
-         Session::addMessageAfterRedirect(__('Archivo demasiado grande (Máx. 300 KB)', 'signatures'), false, ERROR);
+         Session::addMessageAfterRedirect(__('File too large (Max. 300 KB)', 'signatures'), false, ERROR);
          Html::redirect($self);
       }
 
       if (!in_array($mime, $allowedMime, true)) {
-         Session::addMessageAfterRedirect(__('Formato inválido, solo PNG', 'signatures'), false, ERROR);
+         Session::addMessageAfterRedirect(__('Invalid format, only PNG files are allowed', 'signatures'), false, ERROR);
          Html::redirect($self);
       }
 
@@ -148,7 +148,7 @@ if (isset($_POST['save'])) {
    /* ================= FIN POSICIONES ================= */
 
    PluginSignaturesConfig::invalidate();
-   Session::addMessageAfterRedirect(__('Configuración guardada correctamente', 'signatures'), false, INFO);
+   Session::addMessageAfterRedirect(__('Configuration saved successfully', 'signatures'), false, INFO);
    Html::redirect($self . '#tab-' . $activeTab);
 }
 
@@ -161,7 +161,7 @@ $emailFooter  = $config['email_footer']          ?? '';
 
 /* ========================== HEADER ========================== */
 
-Html::header(__('Firma de Correo', 'signatures'), $self, 'config', 'plugins');
+Html::header(__('Email Signature', 'signatures'), $self, 'config', 'plugins');
 
 /* ========================== FORM ========================== */
 
@@ -175,7 +175,7 @@ echo "<div class='ribbon ribbon-bookmark ribbon-top ribbon-start bg-blue s-1'>
         <i class='fs-2x ti ti-settings'></i>
       </div>";
 echo "<h4 class='card-title ms-5 mb-0'>" .
-      __('Configuración de firma para correo', 'signatures') .
+      __('Email Signature Configuration', 'signatures') .
      "</h4>";
 echo "</div>";
 
@@ -198,7 +198,7 @@ echo "
             data-bs-toggle='tab'
             data-bs-target='#tab-cel'
             type='button'>
-      <i class='ti ti-device-mobile me-1'></i> " . __('Con celular', 'signatures') . "
+      <i class='ti ti-device-mobile me-1'></i> " . __('With mobile', 'signatures') . "
     </button>
   </li>
 
@@ -207,7 +207,7 @@ echo "
             data-bs-toggle='tab'
             data-bs-target='#tab-nocel'
             type='button'>
-      <i class='ti ti-phone-off me-1'></i> " . __('Sin celular', 'signatures') . "
+      <i class='ti ti-phone-off me-1'></i> " . __('Without mobile', 'signatures') . "
     </button>
   </li>
 
@@ -217,7 +217,7 @@ echo "
             data-bs-toggle='tab'
             data-bs-target='#tab-positions'
             type='button'>
-      <i class='ti ti-vector-bezier me-1'></i> " . __('Posiciones', 'signatures') . "
+      <i class='ti ti-vector-bezier me-1'></i> " . __('Positions', 'signatures') . "
     </button>
   </li>
 
@@ -233,46 +233,46 @@ echo "<div class='tab-pane fade show active' id='tab-general'>";
 
 /* ── Card: Configuración general ── */
 echo "<div class='card mt-2 rounded-0'>";
-signaturesRibbonSubHeader('ti-settings', __('Configuración general', 'signatures'));
+signaturesRibbonSubHeader('ti-settings', __('General settings', 'signatures'));
 echo "<div class='card-body'>";
 
 /* FACEBOOK */
 echo "<div class='mb-4'>";
 echo "<label class='form-label fw-bold'>
         <i class='ti ti-brand-facebook me-2'></i>
-        " . __('Nombre de la página de Facebook', 'signatures') . "
+        " . __('Facebook page name', 'signatures') . "
       </label>";
 echo "<input type='text'
              name='facebook_page'
              class='form-control'
              value='" . Html::cleanInputText($facebookPage) . "'
-             placeholder='" . htmlspecialchars(__('Ej: SontechsMX', 'signatures'), ENT_QUOTES, 'UTF-8') . "'>";
-echo "<div class='form-text'>" . __('Solo el nombre, sin URL ni @', 'signatures') . "</div>";
+             placeholder='" . htmlspecialchars(__('Ex: AcmeCorp', 'signatures'), ENT_QUOTES, 'UTF-8') . "'>";
+echo "<div class='form-text'>" . __('Name only, no URL or @', 'signatures') . "</div>";
 echo "</div>";
 
 /* CÓDIGO PAÍS WHATSAPP */
 echo "<div class='mb-4'>";
 echo "<label class='form-label fw-bold'>
         <i class='ti ti-brand-whatsapp me-2'></i>
-        " . __('Código de país para QR de Whatsapp', 'signatures') . "
+        " . __('Country code for WhatsApp QR', 'signatures') . "
       </label>";
 echo "<input type='text'
              name='whatsapp_country_code'
              class='form-control'
              value='" . Html::cleanInputText($countryCode) . "'
-             placeholder='" . htmlspecialchars(__('Ej: 52', 'signatures'), ENT_QUOTES, 'UTF-8') . "'
+             placeholder='" . htmlspecialchars(__('Ex: 1', 'signatures'), ENT_QUOTES, 'UTF-8') . "'
              maxlength='5'
              inputmode='numeric'
              pattern='[0-9]*'
              oninput='this.value=this.value.replace(/[^0-9]/g,\"\")'>";
-echo "<div class='form-text'>" . __('Solo el código numérico, sin + ni espacios. Ej: 52 (México), para generar el enlace que lleva a Whatsapp en el QR.', 'signatures') . "</div>";
+echo "<div class='form-text'>" . __('Numeric country code only, no + or spaces. Ex: 1 (USA), used to generate the WhatsApp link in the QR code.', 'signatures') . "</div>";
 echo "</div>";
 
 echo "</div></div>"; // card-body + card general
 
 /* ── Card: Opciones correo ── */
 echo "<div class='card mt-2 rounded-0'>";
-signaturesRibbonSubHeader('ti-mail-forward', __('Opciones del correo electrónico', 'signatures'));
+signaturesRibbonSubHeader('ti-mail-forward', __('Email Options', 'signatures'));
 echo "<div class='card-body'>";
 
 /* PANEL VARIABLES DISPONIBLES */
@@ -285,13 +285,13 @@ echo "
        aria-expanded='false'>
     <span class='fw-bold text-info'>
       <i class='ti ti-variable me-1'></i>
-      " . __('Variables disponibles', 'signatures') . "
+      " . __('Available variables', 'signatures') . "
       &nbsp;<code class='ms-2' style='font-size:0.82em;background:#c8e6fa;padding:1px 5px;border-radius:3px;'>
-        <b>**" . __('negrita', 'signatures') . "**</b>
+        <b>**" . __('bold', 'signatures') . "**</b>
         &nbsp;·&nbsp;
-        <i>*" . __('cursiva', 'signatures') . "*</i>
+        <i>*" . __('italic', 'signatures') . "*</i>
         &nbsp;·&nbsp;
-        <u>__" . __('subrayado', 'signatures') . "__</u>
+        <u>__" . __('underline', 'signatures') . "__</u>
       </code>
     </span>
     <i class='ti ti-chevron-down text-info'></i>
@@ -299,7 +299,7 @@ echo "
   <div class='collapse' id='sigVarsPanel'>
     <div class='card-body py-2' style='font-size:0.9em;'>
       <p class='text-muted mb-2' style='font-size:0.85em;'>
-        <i class='ti ti-hand-click me-1'></i>" . __('Haz clic en una variable para insertarla en el campo activo.', 'signatures') . "
+        <i class='ti ti-hand-click me-1'></i>" . __('Click a variable to insert it into the active field.', 'signatures') . "
       </p>
       <table class='table table-borderless table-sm mb-0'>
         <tbody>
@@ -307,25 +307,25 @@ echo "
             <td>
               <code class='sig-var-badge' data-var='{nombre}'
                     style='background:#ddeeff;padding:2px 6px;border-radius:3px;cursor:pointer;'
-                    title='" . htmlspecialchars(__('Clic para insertar', 'signatures'), ENT_QUOTES, 'UTF-8') . "'>{nombre}</code>
+                    title='" . htmlspecialchars(__('Click to insert', 'signatures'), ENT_QUOTES, 'UTF-8') . "'>{nombre}</code>
             </td>
-            <td class='text-muted'>— " . __('Nombre completo del usuario', 'signatures') . "</td>
+            <td class='text-muted'>— " . __('User\'s full name', 'signatures') . "</td>
           </tr>
           <tr>
             <td>
               <code class='sig-var-badge' data-var='{empresa}'
                     style='background:#ddeeff;padding:2px 6px;border-radius:3px;cursor:pointer;'
-                    title='" . htmlspecialchars(__('Clic para insertar', 'signatures'), ENT_QUOTES, 'UTF-8') . "'>{empresa}</code>
+                    title='" . htmlspecialchars(__('Click to insert', 'signatures'), ENT_QUOTES, 'UTF-8') . "'>{empresa}</code>
             </td>
-            <td class='text-muted'>— " . __('Nombre de la empresa (configurado en General)', 'signatures') . "</td>
+            <td class='text-muted'>— " . __('Company name (configured in General settings)', 'signatures') . "</td>
           </tr>
           <tr>
             <td>
               <code class='sig-var-badge' data-var='{fecha}'
                     style='background:#ddeeff;padding:2px 6px;border-radius:3px;cursor:pointer;'
-                    title='" . htmlspecialchars(__('Clic para insertar', 'signatures'), ENT_QUOTES, 'UTF-8') . "'>{fecha}</code>
+                    title='" . htmlspecialchars(__('Click to insert', 'signatures'), ENT_QUOTES, 'UTF-8') . "'>{fecha}</code>
             </td>
-            <td class='text-muted'>— " . __('Fecha del día en formato dd/mm/aaaa', 'signatures') . "</td>
+            <td class='text-muted'>— " . __('Today\'s date in dd/mm/yyyy format', 'signatures') . "</td>
           </tr>
         </tbody>
       </table>
@@ -338,16 +338,16 @@ echo "
 echo "<div class='mb-4'>";
 echo "<label class='form-label fw-bold'>
         <i class='ti ti-text-size me-2'></i>" .
-        __('Asunto del correo', 'signatures') . "
+        __('Email subject', 'signatures') . "
       </label>";
 echo "<input type='text'
              name='email_subject'
              id='sig-email-subject'
              class='form-control'
              value='" . Html::cleanInputText($emailSubject) . "'
-             placeholder='" . __('Ej: Tu firma de correo corporativa', 'signatures') . "'>";
+             placeholder='" . __('E.g.: Your corporate email signature', 'signatures') . "'>";
 echo "<div class='form-text'>" .
-        __('Puedes usar las variables {nombre}, {empresa} y {fecha}.', 'signatures') .
+        __('You can use the variables {nombre}, {empresa} and {fecha}.', 'signatures') .
      "</div>";
 echo "</div>";
 
@@ -355,30 +355,30 @@ echo "</div>";
 echo "<div class='mb-4'>";
 echo "<label class='form-label fw-bold'>
         <i class='ti ti-align-left me-2'></i>" .
-        __('Cuerpo del correo', 'signatures') . "
+        __('Email body', 'signatures') . "
       </label>";
 echo "<div class='sig-format-toolbar mb-1 d-flex gap-1 align-items-center'>
    <button type='button' class='btn btn-sm btn-outline-secondary sig-fmt-btn' data-wrap='**'
-           title='" . __('Negrita — **texto**', 'signatures') . "'>
+           title='" . __('Bold — **text**', 'signatures') . "'>
       <b>B</b>&nbsp;<small class='fw-normal opacity-75'>**</small>
    </button>
    <button type='button' class='btn btn-sm btn-outline-secondary sig-fmt-btn' data-wrap='*'
-           title='" . __('Cursiva — *texto*', 'signatures') . "'>
+           title='" . __('Italic — *text*', 'signatures') . "'>
       <i>I</i>&nbsp;<small class='fw-normal opacity-75'>*</small>
    </button>
    <button type='button' class='btn btn-sm btn-outline-secondary sig-fmt-btn' data-wrap='__'
-           title='" . __('Subrayado — __texto__', 'signatures') . "'>
+           title='" . __('Underline — __text__', 'signatures') . "'>
       <u>U</u>&nbsp;<small class='fw-normal opacity-75'>__</small>
    </button>
 </div>";
 echo "<textarea name='email_body' id='sig-email-body'
                class='form-control'
                rows='4'
-               placeholder='" . __('Ej: Adjunto encontrarás tu firma de correo corporativa. Guárdala y úsala en tu cliente de correo.', 'signatures') . "'>" .
+               placeholder='" . __('E.g.: Attached you will find your corporate email signature. Save it and use it in your email client.', 'signatures') . "'>" .
                Html::cleanPostForTextArea($emailBody) .
      "</textarea>";
 echo "<div class='form-text'>" .
-        __('Puedes usar las variables {nombre}, {empresa} y {fecha}.', 'signatures') .
+        __('You can use the variables {nombre}, {empresa} and {fecha}.', 'signatures') .
      "</div>";
 echo "</div>";
 
@@ -386,30 +386,30 @@ echo "</div>";
 echo "<div class='mb-4'>";
 echo "<label class='form-label fw-bold'>
         <i class='ti ti-section me-2'></i>" .
-        __('Pie del correo', 'signatures') . "
+        __('Email footer', 'signatures') . "
       </label>";
 echo "<div class='sig-format-toolbar mb-1 d-flex gap-1 align-items-center'>
    <button type='button' class='btn btn-sm btn-outline-secondary sig-fmt-btn' data-wrap='**'
-           title='" . __('Negrita — **texto**', 'signatures') . "'>
+           title='" . __('Bold — **text**', 'signatures') . "'>
       <b>B</b>&nbsp;<small class='fw-normal opacity-75'>**</small>
    </button>
    <button type='button' class='btn btn-sm btn-outline-secondary sig-fmt-btn' data-wrap='*'
-           title='" . __('Cursiva — *texto*', 'signatures') . "'>
+           title='" . __('Italic — *text*', 'signatures') . "'>
       <i>I</i>&nbsp;<small class='fw-normal opacity-75'>*</small>
    </button>
    <button type='button' class='btn btn-sm btn-outline-secondary sig-fmt-btn' data-wrap='__'
-           title='" . __('Subrayado — __texto__', 'signatures') . "'>
+           title='" . __('Underline — __text__', 'signatures') . "'>
       <u>U</u>&nbsp;<small class='fw-normal opacity-75'>__</small>
    </button>
 </div>";
 echo "<textarea name='email_footer' id='sig-email-footer'
                class='form-control'
                rows='2'
-               placeholder='" . __('Ej: Este correo fue generado automáticamente por el sistema GLPI.', 'signatures') . "'>" .
+               placeholder='" . __('E.g.: This email was automatically generated by the GLPI system.', 'signatures') . "'>" .
                Html::cleanPostForTextArea($emailFooter) .
      "</textarea>";
 echo "<div class='form-text'>" .
-        __('Puedes usar las variables {nombre}, {empresa} y {fecha}.', 'signatures') .
+        __('You can use the variables {nombre}, {empresa} and {fecha}.', 'signatures') .
      "</div>";
 echo "</div>";
 
@@ -422,11 +422,11 @@ $_hasConfig   = !empty(trim($emailSubject)) && !empty(trim($emailBody));
 $_btnDisabled = (!$_mailOk || !$_hasConfig);
 
 if (!$_mailOk) {
-   $_btnTooltip = __('Servidor de correo de GLPI no configurado', 'signatures');
+   $_btnTooltip = __('GLPI mail server not configured', 'signatures');
 } elseif (!$_hasConfig) {
-   $_btnTooltip = __('Configure el asunto y cuerpo del correo primero', 'signatures');
+   $_btnTooltip = __('Configure the email subject and body first', 'signatures');
 } else {
-   $_btnTooltip = __('Envía un correo de prueba a tu dirección registrada en GLPI', 'signatures');
+   $_btnTooltip = __('Send a test email to your registered GLPI address', 'signatures');
 }
 
 $_btnTooltipEsc = htmlspecialchars($_btnTooltip, ENT_QUOTES, 'UTF-8');
@@ -439,12 +439,12 @@ echo "<div class='d-flex align-items-center gap-3 flex-wrap mt-3'>
    <span data-bs-toggle='tooltip' title='{$_btnTooltipEsc}' class='d-inline-block'>
       <button type='submit' form='sig-test-mail-form' class='{$_btnCls}'>
          <i class='ti ti-send me-2'></i>"
-         . __('Enviar correo de prueba', 'signatures') .
+         . __('Send test email', 'signatures') .
       "</button>
    </span>
    <span class='text-muted' style='font-size:0.85em;'>
       <i class='ti ti-info-circle me-1'></i>"
-      . __('El correo se enviará a la dirección registrada en tu perfil de GLPI.', 'signatures') .
+      . __('The email will be sent to the address registered in your GLPI profile.', 'signatures') .
    "</span>
 </div>";
 
@@ -456,7 +456,7 @@ echo "</div>"; // fin tab-general
  * ===================================================== */
 echo "<div class='tab-pane fade' id='tab-cel'>";
 echo "<div class='card mt-2 rounded-0'>";
-signaturesRibbonSubHeader('ti-device-mobile', __('Plantilla con celular', 'signatures'));
+signaturesRibbonSubHeader('ti-device-mobile', __('Template with mobile', 'signatures'));
 echo "<div class='card-body'>";
 
 if ($hasbase1) {
@@ -464,7 +464,7 @@ if ($hasbase1) {
    $cacheBust = filemtime($base1File);
    $csrf1     = Session::getNewCSRFToken();
    echo "<div class='mb-4'>";
-   echo "<label class='fw-bold'>" . __('Actual', 'signatures') . "</label><br>";
+   echo "<label class='fw-bold'>" . __('Current', 'signatures') . "</label><br>";
    echo "<a href='{$url}' download='plantilla_con_celular.png'>";
    echo "<img src='{$url}&t={$cacheBust}' style='max-width:100%;border:1px solid #ccc'>";
    echo "</a><br><br>";
@@ -472,16 +472,16 @@ if ($hasbase1) {
    echo "<form method='post' action='{$self}' style='display:inline;'>
             <input type='hidden' name='_glpi_csrf_token' value='{$csrf1}'>
             <button type='submit' name='delete_base1' value='1' class='btn btn-danger'>
-               <i class='ti ti-trash'></i> " . __('Eliminar', 'signatures') . "
+               <i class='ti ti-trash'></i> " . __('Delete', 'signatures') . "
             </button>
          </form>";
    echo "</div>";
 }
 
-echo "<label class='fw-bold'>" . __('Cargar nueva', 'signatures') . "</label>";
+echo "<label class='fw-bold'>" . __('Upload new', 'signatures') . "</label>";
 echo "<input type='file' name='base1' class='form-control' accept='image/png'
        onchange='preview(this,\"new-base1-preview\",\"wrap1\")'>";
-echo "<div class='form-text'>" . __('Solo PNG · Máx. 300 KB · Dimensiones recomendadas: 650×250 px', 'signatures') . "</div>";
+echo "<div class='form-text'>" . __('PNG only · Max. 300 KB · Recommended dimensions: 650×250 px', 'signatures') . "</div>";
 echo "<div id='wrap1' class='d-none mt-2'>
         <img id='new-base1-preview' style='max-width:100%;border:1px dashed #999'>
       </div>";
@@ -494,7 +494,7 @@ echo "</div>"; // fin tab-cel
  * ===================================================== */
 echo "<div class='tab-pane fade' id='tab-nocel'>";
 echo "<div class='card mt-2 rounded-0'>";
-signaturesRibbonSubHeader('ti-phone-off', __('Plantilla sin celular', 'signatures'));
+signaturesRibbonSubHeader('ti-phone-off', __('Template without mobile', 'signatures'));
 echo "<div class='card-body'>";
 
 if ($hasbase2) {
@@ -502,7 +502,7 @@ if ($hasbase2) {
    $cacheBust = filemtime($base2File);
    $csrf2     = Session::getNewCSRFToken();
    echo "<div class='mb-4'>";
-   echo "<label class='fw-bold'>" . __('Actual', 'signatures') . "</label><br>";
+   echo "<label class='fw-bold'>" . __('Current', 'signatures') . "</label><br>";
    echo "<a href='{$url}' download='plantilla_sin_celular.png'>";
    echo "<img src='{$url}&t={$cacheBust}' style='max-width:100%;border:1px solid #ccc'>";
    echo "</a><br><br>";
@@ -510,16 +510,16 @@ if ($hasbase2) {
    echo "<form method='post' action='{$self}' style='display:inline;'>
             <input type='hidden' name='_glpi_csrf_token' value='{$csrf2}'>
             <button type='submit' name='delete_base2' value='1' class='btn btn-danger'>
-               <i class='ti ti-trash'></i> " . __('Eliminar', 'signatures') . "
+               <i class='ti ti-trash'></i> " . __('Delete', 'signatures') . "
             </button>
          </form>";
    echo "</div>";
 }
 
-echo "<label class='fw-bold'>" . __('Cargar nueva', 'signatures') . "</label>";
+echo "<label class='fw-bold'>" . __('Upload new', 'signatures') . "</label>";
 echo "<input type='file' name='base2' class='form-control' accept='image/png'
        onchange='preview(this,\"new-base2-preview\",\"wrap2\")'>";
-echo "<div class='form-text'>" . __('Solo PNG · Máx. 300 KB · Dimensiones recomendadas: 650×250 px', 'signatures') . "</div>";
+echo "<div class='form-text'>" . __('PNG only · Max. 300 KB · Recommended dimensions: 650×250 px', 'signatures') . "</div>";
 echo "<div id='wrap2' class='d-none mt-2'>
         <img id='new-base2-preview' style='max-width:100%;border:1px dashed #999'>
       </div>";
@@ -537,8 +537,8 @@ $_adminId  = (int)Session::getLoginUserID();
 $_adminUser = new User();
 $_adminUser->getFromDB($_adminId);
 
-$_uName     = $_adminUser->getFriendlyName() ?: __('Nombre Apellido', 'signatures');
-$_uEmail    = __('correo@empresa.com', 'signatures');
+$_uName     = $_adminUser->getFriendlyName() ?: __('First Last', 'signatures');
+$_uEmail    = __('email@company.com', 'signatures');
 $_uMobile   = $_adminUser->fields['mobile'] ?? '';
 $_uPhone    = $_adminUser->fields['phone']  ?? '';
 $_uPhone2   = $_adminUser->fields['phone2'] ?? '';
@@ -549,9 +549,9 @@ if (!empty($_uEmails)) {
    $_uEmail = $_row['email'] ?? $_uEmail;
 }
 
-if (empty($_uMobile)) { $_uMobile = __('55 1234 5678', 'signatures'); }
+if (empty($_uMobile)) { $_uMobile = __('555 123 4567', 'signatures'); }
 
-$_uTitulo  = __('No especificado', 'signatures');
+$_uTitulo  = __('Not specified', 'signatures');
 if (!empty($_adminUser->fields['usertitles_id'])) {
    $_uTitulo = Dropdown::getDropdownName('glpi_usertitles', (int)$_adminUser->fields['usertitles_id']);
 }
@@ -563,13 +563,13 @@ if ($_entityPos->getFromDB((int)($_adminUser->fields['entities_id'] ?? 0))) {
    $_phoneEnt = (string)$_entityPos->getField('phonenumber');
    $_web      = (string)$_entityPos->getField('website');
 }
-if (empty($_phoneEnt)) { $_phoneEnt = __('55 9876 5432', 'signatures'); }
-if (empty($_web))      { $_web = __('www.empresa.com', 'signatures'); }
+if (empty($_phoneEnt)) { $_phoneEnt = __('555 987 6543', 'signatures'); }
+if (empty($_web))      { $_web = __('www.company.com', 'signatures'); }
 
 $_extraLabel = '';
 $_extraPhone = '';
-if ($_uPhone2 !== '')       { $_extraLabel = __('Oficina: ', 'signatures'); $_extraPhone = $_uPhone2; }
-elseif ($_uPhone !== '')    { $_extraLabel = __('Ext: ',    'signatures'); $_extraPhone = $_uPhone; }
+if ($_uPhone2 !== '')       { $_extraLabel = __('Office: ', 'signatures'); $_extraPhone = $_uPhone2; }
+elseif ($_uPhone !== '')    { $_extraLabel = __('Ext: ', 'signatures'); $_extraPhone = $_uPhone; }
 if (empty($_extraPhone))    { $_extraLabel = __('Ext: ', 'signatures'); $_extraPhone = '123'; }
 
 // ── URLs de fuentes y plantillas ──────────────────────────────────────
@@ -589,25 +589,25 @@ $_pos = static function (string $key) use ($_c, $_D): int {
 // ── Datos de campos por plantilla ─────────────────────────────────────
 // [ id, label, x, y, size, font (black|roman), color (white|black), sample_text ]
 $_fieldsB1 = [
-   ['nombre',   __('Nombre',         'signatures'), $_pos('sig_b1_nombre_x'),   $_pos('sig_b1_nombre_y'),   $_pos('sig_b1_nombre_size'),   'black', 'white',  $_uName],
-   ['titulo',   __('Título',         'signatures'), $_pos('sig_b1_titulo_x'),   $_pos('sig_b1_titulo_y'),   $_pos('sig_b1_titulo_size'),   'black', 'white',  $_uTitulo],
-   ['email',    __('Correo',         'signatures'), $_pos('sig_b1_email_x'),    $_pos('sig_b1_email_y'),    $_pos('sig_b1_email_size'),    'roman', 'black',  $_uEmail],
-   ['mobile',   __('Celular',        'signatures'), $_pos('sig_b1_mobile_x'),   $_pos('sig_b1_mobile_y'),   $_pos('sig_b1_mobile_size'),   'roman', 'black',  $_uMobile],
-   ['tel',      __('Tel. entidad',   'signatures'), $_pos('sig_b1_tel_x'),      $_pos('sig_b1_tel_y'),      $_pos('sig_b1_tel_size'),      'roman', 'black',  $_phoneEnt],
-   ['ext',      __('Ext/Oficina',    'signatures'), $_pos('sig_b1_ext_x'),      $_pos('sig_b1_ext_y'),      $_pos('sig_b1_ext_size'),      'roman', 'black',  $_extraLabel . $_extraPhone],
-   ['facebook', __('Facebook',       'signatures'), $_pos('sig_b1_facebook_x'), $_pos('sig_b1_facebook_y'), $_pos('sig_b1_facebook_size'), 'roman', 'black',  $facebookPage ?: 'cyalimentos'],
-   ['web',      __('Web',            'signatures'), $_pos('sig_b1_web_x'),      $_pos('sig_b1_web_y'),      $_pos('sig_b1_web_size'),      'roman', 'black',  $_web],
-   ['qr',       __('QR WhatsApp',    'signatures'), $_pos('sig_b1_qr_x'),       $_pos('sig_b1_qr_y'),       0,                            'roman', 'black',  '▣ QR'],
+   ['nombre',   __('Name', 'signatures'), $_pos('sig_b1_nombre_x'),   $_pos('sig_b1_nombre_y'),   $_pos('sig_b1_nombre_size'),   'black', 'white',  $_uName],
+   ['titulo',   __('Title', 'signatures'), $_pos('sig_b1_titulo_x'),   $_pos('sig_b1_titulo_y'),   $_pos('sig_b1_titulo_size'),   'black', 'white',  $_uTitulo],
+   ['email',    __('Email', 'signatures'), $_pos('sig_b1_email_x'),    $_pos('sig_b1_email_y'),    $_pos('sig_b1_email_size'),    'roman', 'black',  $_uEmail],
+   ['mobile',   __('Mobile', 'signatures'), $_pos('sig_b1_mobile_x'),   $_pos('sig_b1_mobile_y'),   $_pos('sig_b1_mobile_size'),   'roman', 'black',  $_uMobile],
+   ['tel',      __('Entity phone', 'signatures'), $_pos('sig_b1_tel_x'),      $_pos('sig_b1_tel_y'),      $_pos('sig_b1_tel_size'),      'roman', 'black',  $_phoneEnt],
+   ['ext',      __('Ext/Office', 'signatures'), $_pos('sig_b1_ext_x'),      $_pos('sig_b1_ext_y'),      $_pos('sig_b1_ext_size'),      'roman', 'black',  $_extraLabel . $_extraPhone],
+   ['facebook', __('Facebook', 'signatures'), $_pos('sig_b1_facebook_x'), $_pos('sig_b1_facebook_y'), $_pos('sig_b1_facebook_size'), 'roman', 'black',  $facebookPage ?: 'cyalimentos'],
+   ['web',      __('Website', 'signatures'), $_pos('sig_b1_web_x'),      $_pos('sig_b1_web_y'),      $_pos('sig_b1_web_size'),      'roman', 'black',  $_web],
+   ['qr',       __('WhatsApp QR', 'signatures'), $_pos('sig_b1_qr_x'),       $_pos('sig_b1_qr_y'),       0,                            'roman', 'black',  '▣ QR'],
 ];
 
 $_fieldsB2 = [
-   ['nombre',   __('Nombre',         'signatures'), $_pos('sig_b2_nombre_x'),   $_pos('sig_b2_nombre_y'),   $_pos('sig_b2_nombre_size'),   'black', 'white',  $_uName],
-   ['titulo',   __('Título',         'signatures'), $_pos('sig_b2_titulo_x'),   $_pos('sig_b2_titulo_y'),   $_pos('sig_b2_titulo_size'),   'black', 'white',  $_uTitulo],
-   ['email',    __('Correo',         'signatures'), $_pos('sig_b2_email_x'),    $_pos('sig_b2_email_y'),    $_pos('sig_b2_email_size'),    'roman', 'black',  $_uEmail],
-   ['tel',      __('Tel. entidad',   'signatures'), $_pos('sig_b2_tel_x'),      $_pos('sig_b2_tel_y'),      $_pos('sig_b2_tel_size'),      'roman', 'black',  $_phoneEnt],
-   ['ext',      __('Ext/Oficina',    'signatures'), $_pos('sig_b2_ext_x'),      $_pos('sig_b2_ext_y'),      $_pos('sig_b2_ext_size'),      'roman', 'black',  $_extraLabel . $_extraPhone],
-   ['facebook', __('Facebook',       'signatures'), $_pos('sig_b2_facebook_x'), $_pos('sig_b2_facebook_y'), $_pos('sig_b2_facebook_size'), 'roman', 'black',  $facebookPage ?: 'cyalimentos'],
-   ['web',      __('Web',            'signatures'), $_pos('sig_b2_web_x'),      $_pos('sig_b2_web_y'),      $_pos('sig_b2_web_size'),      'roman', 'black',  $_web],
+   ['nombre',   __('Name', 'signatures'), $_pos('sig_b2_nombre_x'),   $_pos('sig_b2_nombre_y'),   $_pos('sig_b2_nombre_size'),   'black', 'white',  $_uName],
+   ['titulo',   __('Title', 'signatures'), $_pos('sig_b2_titulo_x'),   $_pos('sig_b2_titulo_y'),   $_pos('sig_b2_titulo_size'),   'black', 'white',  $_uTitulo],
+   ['email',    __('Email', 'signatures'), $_pos('sig_b2_email_x'),    $_pos('sig_b2_email_y'),    $_pos('sig_b2_email_size'),    'roman', 'black',  $_uEmail],
+   ['tel',      __('Entity phone', 'signatures'), $_pos('sig_b2_tel_x'),      $_pos('sig_b2_tel_y'),      $_pos('sig_b2_tel_size'),      'roman', 'black',  $_phoneEnt],
+   ['ext',      __('Ext/Office', 'signatures'), $_pos('sig_b2_ext_x'),      $_pos('sig_b2_ext_y'),      $_pos('sig_b2_ext_size'),      'roman', 'black',  $_extraLabel . $_extraPhone],
+   ['facebook', __('Facebook', 'signatures'), $_pos('sig_b2_facebook_x'), $_pos('sig_b2_facebook_y'), $_pos('sig_b2_facebook_size'), 'roman', 'black',  $facebookPage ?: 'cyalimentos'],
+   ['web',      __('Website', 'signatures'), $_pos('sig_b2_web_x'),      $_pos('sig_b2_web_y'),      $_pos('sig_b2_web_size'),      'roman', 'black',  $_web],
 ];
 
 // ── Renderizar editor ─────────────────────────────────────────────────
@@ -627,7 +627,7 @@ $_renderEditor = static function (
 
    if (!$hasTemplate) {
       echo "<div class='alert alert-warning'><i class='ti ti-alert-triangle me-2'></i>"
-         . __('No hay plantilla cargada para esta configuración. Carga una en la pestaña correspondiente.', 'signatures')
+         . __('No template loaded for this configuration. Upload one in the corresponding tab.', 'signatures')
          . "</div>";
       echo "</div></div>"; // card-body + card (early return sin template)
       return;
@@ -635,7 +635,7 @@ $_renderEditor = static function (
 
    echo "<p class='text-muted small mb-2 sig-editor-hint'>
       <i class='ti ti-hand-move me-1'></i>"
-      . __('Arrastra cada campo a su posición. Usa los inputs de tamaño para ajustar el tamaño de fuente. Guarda con el botón Guardar.', 'signatures') .
+      . __('Drag each field to its position. Use size inputs to adjust font size. Save with the Save button.', 'signatures') .
    "</p>";
 
    // Contenedor del editor — la imagen se escala con max-width:100%
@@ -724,9 +724,9 @@ $_renderEditor = static function (
    echo "<div class='mt-3'>";
    echo "<table class='table table-sm table-bordered sig-pos-table' style='max-width:420px'>";
    echo "<thead><tr>
-      <th>" . __('Campo', 'signatures') . "</th>
-      <th style='width:100px'>" . __('Tamaño (px)', 'signatures') . "</th>
-      <th style='width:140px'>" . __('Posición X / Y', 'signatures') . "</th>
+      <th>" . __('Field', 'signatures') . "</th>
+      <th style='width:100px'>" . __('Size (px)', 'signatures') . "</th>
+      <th style='width:140px'>" . __('Position X / Y', 'signatures') . "</th>
    </tr></thead><tbody>";
 
    foreach ($fields as [$fieldId, $label, $gdX, $gdY, $gdSize]) {
@@ -786,21 +786,21 @@ $_renderEditor = static function (
 
    // Botón reset
    echo "<button type='button' class='btn btn-sm btn-outline-secondary sig-reset-btn' data-base='{$baseId}'>
-      <i class='ti ti-refresh me-1'></i>" . __('Restaurar posiciones por defecto', 'signatures') . "
+      <i class='ti ti-refresh me-1'></i>" . __('Restore default positions', 'signatures') . "
    </button>";
 
    echo "</div></div>"; // card-body + card editor
 };
 
 $_renderEditor('b1',
-   __('Plantilla con celular — Editor de posiciones', 'signatures'),
+   __('Template with mobile — Position editor', 'signatures'),
    $_base1Url,
    $_fieldsB1,
    $hasbase1
 );
 
 $_renderEditor('b2',
-   __('Plantilla sin celular — Editor de posiciones', 'signatures'),
+   __('Template without mobile — Position editor', 'signatures'),
    $_base2Url,
    $_fieldsB2,
    $hasbase2
@@ -813,12 +813,12 @@ echo "</div>"; // tab-content
 /* FOOTER — banner de cambios sin guardar + card-footer del card exterior */
 echo "<div id='sig-unsaved-banner' class='alert alert-warning d-none mb-0 mx-0 py-2 px-3 rounded-0' style='font-size:0.88em;'>
    <i class='ti ti-alert-triangle me-2'></i>"
-   . __('Hay cambios en las posiciones sin guardar. Haz clic en Guardar para aplicarlos.', 'signatures') .
+   . __('There are unsaved position changes. Click Save to apply them.', 'signatures') .
 "</div>";
 echo "<div class='card-footer text-end'>";
 echo "<button type='submit' name='save' id='btn-save-config' class='btn btn-warning'>"
    . "<i class='ti ti-device-floppy me-1' id='icon-save-config'></i>"
-   . __('Guardar', 'signatures')
+   . __('Save', 'signatures')
    . "</button>";
 echo "</div>";
 
@@ -860,10 +860,10 @@ $_fontBlackUrlJs = htmlspecialchars($_fontBlackUrl, ENT_QUOTES, 'UTF-8');
 $_fontRomanUrlJs = htmlspecialchars($_fontRomanUrl, ENT_QUOTES, 'UTF-8');
 
 // Strings traducidos para JS — json_encode NO funciona dentro de heredoc
-$_i18n_confirmReset   = json_encode(__('¿Restaurar todas las posiciones a los valores por defecto? Esta acción no se puede deshacer hasta guardar.', 'signatures'));
-$_i18n_unsavedChanges = json_encode(__('Cambios sin guardar', 'signatures'));
-$_i18n_onlyPng           = json_encode(__('Solo PNG permitido', 'signatures'));
-$_i18n_formatPlaceholder = json_encode(__('texto', 'signatures'));
+$_i18n_confirmReset   = json_encode(__('Reset all positions to default values? This action cannot be undone until you save.', 'signatures'));
+$_i18n_unsavedChanges = json_encode(__('Unsaved changes', 'signatures'));
+$_i18n_onlyPng           = json_encode(__('Only PNG files are allowed', 'signatures'));
+$_i18n_formatPlaceholder = json_encode(__('text', 'signatures'));
 
 echo <<<HTML
 <style>

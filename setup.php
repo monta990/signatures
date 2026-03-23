@@ -19,7 +19,7 @@ function plugin_init_signatures(): void {
 function plugin_version_signatures(): array {
    return [
       'name'         => 'Email Signatures',
-      'version'      => '1.3.4',
+      'version'      => '1.4.0',
       'author'       => 'Edwin Elias Alvarez',
       'license'      => 'GPLv2+',
       'homepage'     => 'https://sontechs.com',
@@ -102,7 +102,7 @@ function plugin_signatures_check_prerequisites(): bool {
 
    if (version_compare(PHP_VERSION, '8.1', '<')) {
       Session::addMessageAfterRedirect(
-         __('Se requiere PHP 8.1 o superior para instalar este complemento.', 'signatures'),
+         __('PHP 8.1 or higher is required to install this plugin.', 'signatures'),
          false,
          ERROR
       );
@@ -111,7 +111,7 @@ function plugin_signatures_check_prerequisites(): bool {
 
    if (!extension_loaded('gd')) {
       Session::addMessageAfterRedirect(
-         __('La extensión GD de PHP es requerida para instalar este complemento.', 'signatures'),
+         __('The PHP GD extension is required to install this plugin.', 'signatures'),
          false,
          ERROR
       );

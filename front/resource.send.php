@@ -21,12 +21,12 @@ switch ($resource) {
 
    default:
       http_response_code(400);
-      exit(__('Recurso inválido', 'signatures'));
+      exit(__('Invalid resource', 'signatures'));
 }
 
 if (!is_readable($file)) {
    http_response_code(404);
-   exit(__('Plantilla no encontrada', 'signatures'));
+   exit(__('Template not found', 'signatures'));
 }
 
 $mtime   = filemtime($file);

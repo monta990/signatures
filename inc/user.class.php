@@ -33,13 +33,13 @@ class PluginSignaturesUser extends CommonGLPI {
       $badge = '';
       if (!$hasBase || !$hasEmail) {
          $badge = " <span class='badge bg-warning text-dark ms-1' style='font-size:0.65em;' "
-                . "title='" . htmlspecialchars(__('Configuración incompleta', 'signatures'), ENT_QUOTES, 'UTF-8') . "'>!</span>";
+                . "title='" . htmlspecialchars(__('Incomplete configuration', 'signatures'), ENT_QUOTES, 'UTF-8') . "'>!</span>";
       }
 
       return [
          1 => "<span class='d-flex align-items-center'>
                              <i class='ti ti-mail me-2'></i>" .
-                             __('Firma de correo', 'signatures') .
+                             __('Email Signature', 'signatures') .
                              $badge .
                           "</span>"
       ];
@@ -96,7 +96,7 @@ class PluginSignaturesUser extends CommonGLPI {
                 <i class='fs-2x ti ti-mail'></i>
              </div>
              <h4 class='card-title ms-5 mb-0'>" .
-                __('Generar firma para correo', 'signatures') .
+                __('Generate email signature', 'signatures') .
              "</h4>
           </div>";
 
@@ -108,8 +108,8 @@ class PluginSignaturesUser extends CommonGLPI {
       if (!$hasBase) {
          echo "<div class='alert alert-warning text-start'>
                 <i class='ti ti-alert-triangle me-2'></i>
-                <strong>" . __('No se encontraron las plantillas.', 'signatures') . "</strong><br>
-                " . __('Por favor valida que las plantillas existan en la configuración del complemento.', 'signatures') . "
+                <strong>" . __('Templates not found.', 'signatures') . "</strong><br>
+                " . __('Please verify that the templates exist in the plugin configuration.', 'signatures') . "
              </div>";
       }
 
@@ -119,14 +119,14 @@ class PluginSignaturesUser extends CommonGLPI {
       if (!$hasEmail) {
          echo "<div class='alert alert-info text-start'>
                 <i class='ti ti-mail-off me-2'></i>
-                <strong>" . __('El envío por correo no está disponible.', 'signatures') . "</strong><br>
-                " . __('Configura el asunto y cuerpo del correo en la configuración del complemento para habilitarlo.', 'signatures') . "
+                <strong>" . __('Email sending is not available.', 'signatures') . "</strong><br>
+                " . __('Configure the email subject and body in the plugin settings to enable it.', 'signatures') . "
              </div>";
       }
 
       echo "<p class='text-body-secondary mb-3'>" .
                sprintf(
-                  __('Generando firma para: %s', 'signatures'),
+                  __('Generating signature for: %s', 'signatures'),
                   $user->getFriendlyName()
                ) .
            "</p>";
@@ -142,12 +142,12 @@ class PluginSignaturesUser extends CommonGLPI {
                             id='qr_check'
                             value='1'
                             checked>
-                     " . __('Incluir código QR de WhatsApp', 'signatures') . "
+                     " . __('Include WhatsApp QR code', 'signatures') . "
                   <i class='ti ti-brand-whatsapp ms-1'></i></label>
                </div>";
       } else {
          echo "<p class='text-body-secondary'><i class='ti ti-info-circle me-1'></i>" .
-              __('Este usuario no tiene número celular, el QR no estará disponible.', 'signatures') .
+              __('This user has no mobile number; the QR code will not be available.', 'signatures') .
               "</p>";
       }
 
@@ -164,7 +164,7 @@ class PluginSignaturesUser extends CommonGLPI {
                        class='btn btn-primary'
                        " . (!$hasBase ? 'disabled' : '') . ">
                   <i class='ti ti-download me-2'></i>
-                  " . __('Descargar firma', 'signatures') . "
+                  " . __('Download signature', 'signatures') . "
                </button>
             </form>";
 
@@ -176,7 +176,7 @@ class PluginSignaturesUser extends CommonGLPI {
                      data-qrval='" . ($hasMobile ? '1' : '') . "'
                      " . (!$hasBase ? 'disabled' : '') . ">
                <i class='ti ti-eye me-2'></i>" .
-               __('Vista previa', 'signatures') .
+               __('Preview', 'signatures') .
             "</button>";
 
       /* --- Botón Enviar por correo --- */
@@ -188,7 +188,7 @@ class PluginSignaturesUser extends CommonGLPI {
                        class='btn btn-primary'
                        " . (!$hasBase || !$hasEmail ? 'disabled' : '') . ">
                   <i class='ti ti-send me-2'></i>
-                  " . __('Enviar por correo', 'signatures') . "
+                  " . __('Send by email', 'signatures') . "
                </button>
             </form>";
 
@@ -206,14 +206,14 @@ class PluginSignaturesUser extends CommonGLPI {
                <div class='modal-header py-2'>
                   <h6 class='modal-title'>
                      <i class='ti ti-eye me-2'></i>" .
-                     __('Vista previa de firma', 'signatures') .
+                     __('Signature preview', 'signatures') .
                   "</h6>
                   <button type='button' class='btn-close' data-bs-dismiss='modal'></button>
                </div>
                <div class='modal-body text-center py-4'>
                   <div id='sig-preview-loading' style='display:none;'>
                      <span class='spinner-border spinner-border-sm me-2'></span>" .
-                     __('Generando vista previa...', 'signatures') .
+                     __('Generating preview...', 'signatures') .
                   "</div>
                   <img id='sig-preview-img' src='' alt='signature preview'
                        style='max-width:100%;display:none;border:1px solid #dee2e6;'>
@@ -225,7 +225,7 @@ class PluginSignaturesUser extends CommonGLPI {
       /* ===========================
        * JS: checkbox + preview + feedback botones
        * =========================== */
-      $_i18n_previewError = json_encode(__('Error al cargar la vista previa', 'signatures'));
+      $_i18n_previewError = json_encode(__('Error loading preview', 'signatures'));
       echo <<<HTML
 <script>
 const SIG_USER_I18N = {

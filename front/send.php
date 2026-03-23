@@ -36,7 +36,7 @@ if ($isTest) {
     $user = new User();
     if (!$user->getFromDB((int)Session::getLoginUserID())) {
         Session::addMessageAfterRedirect(
-            __('No se pudo obtener el usuario actual.', 'signatures'),
+            __('Could not retrieve the current user.', 'signatures'),
             false,
             ERROR
         );
@@ -114,7 +114,7 @@ try {
 } catch (\Throwable $e) {
     Toolbox::logError('signatures plugin - generatePNG: ' . $e->getMessage());
     Session::addMessageAfterRedirect(
-        __('No se pudo generar la firma. Revisa el log de GLPI para más detalles.', 'signatures'),
+        __('Could not generate the signature. Check the GLPI log for details.', 'signatures'),
         false,
         ERROR
     );
@@ -169,13 +169,13 @@ if (is_file($file)) {
  * ============================ */
 if ($sent) {
     $successMsg = $isTest
-        ? sprintf(__('Correo de prueba enviado a %s.', 'signatures'), $payload['toAddress'])
-        : sprintf(__('Firma enviada correctamente a %s.', 'signatures'), $payload['toAddress']);
+        ? sprintf(__('Test email sent to %s.', 'signatures'), $payload['toAddress'])
+        : sprintf(__('Signature successfully sent to %s.', 'signatures'), $payload['toAddress']);
     Session::addMessageAfterRedirect($successMsg, false, INFO);
 } else {
     $errorMsg = $isTest
-        ? __('No se pudo enviar el correo de prueba. Verifica la configuración de correo saliente en GLPI.', 'signatures')
-        : __('No se pudo enviar el correo. Verifica la configuración de correo saliente en GLPI.', 'signatures');
+        ? __('Could not send the test email. Check the outgoing mail configuration in GLPI.', 'signatures')
+        : __('Could not send the email. Please check the outgoing mail configuration in GLPI.', 'signatures');
     Session::addMessageAfterRedirect($errorMsg, false, ERROR);
 }
 

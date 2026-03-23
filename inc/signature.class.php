@@ -11,21 +11,21 @@ class PluginSignaturesSignature {
       $base2 = PluginSignaturesPaths::base2Path();
 
       if (!is_readable($base1) || !is_readable($base2)) {
-         $errors[] = __('Las plantillas no están correctamente cargadas validalo en configuración del complemento', 'signatures');
+         $errors[] = __('Templates are not correctly loaded. Please check the plugin configuration.', 'signatures');
       }
 
       $font = PluginSignaturesPaths::getFontAvenirBlack();
       if (!is_readable($font)) {
-         $errors[] = sprintf(__('No se encontró la fuente TTF: %s', 'signatures'), $font);
+         $errors[] = sprintf(__('TTF font not found: %s', 'signatures'), $font);
       }
 
       $font2 = PluginSignaturesPaths::getFontAvenirRoman();
       if (!is_readable($font2)) {
-         $errors[] = sprintf(__('No se encontró la fuente TTF: %s', 'signatures'), $font2);
+         $errors[] = sprintf(__('TTF font not found: %s', 'signatures'), $font2);
       }
 
       if (!extension_loaded('gd')) {
-         $errors[] = __('Extensión GD de PHP es requerida', 'signatures');
+         $errors[] = __('PHP GD extension is required.', 'signatures');
       }
 
       if ($include_qr) {
@@ -33,7 +33,7 @@ class PluginSignaturesSignature {
          $countryCode  = trim($configsig['whatsapp_country_code'] ?? '');
 
          if ($countryCode === '') {
-            $errors[] = __('El código de país para Whatsapp no está configurado. Defínelo en la configuración del complemento.', 'signatures');
+            $errors[] = __('WhatsApp country code is not configured. Define it in the plugin settings.', 'signatures');
          }
       }
 
@@ -52,11 +52,11 @@ class PluginSignaturesSignature {
       $body    = trim($config['email_body']    ?? '');
 
       if ($subject === '') {
-         $errors[] = __('El asunto del correo no está configurado. Defínelo en la configuración del complemento.', 'signatures');
+         $errors[] = __('Email subject is not configured. Define it in the plugin settings.', 'signatures');
       }
 
       if ($body === '') {
-         $errors[] = __('El cuerpo del correo no está configurado. Defínelo en la configuración del complemento.', 'signatures');
+         $errors[] = __('Email body is not configured. Define it in the plugin settings.', 'signatures');
       }
 
       return $errors;
@@ -86,7 +86,7 @@ class PluginSignaturesSignature {
       $extraPhone = '';
 
       if ($phone2 !== '') {
-         $extraLabel = __('Oficina:', 'signatures') . ' ';
+         $extraLabel = __('Office:', 'signatures') . ' ';
          $extraPhone = $phone2;
       } elseif ($phone !== '') {
          $extraLabel = __('Ext:', 'signatures') . ' ';
@@ -104,7 +104,7 @@ class PluginSignaturesSignature {
 
       if (!$img) {
          throw new RuntimeException(
-            sprintf(__('No se pudo cargar la plantilla: %s', 'signatures'), $basefile)
+            sprintf(__('Could not load template: %s', 'signatures'), $basefile)
          );
       }
 
@@ -122,15 +122,15 @@ class PluginSignaturesSignature {
        * ============================ */
       $entity = new Entity();
       if (!$entity->getFromDB((int)$user->fields['entities_id'])) {
-         throw new RuntimeException(__('Entidad no válida', 'signatures'));
+         throw new RuntimeException(__('Invalid entity', 'signatures'));
       }
 
       /* ============================
        * DATOS USUARIO
        * ============================ */
       $name   = $user->getFriendlyName();
-      $titulo = __('No especificado', 'signatures');
-      $email  = __('No especificado', 'signatures');
+      $titulo = __('Not specified', 'signatures');
+      $email  = __('Not specified', 'signatures');
 
       $phone_entity = (string)$entity->getField('phonenumber');
       $web          = (string)$entity->getField('website');
@@ -338,7 +338,7 @@ class PluginSignaturesSignature {
                 . 'padding:8px 12px;font-size:12px;color:#856404;margin-bottom:16px;">'
                 . '&#9888; '
                 . htmlspecialchars(
-                     __('Este es un correo de prueba enviado desde la configuración del plugin.', 'signatures'),
+                     __('This is a test email sent from the plugin configuration.', 'signatures'),
                      ENT_QUOTES,
                      'UTF-8'
                   )
@@ -380,7 +380,7 @@ class PluginSignaturesSignature {
       }
       if ($toAddress === '') {
          throw new RuntimeException(
-            __('El usuario no tiene una dirección de correo configurada.', 'signatures')
+            __('The user does not have an email address configured.', 'signatures')
          );
       }
 

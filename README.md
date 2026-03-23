@@ -68,7 +68,7 @@ Each signature is rendered dynamically over a configurable PNG template using PH
 
 ### Via ZIP (recommended)
 
-1. Download `signatures-1.3.3.zip` from the [GitHub releases page](https://github.com/monta990/signatures/releases).
+1. Download `signatures-1.4.0.zip` from the [GitHub releases page](https://github.com/monta990/signatures/releases).
 2. In GLPI, go to **Setup → Plugins**.
 3. Click **Upload a plugin**.
 4. Select the ZIP and confirm.
@@ -79,14 +79,14 @@ Each signature is rendered dynamically over a configurable PNG template using PH
 
 ```bash
 cd /var/www/glpi/plugins
-unzip signatures-1.3.3.zip
+unzip signatures-1.4.0.zip
 # The folder must be named exactly "signatures"
 ```
 
 Then go to **Setup → Plugins**, install, and enable.
 
 > **Important:** the plugin directory must be named `signatures` (lowercase). Any
-> other name (e.g. `signatures-1.3.1`) will prevent GLPI from detecting the plugin.
+> other name (e.g. `signatures-1.4.0`) will prevent GLPI from detecting the plugin.
 
 ---
 
@@ -373,7 +373,7 @@ Access checks use `Session::haveRight('config', UPDATE)` and
 | `en_GB` | English (United Kingdom) |
 | `fr_FR` | French (France) |
 
-The `.pot` template contains **121 strings** as of v1.3.3.
+The `.pot` template contains **118 strings** as of v1.4.0.
 All four `.po` source files and compiled `.mo` binaries are included in the package.
 
 To add a new language:
@@ -409,7 +409,7 @@ signatures/
 │   ├── signature.class.php      Image generation, email assembly, QR composition
 │   └── user.class.php           GLPI tab registration, user-facing UI
 ├── locales/
-│   ├── signatures.pot           Translation template (91 strings)
+│   ├── signatures.pot           Translation template (118 strings)
 │   ├── es_MX.po / es_MX.mo
 │   ├── en_US.po / en_US.mo
 │   ├── en_GB.po / en_GB.mo
@@ -417,10 +417,10 @@ signatures/
 ├── templates/                   Created on first upload — not in the ZIP
 │   ├── base.png                 Active template for users WITH mobile
 │   └── base2.png                Active template for users WITHOUT mobile
-├── .gitattributes               Enforces LF line endings
+├── .gitignore
 ├── CHANGELOG.md
 ├── LICENSE
-├── logo.png                     128×128 plugin icon
+├── logo.png                     Plugin icon
 ├── plugin.xml                   GLPI marketplace manifest
 ├── README.md                    This file
 └── setup.php                    Registration, install/uninstall/update hooks
@@ -437,14 +437,15 @@ See [CHANGELOG.md](CHANGELOG.md).
 
 ---
 
-## Autor
+## Author
 
-Edwin Elias Alvarez — [Github](https://github.com/monta990).
+Edwin Elias Alvarez — [GitHub](https://github.com/monta990).
 
 ---
 
 ## Buy me a coffee :)
-If you like my work, you can support me by a donate here:
+
+If you like my work, you can support me with a donation:
 
 <a href="https://www.buymeacoffee.com/monta990" target="_blank"><img src="https://cdn.buymeacoffee.com/buttons/default-yellow.png" alt="Buy Me A Coffee" height="51px" width="210px"></a>
 
@@ -470,7 +471,7 @@ Report bugs or request features on the [issue tracker](https://github.com/monta9
   <strong>GLPI plugin — Genera firmas de correo corporativas en PNG personalizadas para cada usuario de GLPI</strong>
 </p>
    
-p align="center">
+<p align="center">
   <a href="https://github.com/glpi-project/glpi" target="_blank"><img src="https://img.shields.io/badge/GLPI-11.0%2B-blue?style=flat-square" alt="GLPI compatibility"></a>
   <a href="https://www.gnu.org/licenses/old-licenses/gpl-2.0.html" target="_blank"><img src="https://img.shields.io/badge/License-GPL%20v2%2B-green?style=flat-square" alt="License"></a>
   <a href="https://php.net/" target="_blank"><img src="https://img.shields.io/badge/PHP-%3E%3D8.2-purple?style=flat-square" alt="PHP"></a>
@@ -524,7 +525,7 @@ La firma se renderiza dinámicamente sobre una plantilla PNG configurable usando
 
 ### Vía ZIP
 
-1. Descarga `signatures-1.3.3.zip` desde [GitHub releases](https://github.com/monta990/signatures/releases).
+1. Descarga `signatures-1.4.0.zip` desde [GitHub releases](https://github.com/monta990/signatures/releases).
 2. En GLPI: **Configuración → Complementos → Subir un complemento**.
 3. Selecciona el ZIP.
 4. Haz clic en **Instalar** y luego en **Habilitar**.
@@ -533,7 +534,7 @@ La firma se renderiza dinámicamente sobre una plantilla PNG configurable usando
 
 ```bash
 cd /var/www/glpi/plugins
-unzip signatures-1.3.3.zip
+unzip signatures-1.4.0.zip
 # El directorio debe llamarse exactamente "signatures"
 ```
 
@@ -674,7 +675,7 @@ URL `https://wa.me/{pais}{celular}` → `TCPDF2DBarcode` genera PNG temporal →
 | `en_GB` | English (United Kingdom) |
 | `fr_FR` | Français (France) |
 
-91 strings en v1.3.1. Para agregar idioma: copia `.pot` → traduce `msgstr` → compila con `msgfmt` o Poedit.
+118 strings en v1.4.0. Para agregar idioma: copia `.pot` → traduce `msgstr` → compila con `msgfmt` o Poedit.
 
 ---
 
@@ -691,6 +692,7 @@ Ver [CHANGELOG.md](CHANGELOG.md).
 ---
 
 ## Comprame un cafe :)
+
 Si te gusta mi trabajo, me puedes apoyar con una donación:
 
 <a href="https://www.buymeacoffee.com/monta990" target="_blank"><img src="https://cdn.buymeacoffee.com/buttons/default-yellow.png" alt="Buy Me A Coffee" height="51px" width="210px"></a>

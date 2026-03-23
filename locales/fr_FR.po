@@ -1,442 +1,416 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Email Signatures 1.3.1\n"
-"Report-Msgid-Bugs-To: https://sontechs.com\n"
-"POT-Creation-Date: 2026-03-08 00:00+0000\n"
-"PO-Revision-Date: 2026-03-13 15:20+0000\n"
-"Last-Translator: Edwin Elias Alvarez <edwin@sontechs.com>\n"
-"Language-Team: Français\n"
+"Project-Id-Version: Email Signatures 1.4.0\n"
+"Report-Msgid-Bugs-To: https://github.com/monta990/signatures/issues\n"
+"POT-Creation-Date: 2026-03-22 00:00+0000\n"
+"PO-Revision-Date: 2026-03-22 00:00+0000\n"
+"Last-Translator: Automatically generated.\n"
+"Language-Team: Français (France)\n"
 "Language: fr_FR\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-msgid "No se pudo generar la firma. Revisa el log de GLPI para más detalles."
-msgstr ""
-"Impossible de générer la signature. Consultez le journal GLPI pour plus de "
-"détails."
-
-msgid "Plantilla con celular eliminada"
+msgid "Mobile template deleted"
 msgstr "Modèle avec mobile supprimé"
 
-msgid "Plantilla sin celular eliminada"
+msgid "No-mobile template deleted"
 msgstr "Modèle sans mobile supprimé"
 
-msgid "Archivo demasiado grande (Máx. 300 KB)"
+msgid "File too large (Max. 300 KB)"
 msgstr "Fichier trop volumineux (Max. 300 Ko)"
 
-msgid "Formato inválido, solo PNG"
+msgid "Invalid format, only PNG files are allowed"
 msgstr "Format invalide, seuls les fichiers PNG sont acceptés"
 
-msgid "Configuración guardada correctamente"
+msgid "Configuration saved successfully"
 msgstr "Configuration enregistrée avec succès"
 
-msgid "Firma de Correo"
+msgid "Email Signature"
 msgstr "Signature de courriel"
 
-msgid "Configuración de firma para correo"
+msgid "Email Signature Configuration"
 msgstr "Configuration de la signature de courriel"
 
 msgid "General"
 msgstr "Général"
 
-msgid "Con celular"
+msgid "With mobile"
 msgstr "Avec mobile"
 
-msgid "Sin celular"
+msgid "Without mobile"
 msgstr "Sans mobile"
 
-msgid "Posiciones"
+msgid "Positions"
 msgstr "Positions"
 
-msgid "Configuración general"
+msgid "General settings"
 msgstr "Configuration générale"
 
-msgid "Opciones del correo electrónico"
-msgstr "Options du courriel"
+msgid "Facebook page name"
+msgstr "Nom de la page Facebook"
 
-msgid "Variables disponibles"
-msgstr "Variables disponibles"
-
-msgid "Usa **texto** para negrita"
-msgstr "Utilisez **texte** pour le gras"
-
-msgid "Haz clic en una variable para insertarla en el campo activo."
-msgstr "Cliquez sur une variable pour l'insérer dans le champ actif."
-
-msgid "Clic para insertar"
-msgstr "Cliquer pour insérer"
-
-msgid "Nombre completo del usuario"
-msgstr "Nom complet de l'utilisateur"
-
-msgid "Nombre de la empresa (configurado en General)"
-msgstr "Nom de l'entreprise (configuré dans Général)"
-
-msgid "Fecha del día en formato dd/mm/aaaa"
-msgstr "Date du jour au format jj/mm/aaaa"
-
-msgid "Asunto del correo"
-msgstr "Objet du courriel"
-
-msgid "Ej: Tu firma de correo corporativa"
-msgstr "Ex. : Votre signature de courriel d'entreprise"
-
-msgid "Puedes usar las variables {nombre}, {empresa} y {fecha}."
-msgstr "Vous pouvez utiliser les variables {nombre}, {empresa} et {fecha}."
-
-msgid "Cuerpo del correo"
-msgstr "Corps du courriel"
-
-msgid ""
-"Ej: Adjunto encontrarás tu firma de correo corporativa. Guárdala y úsala en "
-"tu cliente de correo."
-msgstr ""
-"Ex. : Ci-joint vous trouverez votre signature de courriel d'entreprise. "
-"Enregistrez-la et utilisez-la dans votre client de messagerie."
-
-msgid "Pie del correo"
-msgstr "Pied de courriel"
-
-msgid "Ej: Este correo fue generado automáticamente por el sistema GLPI."
-msgstr "Ex. : Ce courriel a été généré automatiquement par le système GLPI."
-
-msgid "Servidor de correo de GLPI no configurado"
-msgstr "Serveur de messagerie GLPI non configuré"
-
-msgid "Configure el asunto y cuerpo del correo primero"
-msgstr "Configurez d'abord l'objet et le corps de l'e-mail"
-
-msgid "Envía un correo de prueba a tu dirección registrada en GLPI"
-msgstr "Envoyer un e-mail de test à votre adresse enregistrée dans GLPI"
-
-msgid "Enviar correo de prueba"
-msgstr "Envoyer un e-mail de test"
-
-msgid "El correo se enviará a la dirección registrada en tu perfil de GLPI."
-msgstr "L'e-mail sera envoyé à l'adresse enregistrée dans votre profil GLPI."
-
-msgid "Plantilla con celular"
-msgstr "Modèle avec portable"
-
-msgid "Actual"
-msgstr "Actuel"
-
-msgid "Eliminar"
-msgstr "Supprimer"
-
-msgid "Cargar nueva"
-msgstr "Téléverser un nouveau"
-
-msgid "Plantilla sin celular"
-msgstr "Modèle sans portable"
-
-msgid "No especificado"
-msgstr "Non spécifié"
-
-msgid "Nombre"
-msgstr "Nom"
-
-msgid "Título"
-msgstr "Titre"
-
-msgid "Correo"
-msgstr "E-mail"
-
-msgid "Celular"
-msgstr "Mobile"
-
-msgid "Tel. entidad"
-msgstr "Tél. entité"
-
-msgid "Ext/Oficina"
-msgstr "Poste/Bureau"
-
-msgid "Facebook"
-msgstr "Facebook"
-
-msgid "Web"
-msgstr "Site web"
-
-msgid "QR WhatsApp"
-msgstr "QR WhatsApp"
-
-msgid ""
-"No hay plantilla cargada para esta configuración. Carga una en la pestaña "
-"correspondiente."
-msgstr ""
-"Aucun modèle chargé pour cette configuration. Téléversez-en un dans l'onglet"
-" correspondant."
-
-msgid ""
-"Arrastra cada campo a su posición. Usa los inputs de tamaño para ajustar el "
-"tamaño de fuente. Guarda con el botón Guardar."
-msgstr ""
-"Faites glisser chaque champ vers sa position. Utilisez les entrées de taille"
-" pour ajuster la taille de police. Sauvegardez avec le bouton Enregistrer."
-
-msgid "Campo"
-msgstr "Champ"
-
-msgid "Tamaño (px)"
-msgstr "Taille (px)"
-
-msgid "Posición X / Y"
-msgstr "Position X / Y"
-
-msgid "Restaurar posiciones por defecto"
-msgstr "Restaurer les positions par défaut"
-
-msgid "Plantilla con celular — Editor de posiciones"
-msgstr "Modèle avec mobile — Éditeur de positions"
-
-msgid "Plantilla sin celular — Editor de posiciones"
-msgstr "Modèle sans mobile — Éditeur de positions"
-
-msgid ""
-"Hay cambios en las posiciones sin guardar. Haz clic en Guardar para "
-"aplicarlos."
-msgstr ""
-"Des modifications de positions ne sont pas enregistrées. Cliquez sur "
-"Enregistrer pour les appliquer."
-
-msgid "Guardar"
-msgstr "Enregistrer"
-
-msgid "No se pudo obtener el usuario actual."
-msgstr "Impossible de récupérer l'utilisateur actuel."
-
-msgid "Correo de prueba enviado a %s."
-msgstr "E-mail de test envoyé à %s."
-
-msgid "Firma enviada correctamente a %s."
-msgstr "Signature envoyée avec succès à %s."
-
-msgid ""
-"No se pudo enviar el correo de prueba. Verifica la configuración de correo "
-"saliente en GLPI."
-msgstr ""
-"Impossible d'envoyer l'e-mail de test. Vérifiez la configuration du courrier"
-" sortant dans GLPI."
-
-msgid ""
-"No se pudo enviar el correo. Verifica la configuración de correo saliente en"
-" GLPI."
-msgstr ""
-"Impossible d'envoyer le courriel. Vérifiez la configuration du courrier "
-"sortant dans GLPI."
-
-msgid "Email Signatures"
-msgstr "Signatures de courriel"
-
-msgid "Configuración incompleta"
-msgstr "Configuration incomplète"
-
-msgid "Firma de correo"
-msgstr "Signature de courriel"
-
-msgid "Generar firma para correo"
-msgstr "Générer une signature de courriel"
-
-msgid "No se encontraron las plantillas."
-msgstr "Modèles introuvables."
-
-msgid ""
-"Por favor valida que las plantillas existan en la configuración del "
-"complemento."
-msgstr ""
-"Veuillez vérifier que les modèles existent dans la configuration du plugin."
-
-msgid "El envío por correo no está disponible."
-msgstr "L'envoi par courriel n'est pas disponible."
-
-msgid ""
-"Configura el asunto y cuerpo del correo en la configuración del complemento "
-"para habilitarlo."
-msgstr ""
-"Configurez l'objet et le corps du courriel dans les paramètres du plugin "
-"pour l'activer."
-
-msgid "Generando firma para: %s"
-msgstr "Génération de la signature pour : %s"
-
-msgid "Incluir código QR de WhatsApp"
-msgstr "Inclure le code QR WhatsApp"
-
-msgid "Este usuario no tiene número celular, el QR no estará disponible."
-msgstr ""
-"Cet utilisateur n'a pas de numéro de mobile ; le code QR ne sera pas "
-"disponible."
-
-msgid "Descargar firma"
-msgstr "Télécharger la signature"
-
-msgid "Vista previa"
-msgstr "Aperçu"
-
-msgid "Enviar por correo"
-msgstr "Envoyer par courriel"
-
-msgid "Vista previa de firma"
-msgstr "Aperçu de la signature"
-
-msgid "Generando vista previa..."
-msgstr "Génération de l'aperçu..."
-
-msgid ""
-"Las plantillas no están correctamente cargadas validalo en configuración del"
-" complemento"
-msgstr ""
-"Les modèles ne sont pas correctement chargés. Vérifiez la configuration du "
-"plugin."
-
-msgid "No se encontró la fuente TTF: %s"
-msgstr "Police TTF introuvable : %s"
-
-msgid "Extensión GD de PHP es requerida"
-msgstr "L'extension PHP GD est requise."
-
-msgid ""
-"El código de país para Whatsapp no está configurado. Defínelo en la "
-"configuración del complemento."
-msgstr ""
-"Le code pays WhatsApp n'est pas configuré. Définissez-le dans les paramètres"
-" du plugin."
-
-msgid ""
-"El asunto del correo no está configurado. Defínelo en la configuración del "
-"complemento."
-msgstr ""
-"L'objet du courriel n'est pas configuré. Définissez-le dans les paramètres "
-"du plugin."
-
-msgid ""
-"El cuerpo del correo no está configurado. Defínelo en la configuración del "
-"complemento."
-msgstr ""
-"Le corps du courriel n'est pas configuré. Définissez-le dans les paramètres "
-"du plugin."
-
-msgid "Oficina:"
-msgstr "Bureau :"
-
-msgid "Ext:"
-msgstr "Ext :"
-
-msgid "No se pudo cargar la plantilla: %s"
-msgstr "Impossible de charger le modèle : %s"
-
-msgid "Entidad no válida"
-msgstr "Entité invalide"
-
-msgid "Este es un correo de prueba enviado desde la configuración del plugin."
-msgstr "Ceci est un e-mail de test envoyé depuis la configuration du plugin."
-
-msgid "El usuario no tiene una dirección de correo configurada."
-msgstr "L'utilisateur n'a pas d'adresse courriel configurée."
-
-msgid "Se requiere PHP 8.1 o superior para instalar este complemento."
-msgstr "PHP 8.1 ou supérieur est requis pour installer ce complément."
-
-msgid "La extensión GD de PHP es requerida para instalar este complemento."
-msgstr "L'extension PHP GD est requise pour installer ce complément."
-
-msgid ""
-"¿Restaurar todas las posiciones a los valores por defecto? Esta acción no se"
-" puede deshacer hasta guardar."
-msgstr ""
-"Réinitialiser toutes les positions aux valeurs par défaut ? Cette action ne "
-"peut pas être annulée avant d'enregistrer."
-
-msgid "Ej: SontechsMX"
+msgid "Ex: AcmeCorp"
 msgstr "Ex: AcmeCorp"
 
-msgid "Ej: 52"
+msgid "Name only, no URL or @"
+msgstr "Nom uniquement, sans URL ni @"
+
+msgid "Country code for WhatsApp QR"
+msgstr "Code pays pour le QR WhatsApp"
+
+msgid "Ex: 1"
 msgstr "Ex: 33"
 
 msgid ""
-"Solo el código numérico, sin + ni espacios. Ej: 52 (México), para generar el"
-" enlace que lleva a Whatsapp en el QR."
+"Numeric country code only, no + or spaces. Ex: 1 (USA), used to generate the"
+" WhatsApp link in the QR code."
 msgstr ""
 "Code pays numérique uniquement, sans + ni espaces. Ex: 33 (France), utilisé "
 "pour générer le lien WhatsApp dans le QR code."
 
-msgid "Nombre Apellido"
+msgid "Email Options"
+msgstr "Options du courriel"
+
+msgid "Available variables"
+msgstr "Variables disponibles"
+
+msgid "bold"
+msgstr "gras"
+
+msgid "italic"
+msgstr "italique"
+
+msgid "underline"
+msgstr "souligné"
+
+msgid "Click a variable to insert it into the active field."
+msgstr "Cliquez sur une variable pour l'insérer dans le champ actif."
+
+msgid "Click to insert"
+msgstr "Cliquer pour insérer"
+
+msgid "User's full name"
+msgstr "Nom complet de l'utilisateur"
+
+msgid "Company name (configured in General settings)"
+msgstr "Nom de l'entreprise (configuré dans Général)"
+
+msgid "Today's date in dd/mm/yyyy format"
+msgstr "Date du jour au format jj/mm/aaaa"
+
+msgid "Email subject"
+msgstr "Objet du courriel"
+
+msgid "E.g.: Your corporate email signature"
+msgstr "Ex. : Votre signature de courriel d'entreprise"
+
+msgid "You can use the variables {nombre}, {empresa} and {fecha}."
+msgstr "Vous pouvez utiliser les variables {nombre}, {empresa} et {fecha}."
+
+msgid "Email body"
+msgstr "Corps du courriel"
+
+msgid "Bold — **text**"
+msgstr "Gras — **texte**"
+
+msgid "Italic — *text*"
+msgstr "Italique — *texte*"
+
+msgid "Underline — __text__"
+msgstr "Souligné — __texte__"
+
+msgid ""
+"E.g.: Attached you will find your corporate email signature. Save it and use"
+" it in your email client."
+msgstr ""
+"Ex. : Ci-joint vous trouverez votre signature de courriel d'entreprise. "
+"Enregistrez-la et utilisez-la dans votre client de messagerie."
+
+msgid "Email footer"
+msgstr "Pied de courriel"
+
+msgid "E.g.: This email was automatically generated by the GLPI system."
+msgstr "Ex. : Ce courriel a été généré automatiquement par le système GLPI."
+
+msgid "GLPI mail server not configured"
+msgstr "Serveur de messagerie GLPI non configuré"
+
+msgid "Configure the email subject and body first"
+msgstr "Configurez d'abord l'objet et le corps de l'e-mail"
+
+msgid "Send a test email to your registered GLPI address"
+msgstr "Envoyer un e-mail de test à votre adresse enregistrée dans GLPI"
+
+msgid "Send test email"
+msgstr "Envoyer un e-mail de test"
+
+msgid "The email will be sent to the address registered in your GLPI profile."
+msgstr "L'e-mail sera envoyé à l'adresse enregistrée dans votre profil GLPI."
+
+msgid "Template with mobile"
+msgstr "Modèle avec portable"
+
+msgid "Current"
+msgstr "Actuel"
+
+msgid "Delete"
+msgstr "Supprimer"
+
+msgid "Upload new"
+msgstr "Téléverser un nouveau"
+
+msgid "PNG only · Max. 300 KB · Recommended dimensions: 650×250 px"
+msgstr "PNG uniquement · Max. 300 Ko · Dimensions recommandées : 650×250 px"
+
+msgid "Template without mobile"
+msgstr "Modèle sans portable"
+
+msgid "First Last"
 msgstr "Prénom Nom"
 
-msgid "correo@empresa.com"
+msgid "email@company.com"
 msgstr "email@entreprise.com"
 
-msgid "55 1234 5678"
+msgid "555 123 4567"
 msgstr "01 23 45 67 89"
 
-msgid "55 9876 5432"
+msgid "Not specified"
+msgstr "Non spécifié"
+
+msgid "555 987 6543"
 msgstr "01 98 76 54 32"
 
-msgid "www.empresa.com"
+msgid "www.company.com"
 msgstr "www.entreprise.fr"
 
-msgid "Oficina: "
+msgid "Office: "
 msgstr "Bureau: "
 
 msgid "Ext: "
 msgstr "Poste: "
 
-msgid "Cambios sin guardar"
+msgid "Name"
+msgstr "Nom"
+
+msgid "Title"
+msgstr "Titre"
+
+msgid "Email"
+msgstr "E-mail"
+
+msgid "Mobile"
+msgstr "Mobile"
+
+msgid "Entity phone"
+msgstr "Tél. entité"
+
+msgid "Ext/Office"
+msgstr "Poste/Bureau"
+
+msgid "Facebook"
+msgstr "Facebook"
+
+msgid "Website"
+msgstr "Site web"
+
+msgid "WhatsApp QR"
+msgstr "QR WhatsApp"
+
+msgid ""
+"No template loaded for this configuration. Upload one in the corresponding "
+"tab."
+msgstr ""
+"Aucun modèle chargé pour cette configuration. Téléversez-en un dans l'onglet"
+" correspondant."
+
+msgid ""
+"Drag each field to its position. Use size inputs to adjust font size. Save "
+"with the Save button."
+msgstr ""
+"Faites glisser chaque champ vers sa position. Utilisez les entrées de taille"
+" pour ajuster la taille de police. Sauvegardez avec le bouton Enregistrer."
+
+msgid "Field"
+msgstr "Champ"
+
+msgid "Size (px)"
+msgstr "Taille (px)"
+
+msgid "Position X / Y"
+msgstr "Position X / Y"
+
+msgid "Restore default positions"
+msgstr "Restaurer les positions par défaut"
+
+msgid "Template with mobile — Position editor"
+msgstr "Modèle avec mobile — Éditeur de positions"
+
+msgid "Template without mobile — Position editor"
+msgstr "Modèle sans mobile — Éditeur de positions"
+
+msgid "There are unsaved position changes. Click Save to apply them."
+msgstr ""
+"Des modifications de positions ne sont pas enregistrées. Cliquez sur "
+"Enregistrer pour les appliquer."
+
+msgid "Save"
+msgstr "Enregistrer"
+
+msgid ""
+"Reset all positions to default values? This action cannot be undone until "
+"you save."
+msgstr ""
+"Réinitialiser toutes les positions aux valeurs par défaut ? Cette action ne "
+"peut pas être annulée avant d'enregistrer."
+
+msgid "Unsaved changes"
 msgstr "Modifications non enregistrées"
 
-msgid "Solo PNG permitido"
+msgid "Only PNG files are allowed"
 msgstr "Seuls les fichiers PNG sont autorisés"
 
-msgid "Error al cargar la vista previa"
-msgstr "Erreur lors du chargement de la prévisualisation"
-
-msgid "Solo el nombre, sin URL ni @"
-msgstr "Nom uniquement, sans URL ni @"
-
-msgid "Nombre de la página de Facebook"
-msgstr "Nom de la page Facebook"
-
-msgid "Código de país para QR de Whatsapp"
-msgstr "Code pays pour le QR WhatsApp"
-
-msgid "Negrita"
-msgstr "Gras"
-
-msgid "Cursiva"
-msgstr "Italique"
-
-msgid "Subrayado"
-msgstr "Souligné"
-
-msgid "texto"
+msgid "text"
 msgstr "texte"
 
-msgid "negrita"
-msgstr "gras"
+msgid "Could not generate the signature. Check the GLPI log for details."
+msgstr ""
+"Impossible de générer la signature. Consultez le journal GLPI pour plus de "
+"détails."
 
-msgid "cursiva"
-msgstr "italique"
-
-msgid "subrayado"
-msgstr "souligné"
-
-msgid "Negrita — **texto**"
-msgstr "Gras — **texte**"
-
-msgid "Cursiva — *texto*"
-msgstr "Italique — *texte*"
-
-msgid "Subrayado — __texto__"
-msgstr "Souligné — __texte__"
-
-msgid "Solo PNG · Máx. 300 KB · Dimensiones recomendadas: 650×250 px"
-msgstr "PNG uniquement · Max. 300 Ko · Dimensions recommandées : 650×250 px"
-
-msgid "Recurso inválido"
+msgid "Invalid resource"
 msgstr "Ressource invalide"
 
-msgid "Plantilla no encontrada"
+msgid "Template not found"
 msgstr "Modèle introuvable"
+
+msgid "Could not retrieve the current user."
+msgstr "Impossible de récupérer l'utilisateur actuel."
+
+msgid "Test email sent to %s."
+msgstr "E-mail de test envoyé à %s."
+
+msgid "Signature successfully sent to %s."
+msgstr "Signature envoyée avec succès à %s."
+
+msgid ""
+"Could not send the test email. Check the outgoing mail configuration in "
+"GLPI."
+msgstr ""
+"Impossible d'envoyer l'e-mail de test. Vérifiez la configuration du courrier"
+" sortant dans GLPI."
+
+msgid ""
+"Could not send the email. Please check the outgoing mail configuration in "
+"GLPI."
+msgstr ""
+"Impossible d'envoyer le courriel. Vérifiez la configuration du courrier "
+"sortant dans GLPI."
+
+msgid ""
+"Templates are not correctly loaded. Please check the plugin configuration."
+msgstr ""
+"Les modèles ne sont pas correctement chargés. Vérifiez la configuration du "
+"plugin."
+
+msgid "TTF font not found: %s"
+msgstr "Police TTF introuvable : %s"
+
+msgid "PHP GD extension is required."
+msgstr "L'extension PHP GD est requise."
+
+msgid ""
+"WhatsApp country code is not configured. Define it in the plugin settings."
+msgstr ""
+"Le code pays WhatsApp n'est pas configuré. Définissez-le dans les paramètres"
+" du plugin."
+
+msgid "Email subject is not configured. Define it in the plugin settings."
+msgstr ""
+"L'objet du courriel n'est pas configuré. Définissez-le dans les paramètres "
+"du plugin."
+
+msgid "Email body is not configured. Define it in the plugin settings."
+msgstr ""
+"Le corps du courriel n'est pas configuré. Définissez-le dans les paramètres "
+"du plugin."
+
+msgid "Office:"
+msgstr "Bureau :"
+
+msgid "Ext:"
+msgstr "Ext :"
+
+msgid "Could not load template: %s"
+msgstr "Impossible de charger le modèle : %s"
+
+msgid "Invalid entity"
+msgstr "Entité invalide"
+
+msgid "This is a test email sent from the plugin configuration."
+msgstr "Ceci est un e-mail de test envoyé depuis la configuration du plugin."
+
+msgid "The user does not have an email address configured."
+msgstr "L'utilisateur n'a pas d'adresse courriel configurée."
+
+msgid "Email Signatures"
+msgstr "Signatures de courriel"
+
+msgid "Incomplete configuration"
+msgstr "Configuration incomplète"
+
+msgid "Generate email signature"
+msgstr "Générer une signature de courriel"
+
+msgid "Templates not found."
+msgstr "Modèles introuvables."
+
+msgid "Please verify that the templates exist in the plugin configuration."
+msgstr ""
+"Veuillez vérifier que les modèles existent dans la configuration du plugin."
+
+msgid "Email sending is not available."
+msgstr "L'envoi par courriel n'est pas disponible."
+
+msgid ""
+"Configure the email subject and body in the plugin settings to enable it."
+msgstr ""
+"Configurez l'objet et le corps du courriel dans les paramètres du plugin "
+"pour l'activer."
+
+msgid "Generating signature for: %s"
+msgstr "Génération de la signature pour : %s"
+
+msgid "Include WhatsApp QR code"
+msgstr "Inclure le code QR WhatsApp"
+
+msgid "This user has no mobile number; the QR code will not be available."
+msgstr ""
+"Cet utilisateur n'a pas de numéro de mobile ; le code QR ne sera pas "
+"disponible."
+
+msgid "Download signature"
+msgstr "Télécharger la signature"
+
+msgid "Preview"
+msgstr "Aperçu"
+
+msgid "Send by email"
+msgstr "Envoyer par courriel"
+
+msgid "Signature preview"
+msgstr "Aperçu de la signature"
+
+msgid "Generating preview..."
+msgstr "Génération de l'aperçu..."
+
+msgid "Error loading preview"
+msgstr "Erreur lors du chargement de la prévisualisation"
+
+msgid "PHP 8.1 or higher is required to install this plugin."
+msgstr "PHP 8.1 ou supérieur est requis pour installer ce complément."
+
+msgid "The PHP GD extension is required to install this plugin."
+msgstr "L'extension PHP GD est requise pour installer ce complément."

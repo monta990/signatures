@@ -6,6 +6,22 @@ Versioning follows [Semantic Versioning](https://semver.org/).
 
 ---
 
+## [1.4.0] — 2026-03-22
+
+### Changed
+- **Base language changed from Spanish to English**: the plugin's `msgid` strings are now
+  English. Previously all `__()` calls used Spanish as the source string, meaning a GLPI
+  instance without any of the bundled locales would display Spanish. Now the fallback
+  language is English, consistent with GLPI plugin conventions.
+  - All PHP files updated: `__('Cadena en español', 'signatures')` →
+    `__('English string', 'signatures')`.
+  - `signatures.pot` rebuilt with English msgids (118 strings; 6 orphaned entries removed).
+  - `es_MX.po` — msgids updated to English; Spanish `msgstr` values preserved.
+  - `en_US.po` — msgids updated to English; `msgstr` entries left empty (base language).
+  - `en_GB.po` / `fr_FR.po` — msgids updated to English; existing translations preserved.
+
+---
+
 ## [1.3.4] — 2026-03-22
 
 ### Fixed

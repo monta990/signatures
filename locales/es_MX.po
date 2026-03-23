@@ -1,10 +1,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Email Signatures 1.3.1\n"
-"Report-Msgid-Bugs-To: https://sontechs.com\n"
-"POT-Creation-Date: 2026-03-08 00:00+0000\n"
-"PO-Revision-Date: 2026-03-13 15:20+0000\n"
+"Project-Id-Version: Email Signatures 1.4.0\n"
+"Report-Msgid-Bugs-To: https://github.com/monta990/signatures/issues\n"
+"POT-Creation-Date: 2026-03-22 00:00+0000\n"
+"PO-Revision-Date: 2026-03-22 00:00+0000\n"
 "Last-Translator: Edwin Elias Alvarez <edwin@sontechs.com>\n"
 "Language-Team: Español (México)\n"
 "Language: es_MX\n"
@@ -13,428 +13,402 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-msgid "No se pudo generar la firma. Revisa el log de GLPI para más detalles."
-msgstr "No se pudo generar la firma. Revisa el log de GLPI para más detalles."
-
-msgid "Plantilla con celular eliminada"
+msgid "Mobile template deleted"
 msgstr "Plantilla con celular eliminada"
 
-msgid "Plantilla sin celular eliminada"
+msgid "No-mobile template deleted"
 msgstr "Plantilla sin celular eliminada"
 
-msgid "Archivo demasiado grande (Máx. 300 KB)"
+msgid "File too large (Max. 300 KB)"
 msgstr "Archivo demasiado grande (Máx. 300 KB)"
 
-msgid "Formato inválido, solo PNG"
+msgid "Invalid format, only PNG files are allowed"
 msgstr "Formato inválido, solo se permiten archivos PNG"
 
-msgid "Configuración guardada correctamente"
+msgid "Configuration saved successfully"
 msgstr "Configuración guardada correctamente"
 
-msgid "Firma de Correo"
+msgid "Email Signature"
 msgstr "Firma de correo"
 
-msgid "Configuración de firma para correo"
+msgid "Email Signature Configuration"
 msgstr "Configuración de firma de correo"
 
 msgid "General"
 msgstr "General"
 
-msgid "Con celular"
+msgid "With mobile"
 msgstr "Con celular"
 
-msgid "Sin celular"
+msgid "Without mobile"
 msgstr "Sin celular"
 
-msgid "Posiciones"
+msgid "Positions"
 msgstr "Posiciones"
 
-msgid "Configuración general"
+msgid "General settings"
 msgstr "Configuración general"
 
-msgid "Opciones del correo electrónico"
-msgstr "Opciones del correo electrónico"
+msgid "Facebook page name"
+msgstr "Nombre de la página de Facebook"
 
-msgid "Variables disponibles"
-msgstr "Variables disponibles"
-
-msgid "Usa **texto** para negrita"
-msgstr "Usa **texto** para negrita"
-
-msgid "Haz clic en una variable para insertarla en el campo activo."
-msgstr "Haz clic en una variable para insertarla en el campo activo."
-
-msgid "Clic para insertar"
-msgstr "Clic para insertar"
-
-msgid "Nombre completo del usuario"
-msgstr "Nombre completo del usuario"
-
-msgid "Nombre de la empresa (configurado en General)"
-msgstr "Nombre de la empresa (configurado en General)"
-
-msgid "Fecha del día en formato dd/mm/aaaa"
-msgstr "Fecha del día en formato dd/mm/aaaa"
-
-msgid "Asunto del correo"
-msgstr "Asunto del correo"
-
-msgid "Ej: Tu firma de correo corporativa"
-msgstr "Ej: Tu firma de correo corporativa"
-
-msgid "Puedes usar las variables {nombre}, {empresa} y {fecha}."
-msgstr "Puedes usar las variables {nombre}, {empresa} y {fecha}."
-
-msgid "Cuerpo del correo"
-msgstr "Cuerpo del correo"
-
-msgid ""
-"Ej: Adjunto encontrarás tu firma de correo corporativa. Guárdala y úsala en "
-"tu cliente de correo."
-msgstr ""
-"Ej: Adjunto encontrarás tu firma de correo corporativa. Guárdala y úsala en "
-"tu cliente de correo."
-
-msgid "Pie del correo"
-msgstr "Pie del correo"
-
-msgid "Ej: Este correo fue generado automáticamente por el sistema GLPI."
-msgstr "Ej: Este correo fue generado automáticamente por el sistema GLPI."
-
-msgid "Servidor de correo de GLPI no configurado"
-msgstr "Servidor de correo de GLPI no configurado"
-
-msgid "Configure el asunto y cuerpo del correo primero"
-msgstr "Configure el asunto y cuerpo del correo primero"
-
-msgid "Envía un correo de prueba a tu dirección registrada en GLPI"
-msgstr "Envía un correo de prueba a tu dirección registrada en GLPI"
-
-msgid "Enviar correo de prueba"
-msgstr "Enviar correo de prueba"
-
-msgid "El correo se enviará a la dirección registrada en tu perfil de GLPI."
-msgstr "El correo se enviará a la dirección registrada en tu perfil de GLPI."
-
-msgid "Plantilla con celular"
-msgstr "Plantilla con celular"
-
-msgid "Actual"
-msgstr "Actual"
-
-msgid "Eliminar"
-msgstr "Eliminar"
-
-msgid "Cargar nueva"
-msgstr "Cargar nueva"
-
-msgid "Plantilla sin celular"
-msgstr "Plantilla sin celular"
-
-msgid "No especificado"
-msgstr "No especificado"
-
-msgid "Nombre"
-msgstr "Nombre"
-
-msgid "Título"
-msgstr "Título"
-
-msgid "Correo"
-msgstr "Correo"
-
-msgid "Celular"
-msgstr "Celular"
-
-msgid "Tel. entidad"
-msgstr "Tel. entidad"
-
-msgid "Ext/Oficina"
-msgstr "Ext/Oficina"
-
-msgid "Facebook"
-msgstr "Facebook"
-
-msgid "Web"
-msgstr "Web"
-
-msgid "QR WhatsApp"
-msgstr "QR WhatsApp"
-
-msgid ""
-"No hay plantilla cargada para esta configuración. Carga una en la pestaña "
-"correspondiente."
-msgstr ""
-"No hay plantilla cargada para esta configuración. Carga una en la pestaña "
-"correspondiente."
-
-msgid ""
-"Arrastra cada campo a su posición. Usa los inputs de tamaño para ajustar el "
-"tamaño de fuente. Guarda con el botón Guardar."
-msgstr ""
-"Arrastra cada campo a su posición. Usa los inputs de tamaño para ajustar el "
-"tamaño de fuente. Guarda con el botón Guardar."
-
-msgid "Campo"
-msgstr "Campo"
-
-msgid "Tamaño (px)"
-msgstr "Tamaño (px)"
-
-msgid "Posición X / Y"
-msgstr "Posición X / Y"
-
-msgid "Restaurar posiciones por defecto"
-msgstr "Restaurar posiciones por defecto"
-
-msgid "Plantilla con celular — Editor de posiciones"
-msgstr "Plantilla con celular — Editor de posiciones"
-
-msgid "Plantilla sin celular — Editor de posiciones"
-msgstr "Plantilla sin celular — Editor de posiciones"
-
-msgid ""
-"Hay cambios en las posiciones sin guardar. Haz clic en Guardar para "
-"aplicarlos."
-msgstr ""
-"Hay cambios en las posiciones sin guardar. Haz clic en Guardar para "
-"aplicarlos."
-
-msgid "Guardar"
-msgstr "Guardar"
-
-msgid "No se pudo obtener el usuario actual."
-msgstr "No se pudo obtener el usuario actual."
-
-msgid "Correo de prueba enviado a %s."
-msgstr "Correo de prueba enviado a %s."
-
-msgid "Firma enviada correctamente a %s."
-msgstr "Firma enviada correctamente a %s."
-
-msgid ""
-"No se pudo enviar el correo de prueba. Verifica la configuración de correo "
-"saliente en GLPI."
-msgstr ""
-"No se pudo enviar el correo de prueba. Verifica la configuración de correo "
-"saliente en GLPI."
-
-msgid ""
-"No se pudo enviar el correo. Verifica la configuración de correo saliente en"
-" GLPI."
-msgstr ""
-"No se pudo enviar el correo. Verifica la configuración de correo saliente en"
-" GLPI."
-
-msgid "Email Signatures"
-msgstr "Firmas de correo"
-
-msgid "Configuración incompleta"
-msgstr "Configuración incompleta"
-
-msgid "Firma de correo"
-msgstr "Firma de correo"
-
-msgid "Generar firma para correo"
-msgstr "Generar firma de correo"
-
-msgid "No se encontraron las plantillas."
-msgstr "No se encontraron las plantillas."
-
-msgid ""
-"Por favor valida que las plantillas existan en la configuración del "
-"complemento."
-msgstr ""
-"Por favor valida que las plantillas existan en la configuración del "
-"complemento."
-
-msgid "El envío por correo no está disponible."
-msgstr "El envío por correo no está disponible."
-
-msgid ""
-"Configura el asunto y cuerpo del correo en la configuración del complemento "
-"para habilitarlo."
-msgstr ""
-"Configura el asunto y cuerpo del correo en la configuración del complemento "
-"para habilitarlo."
-
-msgid "Generando firma para: %s"
-msgstr "Generando firma para: %s"
-
-msgid "Incluir código QR de WhatsApp"
-msgstr "Incluir código QR de WhatsApp"
-
-msgid "Este usuario no tiene número celular, el QR no estará disponible."
-msgstr "Este usuario no tiene número celular, el QR no estará disponible."
-
-msgid "Descargar firma"
-msgstr "Descargar firma"
-
-msgid "Vista previa"
-msgstr "Vista previa"
-
-msgid "Enviar por correo"
-msgstr "Enviar por correo"
-
-msgid "Vista previa de firma"
-msgstr "Vista previa de firma"
-
-msgid "Generando vista previa..."
-msgstr "Generando vista previa..."
-
-msgid ""
-"Las plantillas no están correctamente cargadas validalo en configuración del"
-" complemento"
-msgstr ""
-"Las plantillas no están correctamente cargadas, valídalo en la configuración"
-" del complemento."
-
-msgid "No se encontró la fuente TTF: %s"
-msgstr "No se encontró la fuente TTF: %s"
-
-msgid "Extensión GD de PHP es requerida"
-msgstr "La extensión GD de PHP es requerida."
-
-msgid ""
-"El código de país para Whatsapp no está configurado. Defínelo en la "
-"configuración del complemento."
-msgstr ""
-"El código de país para WhatsApp no está configurado. Defínelo en la "
-"configuración del complemento."
-
-msgid ""
-"El asunto del correo no está configurado. Defínelo en la configuración del "
-"complemento."
-msgstr ""
-"El asunto del correo no está configurado. Defínelo en la configuración del "
-"complemento."
-
-msgid ""
-"El cuerpo del correo no está configurado. Defínelo en la configuración del "
-"complemento."
-msgstr ""
-"El cuerpo del correo no está configurado. Defínelo en la configuración del "
-"complemento."
-
-msgid "Oficina:"
-msgstr "Oficina:"
-
-msgid "Ext:"
-msgstr "Ext:"
-
-msgid "No se pudo cargar la plantilla: %s"
-msgstr "No se pudo cargar la plantilla: %s"
-
-msgid "Entidad no válida"
-msgstr "Entidad no válida"
-
-msgid "Este es un correo de prueba enviado desde la configuración del plugin."
-msgstr ""
-"Este es un correo de prueba enviado desde la configuración del plugin."
-
-msgid "El usuario no tiene una dirección de correo configurada."
-msgstr "El usuario no tiene una dirección de correo configurada."
-
-msgid "Se requiere PHP 8.1 o superior para instalar este complemento."
-msgstr "Se requiere PHP 8.1 o superior para instalar este complemento."
-
-msgid "La extensión GD de PHP es requerida para instalar este complemento."
-msgstr "La extensión GD de PHP es requerida para instalar este complemento."
-
-msgid ""
-"¿Restaurar todas las posiciones a los valores por defecto? Esta acción no se"
-" puede deshacer hasta guardar."
-msgstr ""
-"¿Restaurar todas las posiciones a los valores por defecto? Esta acción no se"
-" puede deshacer hasta guardar."
-
-msgid "Ej: SontechsMX"
+msgid "Ex: AcmeCorp"
 msgstr "Ej: SontechsMX"
 
-msgid "Ej: 52"
+msgid "Name only, no URL or @"
+msgstr "Solo el nombre, sin URL ni @"
+
+msgid "Country code for WhatsApp QR"
+msgstr "Código de país para QR de Whatsapp"
+
+msgid "Ex: 1"
 msgstr "Ej: 52"
 
 msgid ""
-"Solo el código numérico, sin + ni espacios. Ej: 52 (México), para generar el"
-" enlace que lleva a Whatsapp en el QR."
+"Numeric country code only, no + or spaces. Ex: 1 (USA), used to generate the"
+" WhatsApp link in the QR code."
 msgstr ""
 "Solo el código numérico, sin + ni espacios. Ej: 52 (México), para generar el"
 " enlace que lleva a Whatsapp en el QR."
 
-msgid "Nombre Apellido"
+msgid "Email Options"
+msgstr "Opciones del correo electrónico"
+
+msgid "Available variables"
+msgstr "Variables disponibles"
+
+msgid "bold"
+msgstr "negrita"
+
+msgid "italic"
+msgstr "cursiva"
+
+msgid "underline"
+msgstr "subrayado"
+
+msgid "Click a variable to insert it into the active field."
+msgstr "Haz clic en una variable para insertarla en el campo activo."
+
+msgid "Click to insert"
+msgstr "Clic para insertar"
+
+msgid "User's full name"
+msgstr "Nombre completo del usuario"
+
+msgid "Company name (configured in General settings)"
+msgstr "Nombre de la empresa (configurado en General)"
+
+msgid "Today's date in dd/mm/yyyy format"
+msgstr "Fecha del día en formato dd/mm/aaaa"
+
+msgid "Email subject"
+msgstr "Asunto del correo"
+
+msgid "E.g.: Your corporate email signature"
+msgstr "Ej: Tu firma de correo corporativa"
+
+msgid "You can use the variables {nombre}, {empresa} and {fecha}."
+msgstr "Puedes usar las variables {nombre}, {empresa} y {fecha}."
+
+msgid "Email body"
+msgstr "Cuerpo del correo"
+
+msgid "Bold — **text**"
+msgstr "Negrita — **texto**"
+
+msgid "Italic — *text*"
+msgstr "Cursiva — *texto*"
+
+msgid "Underline — __text__"
+msgstr "Subrayado — __texto__"
+
+msgid ""
+"E.g.: Attached you will find your corporate email signature. Save it and use"
+" it in your email client."
+msgstr ""
+"Ej: Adjunto encontrarás tu firma de correo corporativa. Guárdala y úsala en "
+"tu cliente de correo."
+
+msgid "Email footer"
+msgstr "Pie del correo"
+
+msgid "E.g.: This email was automatically generated by the GLPI system."
+msgstr "Ej: Este correo fue generado automáticamente por el sistema GLPI."
+
+msgid "GLPI mail server not configured"
+msgstr "Servidor de correo de GLPI no configurado"
+
+msgid "Configure the email subject and body first"
+msgstr "Configure el asunto y cuerpo del correo primero"
+
+msgid "Send a test email to your registered GLPI address"
+msgstr "Envía un correo de prueba a tu dirección registrada en GLPI"
+
+msgid "Send test email"
+msgstr "Enviar correo de prueba"
+
+msgid "The email will be sent to the address registered in your GLPI profile."
+msgstr "El correo se enviará a la dirección registrada en tu perfil de GLPI."
+
+msgid "Template with mobile"
+msgstr "Plantilla con celular"
+
+msgid "Current"
+msgstr "Actual"
+
+msgid "Delete"
+msgstr "Eliminar"
+
+msgid "Upload new"
+msgstr "Cargar nueva"
+
+msgid "PNG only · Max. 300 KB · Recommended dimensions: 650×250 px"
+msgstr "Solo PNG · Máx. 300 KB · Dimensiones recomendadas: 650×250 px"
+
+msgid "Template without mobile"
+msgstr "Plantilla sin celular"
+
+msgid "First Last"
 msgstr "Nombre Apellido"
 
-msgid "correo@empresa.com"
+msgid "email@company.com"
 msgstr "correo@empresa.com"
 
-msgid "55 1234 5678"
+msgid "555 123 4567"
 msgstr "55 1234 5678"
 
-msgid "55 9876 5432"
+msgid "Not specified"
+msgstr "No especificado"
+
+msgid "555 987 6543"
 msgstr "55 9876 5432"
 
-msgid "www.empresa.com"
+msgid "www.company.com"
 msgstr "www.empresa.com"
 
-msgid "Oficina: "
+msgid "Office: "
 msgstr "Oficina: "
 
 msgid "Ext: "
 msgstr "Ext: "
 
-msgid "Cambios sin guardar"
+msgid "Name"
+msgstr "Nombre"
+
+msgid "Title"
+msgstr "Título"
+
+msgid "Email"
+msgstr "Correo"
+
+msgid "Mobile"
+msgstr "Celular"
+
+msgid "Entity phone"
+msgstr "Tel. entidad"
+
+msgid "Ext/Office"
+msgstr "Ext/Oficina"
+
+msgid "Facebook"
+msgstr "Facebook"
+
+msgid "Website"
+msgstr "Web"
+
+msgid "WhatsApp QR"
+msgstr "QR WhatsApp"
+
+msgid ""
+"No template loaded for this configuration. Upload one in the corresponding "
+"tab."
+msgstr ""
+"No hay plantilla cargada para esta configuración. Carga una en la pestaña "
+"correspondiente."
+
+msgid ""
+"Drag each field to its position. Use size inputs to adjust font size. Save "
+"with the Save button."
+msgstr ""
+"Arrastra cada campo a su posición. Usa los inputs de tamaño para ajustar el "
+"tamaño de fuente. Guarda con el botón Guardar."
+
+msgid "Field"
+msgstr "Campo"
+
+msgid "Size (px)"
+msgstr "Tamaño (px)"
+
+msgid "Position X / Y"
+msgstr "Posición X / Y"
+
+msgid "Restore default positions"
+msgstr "Restaurar posiciones por defecto"
+
+msgid "Template with mobile — Position editor"
+msgstr "Plantilla con celular — Editor de posiciones"
+
+msgid "Template without mobile — Position editor"
+msgstr "Plantilla sin celular — Editor de posiciones"
+
+msgid "There are unsaved position changes. Click Save to apply them."
+msgstr ""
+"Hay cambios en las posiciones sin guardar. Haz clic en Guardar para "
+"aplicarlos."
+
+msgid "Save"
+msgstr "Guardar"
+
+msgid ""
+"Reset all positions to default values? This action cannot be undone until "
+"you save."
+msgstr ""
+"¿Restaurar todas las posiciones a los valores por defecto? Esta acción no se"
+" puede deshacer hasta guardar."
+
+msgid "Unsaved changes"
 msgstr "Cambios sin guardar"
 
-msgid "Solo PNG permitido"
+msgid "Only PNG files are allowed"
 msgstr "Solo PNG permitido"
 
-msgid "Error al cargar la vista previa"
-msgstr "Error al cargar la vista previa"
-
-msgid "Solo el nombre, sin URL ni @"
-msgstr "Solo el nombre, sin URL ni @"
-
-msgid "Nombre de la página de Facebook"
-msgstr "Nombre de la página de Facebook"
-
-msgid "Código de país para QR de Whatsapp"
-msgstr "Código de país para QR de Whatsapp"
-
-msgid "Negrita"
-msgstr "Negrita"
-
-msgid "Cursiva"
-msgstr "Cursiva"
-
-msgid "Subrayado"
-msgstr "Subrayado"
-
-msgid "texto"
+msgid "text"
 msgstr "texto"
 
-msgid "negrita"
-msgstr "negrita"
+msgid "Could not generate the signature. Check the GLPI log for details."
+msgstr "No se pudo generar la firma. Revisa el log de GLPI para más detalles."
 
-msgid "cursiva"
-msgstr "cursiva"
-
-msgid "subrayado"
-msgstr "subrayado"
-
-msgid "Negrita — **texto**"
-msgstr "Negrita — **texto**"
-
-msgid "Cursiva — *texto*"
-msgstr "Cursiva — *texto*"
-
-msgid "Subrayado — __texto__"
-msgstr "Subrayado — __texto__"
-
-msgid "Solo PNG · Máx. 300 KB · Dimensiones recomendadas: 650×250 px"
-msgstr "Solo PNG · Máx. 300 KB · Dimensiones recomendadas: 650×250 px"
-
-msgid "Recurso inválido"
+msgid "Invalid resource"
 msgstr "Recurso inválido"
 
-msgid "Plantilla no encontrada"
+msgid "Template not found"
 msgstr "Plantilla no encontrada"
+
+msgid "Could not retrieve the current user."
+msgstr "No se pudo obtener el usuario actual."
+
+msgid "Test email sent to %s."
+msgstr "Correo de prueba enviado a %s."
+
+msgid "Signature successfully sent to %s."
+msgstr "Firma enviada correctamente a %s."
+
+msgid ""
+"Could not send the test email. Check the outgoing mail configuration in "
+"GLPI."
+msgstr ""
+"No se pudo enviar el correo de prueba. Verifica la configuración de correo "
+"saliente en GLPI."
+
+msgid ""
+"Could not send the email. Please check the outgoing mail configuration in "
+"GLPI."
+msgstr ""
+"No se pudo enviar el correo. Verifica la configuración de correo saliente en"
+" GLPI."
+
+msgid ""
+"Templates are not correctly loaded. Please check the plugin configuration."
+msgstr ""
+"Las plantillas no están correctamente cargadas, valídalo en la configuración"
+" del complemento."
+
+msgid "TTF font not found: %s"
+msgstr "No se encontró la fuente TTF: %s"
+
+msgid "PHP GD extension is required."
+msgstr "La extensión GD de PHP es requerida."
+
+msgid ""
+"WhatsApp country code is not configured. Define it in the plugin settings."
+msgstr ""
+"El código de país para WhatsApp no está configurado. Defínelo en la "
+"configuración del complemento."
+
+msgid "Email subject is not configured. Define it in the plugin settings."
+msgstr ""
+"El asunto del correo no está configurado. Defínelo en la configuración del "
+"complemento."
+
+msgid "Email body is not configured. Define it in the plugin settings."
+msgstr ""
+"El cuerpo del correo no está configurado. Defínelo en la configuración del "
+"complemento."
+
+msgid "Office:"
+msgstr "Oficina:"
+
+msgid "Ext:"
+msgstr "Ext:"
+
+msgid "Could not load template: %s"
+msgstr "No se pudo cargar la plantilla: %s"
+
+msgid "Invalid entity"
+msgstr "Entidad no válida"
+
+msgid "This is a test email sent from the plugin configuration."
+msgstr ""
+"Este es un correo de prueba enviado desde la configuración del plugin."
+
+msgid "The user does not have an email address configured."
+msgstr "El usuario no tiene una dirección de correo configurada."
+
+msgid "Email Signatures"
+msgstr "Firmas de correo"
+
+msgid "Incomplete configuration"
+msgstr "Configuración incompleta"
+
+msgid "Generate email signature"
+msgstr "Generar firma de correo"
+
+msgid "Templates not found."
+msgstr "No se encontraron las plantillas."
+
+msgid "Please verify that the templates exist in the plugin configuration."
+msgstr ""
+"Por favor valida que las plantillas existan en la configuración del "
+"complemento."
+
+msgid "Email sending is not available."
+msgstr "El envío por correo no está disponible."
+
+msgid ""
+"Configure the email subject and body in the plugin settings to enable it."
+msgstr ""
+"Configura el asunto y cuerpo del correo en la configuración del complemento "
+"para habilitarlo."
+
+msgid "Generating signature for: %s"
+msgstr "Generando firma para: %s"
+
+msgid "Include WhatsApp QR code"
+msgstr "Incluir código QR de WhatsApp"
+
+msgid "This user has no mobile number; the QR code will not be available."
+msgstr "Este usuario no tiene número celular, el QR no estará disponible."
+
+msgid "Download signature"
+msgstr "Descargar firma"
+
+msgid "Preview"
+msgstr "Vista previa"
+
+msgid "Send by email"
+msgstr "Enviar por correo"
+
+msgid "Signature preview"
+msgstr "Vista previa de firma"
+
+msgid "Generating preview..."
+msgstr "Generando vista previa..."
+
+msgid "Error loading preview"
+msgstr "Error al cargar la vista previa"
+
+msgid "PHP 8.1 or higher is required to install this plugin."
+msgstr "Se requiere PHP 8.1 o superior para instalar este complemento."
+
+msgid "The PHP GD extension is required to install this plugin."
+msgstr "La extensión GD de PHP es requerida para instalar este complemento."
