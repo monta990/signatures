@@ -374,9 +374,6 @@ Access checks use `Session::haveRight('config', UPDATE)` and
 | `en_GB` | English (United Kingdom) |
 | `fr_FR` | French (France) |
 
-The `.pot` template contains **118 strings** as of v1.4.0.
-All four `.po` source files and compiled `.mo` binaries are included in the package.
-
 To add a new language:
 
 ```bash
@@ -676,8 +673,6 @@ URL `https://wa.me/{pais}{celular}` → `TCPDF2DBarcode` genera PNG temporal →
 | `en_US` | English (United States) |
 | `en_GB` | English (United Kingdom) |
 | `fr_FR` | Français (France) |
-
-118 strings en v1.4.0. Para agregar idioma: copia `.pot` → traduce `msgstr` → compila con `msgfmt` o Poedit.
 
 ---
 
