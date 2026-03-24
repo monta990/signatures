@@ -84,8 +84,7 @@ unzip signatures-1.4.0.zip
 
 Then go to **Setup → Plugins**, install, and enable.
 
-> **Important:** the plugin directory must be named `signatures` (lowercase). Any
-> other name (e.g. `signatures-1.4.0`) will prevent GLPI from detecting the plugin.
+> **Important:** the plugin directory must be named `signatures` (lowercase).
 
 ---
 
