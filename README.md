@@ -61,8 +61,6 @@ Each signature is rendered dynamically over a configurable PNG template using PH
 | TCPDF | Bundled with GLPI — required only for QR code |
 | Outgoing mail server | GLPI → Setup → Notifications — required only for email delivery |
 
-> Installation validates PHP ≥ 8.1 and the GD extension with clear error messages.
-
 ---
 
 ## Installation
