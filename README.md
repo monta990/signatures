@@ -12,6 +12,7 @@
   <a href="https://github.com/glpi-project/glpi" target="_blank"><img src="https://img.shields.io/badge/GLPI-11.0%2B-blue?style=flat-square" alt="GLPI compatibility"></a>
   <a href="https://www.gnu.org/licenses/old-licenses/gpl-2.0.html" target="_blank"><img src="https://img.shields.io/badge/License-GPL%20v2%2B-green?style=flat-square" alt="License"></a>
   <a href="https://php.net/" target="_blank"><img src="https://img.shields.io/badge/PHP-%3E%3D8.2-purple?style=flat-square" alt="PHP"></a>
+  <a href="https://github.com/monta990/responsivas/releases" target="_blank"><img alt="GitHub Downloads (all assets, all releases)" src="https://img.shields.io/github/downloads/monta990/responsivas/total"></a>
 </p>
 
 ---
@@ -68,7 +69,7 @@ Each signature is rendered dynamically over a configurable PNG template using PH
 
 ### Via ZIP (recommended)
 
-1. Download `signatures-1.4.0.zip` from the [GitHub releases page](https://github.com/monta990/signatures/releases).
+1. Download the zip file from the [GitHub releases page](https://github.com/monta990/signatures/releases).
 2. In GLPI, go to **Setup → Plugins**.
 3. Click **Upload a plugin**.
 4. Select the ZIP and confirm.
@@ -475,6 +476,7 @@ Report bugs or request features on the [issue tracker](https://github.com/monta9
   <a href="https://github.com/glpi-project/glpi" target="_blank"><img src="https://img.shields.io/badge/GLPI-11.0%2B-blue?style=flat-square" alt="GLPI compatibility"></a>
   <a href="https://www.gnu.org/licenses/old-licenses/gpl-2.0.html" target="_blank"><img src="https://img.shields.io/badge/License-GPL%20v2%2B-green?style=flat-square" alt="License"></a>
   <a href="https://php.net/" target="_blank"><img src="https://img.shields.io/badge/PHP-%3E%3D8.2-purple?style=flat-square" alt="PHP"></a>
+  <a href="https://github.com/monta990/responsivas/releases" target="_blank"><img alt="GitHub Downloads (all assets, all releases)" src="https://img.shields.io/github/downloads/monta990/responsivas/total"></a>
 </p>
 
 ---
@@ -525,7 +527,7 @@ La firma se renderiza dinámicamente sobre una plantilla PNG configurable usando
 
 ### Vía ZIP
 
-1. Descarga `signatures-1.4.0.zip` desde [GitHub releases](https://github.com/monta990/signatures/releases).
+1. Descarga el archivo zip desde [GitHub releases](https://github.com/monta990/signatures/releases).
 2. En GLPI: **Configuración → Complementos → Subir un complemento**.
 3. Selecciona el ZIP.
 4. Haz clic en **Instalar** y luego en **Habilitar**.
