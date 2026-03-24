@@ -67,7 +67,7 @@ Each signature is rendered dynamically over a configurable PNG template using PH
 
 ### Via ZIP (recommended)
 
-1. Download the latest .zip from the [GitHub releases page](https://github.com/monta990/signatures/releases).
+1. Download the latest `.zip` from the [GitHub releases page](https://github.com/monta990/signatures/releases).
 2. In GLPI, go to **Setup → Plugins**.
 3. Click **Upload a plugin**.
 4. Select the ZIP and confirm.
@@ -521,7 +521,7 @@ La firma se renderiza dinámicamente sobre una plantilla PNG configurable usando
 
 ### Vía ZIP
 
-1. Descarga el .zip de la útima  versión desde [GitHub releases](https://github.com/monta990/signatures/releases).
+1. Descarga el `.zip` de la útima  versión desde [GitHub releases](https://github.com/monta990/signatures/releases).
 2. En GLPI: **Configuración → Complementos → Subir un complemento**.
 3. Selecciona el ZIP.
 4. Haz clic en **Instalar** y luego en **Habilitar**.
