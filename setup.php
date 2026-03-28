@@ -19,9 +19,9 @@ function plugin_init_signatures(): void {
 function plugin_version_signatures(): array {
    return [
       'name'         => 'Email Signatures',
-      'version'      => '1.4.0',
+      'version'      => '1.5.0',
       'author'       => 'Edwin Elias Alvarez',
-      'license'      => 'GPLv2+',
+      'license'      => 'GPLv3+',
       'homepage'     => 'https://sontechs.com',
       'requirements' => [
          'glpi' => ['min' => '11.0']
@@ -41,6 +41,9 @@ function plugin_signatures_getDefaults(): array {
       'email_subject'           => '',
       'email_body'              => '',
       'email_footer'            => '',
+      // ── Custom fonts (empty = use built-in Avenir) ─────────────────────────
+      'font_name'               => '',
+      'font_body'               => '',
       // ── Posiciones plantilla CON celular (base1) ──────────────────────
       'sig_b1_nombre_x'         => 20,  'sig_b1_nombre_y'   => 75,  'sig_b1_nombre_size'   => 40,
       'sig_b1_titulo_x'         => 20,  'sig_b1_titulo_y'   => 104, 'sig_b1_titulo_size'   => 11,
@@ -63,9 +66,16 @@ function plugin_signatures_getDefaults(): array {
 }
 
 function plugin_signatures_install(): bool {
+   // Directorio de plantillas PNG
    $dir = GLPI_PLUGIN_DOC_DIR . '/signatures/templates';
    if (!is_dir($dir)) {
       mkdir($dir, 0755, true);
+   }
+
+   // Directorio de fuentes de usuario
+   $fontsDir = GLPI_PLUGIN_DOC_DIR . '/signatures/fonts';
+   if (!is_dir($fontsDir)) {
+      mkdir($fontsDir, 0755, true);
    }
 
    // Solo aplicar defaults para claves que aún no existen

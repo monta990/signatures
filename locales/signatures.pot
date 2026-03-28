@@ -1,7 +1,7 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Email Signatures 1.4.0\n"
+"Project-Id-Version: Email Signatures 1.5.0\n"
 "Report-Msgid-Bugs-To: https://github.com/monta990/signatures/issues\n"
 "POT-Creation-Date: 2026-03-22 00:00+0000\n"
 "PO-Revision-Date: 2026-03-22 00:00+0000\n"
@@ -17,10 +17,22 @@ msgstr ""
 msgid "No-mobile template deleted"
 msgstr ""
 
+msgid "Font deleted"
+msgstr ""
+
 msgid "File too large (Max. 300 KB)"
 msgstr ""
 
 msgid "Invalid format, only PNG files are allowed"
+msgstr ""
+
+msgid "Font file too large (Max. 2 MB)"
+msgstr ""
+
+msgid "Invalid font file. Only TTF and OTF files are accepted."
+msgstr ""
+
+msgid "Font \"%s\" uploaded successfully."
 msgstr ""
 
 msgid "Configuration saved successfully"
@@ -42,6 +54,9 @@ msgid "Without mobile"
 msgstr ""
 
 msgid "Positions"
+msgstr ""
+
+msgid "Fonts"
 msgstr ""
 
 msgid "General settings"
@@ -241,6 +256,70 @@ msgstr ""
 msgid "Template without mobile — Position editor"
 msgstr ""
 
+msgid "Upload font"
+msgstr ""
+
+msgid "Accepted formats: TTF · OTF · Max. 2 MB"
+msgstr ""
+
+msgid "Upload"
+msgstr ""
+
+msgid "The font display name will be read automatically after uploading."
+msgstr ""
+
+msgid "Active fonts"
+msgstr ""
+
+msgid ""
+"Select the font for each role. Avenir Black and Avenir Roman are always "
+"available as built-in options."
+msgstr ""
+
+msgid "Name font"
+msgstr ""
+
+msgid "Font used to render the signature name."
+msgstr ""
+
+msgid "Avenir Black (built-in)"
+msgstr ""
+
+msgid "Avenir Roman (built-in)"
+msgstr ""
+
+msgid "Body font"
+msgstr ""
+
+msgid "Font used for all other fields in the signature."
+msgstr ""
+
+msgid "Installed fonts"
+msgstr ""
+
+msgid ""
+"Avenir Black and Avenir Roman are built-in fonts, always available as "
+"options and cannot be deleted."
+msgstr ""
+
+msgid "No custom fonts uploaded yet."
+msgstr ""
+
+msgid "File"
+msgstr ""
+
+msgid "Used as"
+msgstr ""
+
+msgid "Bold"
+msgstr ""
+
+msgid "Regular"
+msgstr ""
+
+msgid "Delete this font?"
+msgstr ""
+
 msgid "There are unsaved position changes. Click Save to apply them."
 msgstr ""
 
@@ -264,10 +343,13 @@ msgstr ""
 msgid "Could not generate the signature. Check the GLPI log for details."
 msgstr ""
 
+msgid "Invalid font resource"
+msgstr ""
+
 msgid "Invalid resource"
 msgstr ""
 
-msgid "Template not found"
+msgid "Resource not found"
 msgstr ""
 
 msgid "Could not retrieve the current user."

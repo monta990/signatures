@@ -1,7 +1,7 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Email Signatures 1.4.0\n"
+"Project-Id-Version: Email Signatures 1.5.0\n"
 "Report-Msgid-Bugs-To: https://github.com/monta990/signatures/issues\n"
 "POT-Creation-Date: 2026-03-22 00:00+0000\n"
 "PO-Revision-Date: 2026-03-22 00:00+0000\n"
@@ -19,11 +19,24 @@ msgstr "Modèle avec mobile supprimé"
 msgid "No-mobile template deleted"
 msgstr "Modèle sans mobile supprimé"
 
+msgid "Font deleted"
+msgstr "Police supprimée"
+
 msgid "File too large (Max. 300 KB)"
 msgstr "Fichier trop volumineux (Max. 300 Ko)"
 
 msgid "Invalid format, only PNG files are allowed"
 msgstr "Format invalide, seuls les fichiers PNG sont acceptés"
+
+msgid "Font file too large (Max. 2 MB)"
+msgstr "Fichier de police trop volumineux (Max. 2 Mo)"
+
+msgid "Invalid font file. Only TTF and OTF files are accepted."
+msgstr ""
+"Fichier de police invalide. Seuls les fichiers TTF et OTF sont acceptés."
+
+msgid "Font \"%s\" uploaded successfully."
+msgstr "Police « %s » téléversée avec succès."
 
 msgid "Configuration saved successfully"
 msgstr "Configuration enregistrée avec succès"
@@ -45,6 +58,9 @@ msgstr "Sans mobile"
 
 msgid "Positions"
 msgstr "Positions"
+
+msgid "Fonts"
+msgstr "Polices"
 
 msgid "General settings"
 msgstr "Configuration générale"
@@ -251,6 +267,76 @@ msgstr "Modèle avec mobile — Éditeur de positions"
 msgid "Template without mobile — Position editor"
 msgstr "Modèle sans mobile — Éditeur de positions"
 
+msgid "Upload font"
+msgstr "Téléverser une police"
+
+msgid "Accepted formats: TTF · OTF · Max. 2 MB"
+msgstr "Formats acceptés : TTF · OTF · Max. 2 Mo"
+
+msgid "Upload"
+msgstr "Téléverser"
+
+msgid "The font display name will be read automatically after uploading."
+msgstr ""
+"Le nom d'affichage de la police sera lu automatiquement après le "
+"téléversement."
+
+msgid "Active fonts"
+msgstr "Polices actives"
+
+msgid ""
+"Select the font for each role. Avenir Black and Avenir Roman are always "
+"available as built-in options."
+msgstr ""
+"Sélectionnez la police pour chaque rôle. Avenir Black et Avenir Roman sont "
+"toujours disponibles en options intégrées."
+
+msgid "Name font"
+msgstr "Police du nom"
+
+msgid "Font used to render the signature name."
+msgstr "Police utilisée pour afficher le nom dans la signature."
+
+msgid "Avenir Black (built-in)"
+msgstr "Avenir Black (intégrée)"
+
+msgid "Avenir Roman (built-in)"
+msgstr "Avenir Roman (intégrée)"
+
+msgid "Body font"
+msgstr "Police du corps"
+
+msgid "Font used for all other fields in the signature."
+msgstr "Police utilisée pour tous les autres champs de la signature."
+
+msgid "Installed fonts"
+msgstr "Polices installées"
+
+msgid ""
+"Avenir Black and Avenir Roman are built-in fonts, always available as "
+"options and cannot be deleted."
+msgstr ""
+"Avenir Black et Avenir Roman sont des polices intégrées, toujours "
+"disponibles et ne peuvent pas être supprimées."
+
+msgid "No custom fonts uploaded yet."
+msgstr "Aucune police personnalisée téléversée pour l'instant."
+
+msgid "File"
+msgstr "Fichier"
+
+msgid "Used as"
+msgstr "Utilisée comme"
+
+msgid "Bold"
+msgstr "Gras"
+
+msgid "Regular"
+msgstr "Normal"
+
+msgid "Delete this font?"
+msgstr "Supprimer cette police ?"
+
 msgid "There are unsaved position changes. Click Save to apply them."
 msgstr ""
 "Des modifications de positions ne sont pas enregistrées. Cliquez sur "
@@ -280,11 +366,14 @@ msgstr ""
 "Impossible de générer la signature. Consultez le journal GLPI pour plus de "
 "détails."
 
+msgid "Invalid font resource"
+msgstr "Ressource de police invalide"
+
 msgid "Invalid resource"
 msgstr "Ressource invalide"
 
-msgid "Template not found"
-msgstr "Modèle introuvable"
+msgid "Resource not found"
+msgstr "Ressource introuvable"
 
 msgid "Could not retrieve the current user."
 msgstr "Impossible de récupérer l'utilisateur actuel."

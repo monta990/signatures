@@ -1,7 +1,7 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Email Signatures 1.4.0\n"
+"Project-Id-Version: Email Signatures 1.5.0\n"
 "Report-Msgid-Bugs-To: https://github.com/monta990/signatures/issues\n"
 "POT-Creation-Date: 2026-03-22 00:00+0000\n"
 "PO-Revision-Date: 2026-03-22 00:00+0000\n"
@@ -19,11 +19,23 @@ msgstr "Mobile template deleted"
 msgid "No-mobile template deleted"
 msgstr "No-mobile template deleted"
 
+msgid "Font deleted"
+msgstr "Font deleted"
+
 msgid "File too large (Max. 300 KB)"
 msgstr "File too large (Max. 300 KB)"
 
 msgid "Invalid format, only PNG files are allowed"
 msgstr "Invalid format, only PNG files are permitted"
+
+msgid "Font file too large (Max. 2 MB)"
+msgstr "Font file too large (Max. 2 MB)"
+
+msgid "Invalid font file. Only TTF and OTF files are accepted."
+msgstr "Invalid font file. Only TTF and OTF files are accepted."
+
+msgid "Font \"%s\" uploaded successfully."
+msgstr "Font \"%s\" uploaded successfully."
 
 msgid "Configuration saved successfully"
 msgstr "Configuration saved successfully"
@@ -45,6 +57,9 @@ msgstr "Without mobile"
 
 msgid "Positions"
 msgstr "Positions"
+
+msgid "Fonts"
+msgstr "Fonts"
 
 msgid "General settings"
 msgstr "General settings"
@@ -252,6 +267,74 @@ msgstr "Template with mobile — Position editor"
 msgid "Template without mobile — Position editor"
 msgstr "Template without mobile — Position editor"
 
+msgid "Upload font"
+msgstr "Upload font"
+
+msgid "Accepted formats: TTF · OTF · Max. 2 MB"
+msgstr "Accepted formats: TTF · OTF · Max. 2 MB"
+
+msgid "Upload"
+msgstr "Upload"
+
+msgid "The font display name will be read automatically after uploading."
+msgstr "The font display name will be read automatically after uploading."
+
+msgid "Active fonts"
+msgstr "Active fonts"
+
+msgid ""
+"Select the font for each role. Avenir Black and Avenir Roman are always "
+"available as built-in options."
+msgstr ""
+"Select the font for each role. Avenir Black and Avenir Roman are always "
+"available as built-in options."
+
+msgid "Name font"
+msgstr "Name font"
+
+msgid "Font used to render the signature name."
+msgstr "Font used to render the signature name."
+
+msgid "Avenir Black (built-in)"
+msgstr "Avenir Black (built-in)"
+
+msgid "Avenir Roman (built-in)"
+msgstr "Avenir Roman (built-in)"
+
+msgid "Body font"
+msgstr "Body font"
+
+msgid "Font used for all other fields in the signature."
+msgstr "Font used for all other fields in the signature."
+
+msgid "Installed fonts"
+msgstr "Installed fonts"
+
+msgid ""
+"Avenir Black and Avenir Roman are built-in fonts, always available as "
+"options and cannot be deleted."
+msgstr ""
+"Avenir Black and Avenir Roman are built-in fonts, always available as "
+"options and cannot be deleted."
+
+msgid "No custom fonts uploaded yet."
+msgstr "No custom fonts uploaded yet."
+
+msgid "File"
+msgstr "File"
+
+msgid "Used as"
+msgstr "Used as"
+
+msgid "Bold"
+msgstr "Bold"
+
+msgid "Regular"
+msgstr "Regular"
+
+msgid "Delete this font?"
+msgstr "Delete this font?"
+
 msgid "There are unsaved position changes. Click Save to apply them."
 msgstr "There are unsaved position changes. Click Save to apply them."
 
@@ -277,11 +360,14 @@ msgstr "text"
 msgid "Could not generate the signature. Check the GLPI log for details."
 msgstr "Could not generate the signature. Check the GLPI log for details."
 
+msgid "Invalid font resource"
+msgstr "Invalid font resource"
+
 msgid "Invalid resource"
 msgstr "Invalid resource"
 
-msgid "Template not found"
-msgstr "Template not found"
+msgid "Resource not found"
+msgstr "Resource not found"
 
 msgid "Could not retrieve the current user."
 msgstr "Could not retrieve the current user."

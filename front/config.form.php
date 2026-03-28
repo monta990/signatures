@@ -21,7 +21,7 @@ global $CFG_GLPI;
 $self = Plugin::getWebDir('signatures') . '/front/config.form.php';
 
 // Fix 7: volver al tab activo tras guardar
-$activeTab = in_array($_POST['active_tab'] ?? '', ['general','cel','nocel','positions'], true)
+$activeTab = in_array($_POST['active_tab'] ?? '', ['general','cel','nocel','positions','fonts'], true)
    ? $_POST['active_tab']
    : 'general';
 
@@ -30,15 +30,23 @@ $activeTab = in_array($_POST['active_tab'] ?? '', ['general','cel','nocel','posi
 $maxSize     = 300 * 1024;
 $allowedMime = ['image/png'];
 
+$fontMaxSize = 2 * 1024 * 1024; // 2 MB
+
 $baseDir   = PluginSignaturesPaths::filesDir();
 $base1File = PluginSignaturesPaths::base1Path();
 $base2File = PluginSignaturesPaths::base2Path();
+
+$userFontsDir = PluginSignaturesPaths::userFontsDir();
 
 $hasbase1  = is_readable($base1File);
 $hasbase2  = is_readable($base2File);
 
 if (!is_dir($baseDir)) {
    mkdir($baseDir, 0755, true);
+}
+
+if (!is_dir($userFontsDir)) {
+   mkdir($userFontsDir, 0755, true);
 }
 
 /* ========================== DELETE ========================== */
@@ -53,6 +61,29 @@ if (isset($_POST['delete_base2']) && $hasbase2) {
    unlink($base2File);
    Session::addMessageAfterRedirect(__('No-mobile template deleted', 'signatures'), false, INFO);
    Html::redirect($self);
+}
+
+// ── Eliminar fuente de usuario ─────────────────────────────────────────────
+if (isset($_POST['delete_font'])) {
+   $fontToDelete = basename(trim($_POST['delete_font'] ?? ''));
+   $ext          = strtolower(pathinfo($fontToDelete, PATHINFO_EXTENSION));
+
+   if ($fontToDelete !== '' && in_array($ext, ['ttf', 'otf'], true)) {
+      $fontPath = PluginSignaturesPaths::userFontPath($fontToDelete);
+      if (is_file($fontPath)) {
+         // Si la fuente eliminada estaba seleccionada, limpiar la config
+         $cfg = PluginSignaturesConfig::getAll();
+         foreach (['font_name', 'font_body'] as $key) {
+            if (($cfg[$key] ?? '') === $fontToDelete) {
+               Config::setConfigurationValues('plugin_signatures', [$key => '']);
+            }
+         }
+         PluginSignaturesConfig::invalidate();
+         unlink($fontPath);
+         Session::addMessageAfterRedirect(__('Font deleted', 'signatures'), false, INFO);
+      }
+   }
+   Html::redirect($self . '#tab-fonts');
 }
 
 /* ========================== SAVE ========================== */
@@ -123,7 +154,51 @@ if (isset($_POST['save'])) {
       chmod($dest, 0644);
    }
 
-   /* ================= POSICIONES ================= */
+   /* ================= FUENTES ================= */
+   foreach (['font_name', 'font_body'] as $key) {
+      if (isset($_POST[$key])) {
+         $val = basename(trim($_POST[$key]));
+         // Aceptar vacío (usar built-in) o un nombre de archivo de fuente existente
+         if ($val === '' || is_readable(PluginSignaturesPaths::userFontPath($val))) {
+            Config::setConfigurationValues('plugin_signatures', [$key => $val]);
+         }
+      }
+   }
+
+   // Upload de fuente nueva
+   if (isset($_FILES['font_upload']) && is_uploaded_file($_FILES['font_upload']['tmp_name'])) {
+      $tmp      = $_FILES['font_upload']['tmp_name'];
+      $origName = $_FILES['font_upload']['name'] ?? '';
+      $size     = $_FILES['font_upload']['size'] ?? 0;
+
+      if ($size > $fontMaxSize) {
+         Session::addMessageAfterRedirect(__('Font file too large (Max. 2 MB)', 'signatures'), false, ERROR);
+         Html::redirect($self . '#tab-fonts');
+      }
+
+      $safeName = PluginSignaturesSignature::sanitizeFontFilename($origName);
+      if ($safeName === null) {
+         Session::addMessageAfterRedirect(__('Invalid font file. Only TTF and OTF files are accepted.', 'signatures'), false, ERROR);
+         Html::redirect($self . '#tab-fonts');
+      }
+
+      if (!PluginSignaturesSignature::validateFontFile($tmp)) {
+         Session::addMessageAfterRedirect(__('Invalid font file. Only TTF and OTF files are accepted.', 'signatures'), false, ERROR);
+         Html::redirect($self . '#tab-fonts');
+      }
+
+      $dest = PluginSignaturesPaths::userFontPath($safeName);
+      move_uploaded_file($tmp, $dest);
+      chmod($dest, 0644);
+      Session::addMessageAfterRedirect(
+         sprintf(__('Font "%s" uploaded successfully.', 'signatures'), $safeName),
+         false,
+         INFO
+      );
+      PluginSignaturesConfig::invalidate();
+      Html::redirect($self . '#tab-fonts');
+   }
+   /* ================= FIN FUENTES ================= */
    $posKeys = array_keys(array_filter(
       plugin_signatures_getDefaults(),
       static fn($k) => str_starts_with($k, 'sig_b'),
@@ -218,6 +293,15 @@ echo "
             data-bs-target='#tab-positions'
             type='button'>
       <i class='ti ti-vector-bezier me-1'></i> " . __('Positions', 'signatures') . "
+    </button>
+  </li>
+
+  <li class='nav-item'>
+    <button class='nav-link'
+            data-bs-toggle='tab'
+            data-bs-target='#tab-fonts'
+            type='button'>
+      <i class='ti ti-typography me-1'></i> " . __('Fonts', 'signatures') . "
     </button>
   </li>
 
@@ -574,8 +658,29 @@ if (empty($_extraPhone))    { $_extraLabel = __('Ext: ', 'signatures'); $_extraP
 
 // ── URLs de fuentes y plantillas ──────────────────────────────────────
 $_pluginWebDir = Plugin::getWebDir('signatures');
-$_fontBlackUrl = $_pluginWebDir . '/fonts/AvenirBlack.ttf';
-$_fontRomanUrl = $_pluginWebDir . '/fonts/AvenirRoman.ttf';
+
+// Resolver fuentes activas para @font-face del editor
+$_cfgFontsResolved = PluginSignaturesConfig::getAll();
+$_fontNameFile     = trim($_cfgFontsResolved['font_name'] ?? '');
+$_fontBodyFile     = trim($_cfgFontsResolved['font_body'] ?? '');
+
+// Helper: devuelve URL pública de una fuente (user dir o built-in dir)
+$_resolveFontUrl = static function(string $filename, string $builtinFile) use ($_pluginWebDir): string {
+   if ($filename !== '') {
+      // Built-in fonts served directly from plugin web dir
+      if ($filename === 'AvenirBlack.ttf' || $filename === 'AvenirRoman.ttf') {
+         return $_pluginWebDir . '/fonts/' . $filename;
+      }
+      // User-uploaded font served through resource endpoint
+      if (is_readable(PluginSignaturesPaths::userFontPath($filename))) {
+         return PluginSignaturesPaths::userFontUrl($filename);
+      }
+   }
+   return $_pluginWebDir . '/fonts/' . $builtinFile;
+};
+
+$_fontBlackUrl = $_resolveFontUrl($_fontNameFile, 'AvenirBlack.ttf');
+$_fontRomanUrl = $_resolveFontUrl($_fontBodyFile, 'AvenirRoman.ttf');
 $_base1Url     = PluginSignaturesPaths::base1Url();
 $_base2Url     = PluginSignaturesPaths::base2Url();
 
@@ -807,6 +912,183 @@ $_renderEditor('b2',
 );
 
 echo "</div>"; // tab-pane positions
+
+/* =====================================================
+ * TAB FONTS
+ * ===================================================== */
+echo "<div class='tab-pane fade' id='tab-fonts'>";
+echo "<div class='card mt-2 rounded-0'>";
+signaturesRibbonSubHeader('ti-typography', __('Fonts', 'signatures'));
+echo "<div class='card-body'>";
+
+// ── Collect current state ──────────────────────────────────────────
+$userFontsMap   = PluginSignaturesPaths::listUserFontsWithNames();
+$userFontsList  = array_keys($userFontsMap);
+$cfgFonts       = PluginSignaturesConfig::getAll();
+$currentName    = $cfgFonts['font_name'] ?? '';
+$currentBody    = $cfgFonts['font_body'] ?? '';
+
+// ── Built-in font labels ───────────────────────────────────────────
+// Built-in font filenames
+$_builtinNameFile = PluginSignaturesPaths::BUILTIN_FONT_NAME; // AvenirBlack.ttf
+$_builtinBodyFile = PluginSignaturesPaths::BUILTIN_FONT_BODY; // AvenirRoman.ttf
+
+// ── Upload form ────────────────────────────────────────────────────
+echo "<div class='mb-4'>";
+signaturesRibbonSubHeader('ti-upload', __('Upload font', 'signatures'));
+echo "<div class='card-body pt-2'>";
+echo "<p class='form-text'>"
+   . __('Accepted formats: TTF · OTF · Max. 2 MB', 'signatures')
+   . "</p>";
+echo "<div class='input-group' style='max-width:480px;'>";
+echo "<input type='file' name='font_upload' id='font_upload_input' class='form-control' accept='.ttf,.otf'>";
+echo "<button type='submit' name='save' class='btn btn-secondary'>"
+   . "<i class='ti ti-upload me-1'></i>"
+   . __('Upload', 'signatures')
+   . "</button>";
+echo "</div>";
+echo "<p class='form-text mt-1' id='font_upload_name' style='display:none;'>"
+   . "<i class='ti ti-info-circle me-1'></i>"
+   . __('The font display name will be read automatically after uploading.', 'signatures')
+   . "</p>";
+echo "</div></div>"; // card-body + inner card
+
+// ── Font selector ──────────────────────────────────────────────────
+echo "<div class='mb-4 mt-2'>";
+signaturesRibbonSubHeader('ti-text-size', __('Active fonts', 'signatures'));
+echo "<div class='card-body pt-2'>";
+echo "<p class='form-text mb-3'>"
+   . __('Select the font for each role. Avenir Black and Avenir Roman are always available as built-in options.', 'signatures')
+   . "</p>";
+
+// Build option list
+$fontOptions = [''];
+foreach ($userFontsList as $fname) {
+   $fontOptions[] = $fname;
+}
+
+echo "<div class='row g-3'>";
+
+// Bold font select
+echo "<div class='col-md-6'>";
+echo "<label class='form-label fw-bold'>" . __('Name font', 'signatures') . "</label>";
+echo "<p class='form-text mb-1'>"
+   . __('Font used to render the signature name.', 'signatures')
+   . "</p>";
+echo "<select name='font_name' class='form-select'>";
+// Built-in options (always available)
+$_sel = ($currentName === '' || $currentName === $_builtinNameFile) ? 'selected' : '';
+echo "<option value='" . htmlspecialchars($_builtinNameFile, ENT_QUOTES, 'UTF-8') . "' {$_sel}>"
+   . __('Avenir Black (built-in)', 'signatures') . "</option>";
+$_sel = ($currentName === $_builtinBodyFile) ? 'selected' : '';
+echo "<option value='" . htmlspecialchars($_builtinBodyFile, ENT_QUOTES, 'UTF-8') . "' {$_sel}>"
+   . __('Avenir Roman (built-in)', 'signatures') . "</option>";
+// User uploaded fonts
+if (!empty($userFontsMap)) {
+   echo "<option disabled>──────────────</option>";
+   foreach ($userFontsMap as $fname => $displayName) {
+      $sel = ($currentName === $fname) ? 'selected' : '';
+      echo "<option value='" . htmlspecialchars($fname, ENT_QUOTES, 'UTF-8') . "' {$sel}>"
+         . htmlspecialchars($displayName, ENT_QUOTES, 'UTF-8') . "</option>";
+   }
+}
+echo "</select>";
+echo "</div>"; // col bold
+
+// Regular font select
+echo "<div class='col-md-6'>";
+echo "<label class='form-label fw-bold'>" . __('Body font', 'signatures') . "</label>";
+echo "<p class='form-text mb-1'>"
+   . __('Font used for all other fields in the signature.', 'signatures')
+   . "</p>";
+echo "<select name='font_body' class='form-select'>";
+// Built-in options (always available)
+$_sel = ($currentBody === '' || $currentBody === $_builtinBodyFile) ? 'selected' : '';
+echo "<option value='" . htmlspecialchars($_builtinBodyFile, ENT_QUOTES, 'UTF-8') . "' {$_sel}>"
+   . __('Avenir Roman (built-in)', 'signatures') . "</option>";
+$_sel = ($currentBody === $_builtinNameFile) ? 'selected' : '';
+echo "<option value='" . htmlspecialchars($_builtinNameFile, ENT_QUOTES, 'UTF-8') . "' {$_sel}>"
+   . __('Avenir Black (built-in)', 'signatures') . "</option>";
+// User uploaded fonts
+if (!empty($userFontsMap)) {
+   echo "<option disabled>──────────────</option>";
+   foreach ($userFontsMap as $fname => $displayName) {
+      $sel = ($currentBody === $fname) ? 'selected' : '';
+      echo "<option value='" . htmlspecialchars($fname, ENT_QUOTES, 'UTF-8') . "' {$sel}>"
+         . htmlspecialchars($displayName, ENT_QUOTES, 'UTF-8') . "</option>";
+   }
+}
+echo "</select>";
+echo "</div>"; // col regular
+
+echo "</div>"; // row
+echo "</div></div>"; // card-body + inner card
+
+// ── Installed fonts list ───────────────────────────────────────────
+echo "<div class='mt-2'>";
+signaturesRibbonSubHeader('ti-list', __('Installed fonts', 'signatures'));
+echo "<div class='card-body pt-2'>";
+
+echo "<p class='form-text mb-3'>"
+   . "<i class='ti ti-shield-check me-1'></i>"
+   . __('Avenir Black and Avenir Roman are built-in fonts, always available as options and cannot be deleted.', 'signatures')
+   . "</p>";
+
+if (empty($userFontsList)) {
+   echo "<div class='alert alert-info d-flex align-items-center gap-2 py-2' style='font-size:0.9em;'>"
+         . "<i class='ti ti-info-circle fs-5'></i>"
+         . "<span>" . __('No custom fonts uploaded yet.', 'signatures') . "</span>"
+         . "</div>";
+} else {
+   echo "<table class='table table-sm table-hover align-middle'>";
+   echo "<thead><tr>"
+      . "<th>" . __('File', 'signatures') . "</th>"
+      . "<th>" . __('Used as', 'signatures') . "</th>"
+      . "<th></th>"
+      . "</tr></thead>";
+   echo "<tbody>";
+   foreach ($userFontsMap as $fname => $_dn) {
+      $usedAs = [];
+      if ($currentName    === $fname) $usedAs[] = __('Bold',    'signatures');
+      if ($currentBody === $fname) $usedAs[] = __('Regular', 'signatures');
+      $usedLabel = !empty($usedAs)
+         ? implode(' ', array_map(
+               static fn(string $r): string =>
+                  "<span class='badge' style='background:#f0a500;color:#000;font-weight:600;'>" . $r . "</span>",
+               $usedAs
+           ))
+         : "<span class='text-body-secondary'>—</span>";
+
+      $fnameEsc    = htmlspecialchars($fname, ENT_QUOTES, 'UTF-8');
+      $displayName = htmlspecialchars($userFontsMap[$fname] ?? $fname, ENT_QUOTES, 'UTF-8');
+      echo "<tr>";
+      echo "<td>";
+      echo "<i class='ti ti-file-typography me-1'></i>";
+      echo "<span class='fw-semibold'>{$displayName}</span>";
+      echo "<br><span class='form-text' style='font-size:0.78em;'>{$fnameEsc}</span>";
+      echo "</td>";
+      echo "<td>{$usedLabel}</td>";
+      echo "<td class='text-end'>";
+      // Delete button — own mini-form with CSRF
+      $_fontDelToken = Session::getNewCSRFToken();
+      echo "<form method='post' action='" . htmlspecialchars($self, ENT_QUOTES, 'UTF-8') . "' class='d-inline'>";
+      echo Html::hidden('_glpi_csrf_token', ['value' => $_fontDelToken]);
+      echo "<input type='hidden' name='delete_font' value='{$fnameEsc}'>";
+      echo "<button type='submit' class='btn btn-sm btn-outline-danger'
+                   onclick=\"return confirm('" . addslashes(__('Delete this font?', 'signatures')) . "')\">"
+         . "<i class='ti ti-trash me-1'></i>" . __('Delete', 'signatures')
+         . "</button>";
+      echo "</form>";
+      echo "</td>";
+      echo "</tr>";
+   }
+   echo "</tbody></table>";
+}
+echo "</div></div>"; // card-body + inner card
+
+echo "</div>"; // card-body tab
+echo "</div>"; // card
+echo "</div>"; // tab-pane fonts
 
 echo "</div>"; // tab-content
 
@@ -1373,6 +1655,16 @@ document.addEventListener('click', e => {
    target.selectionStart = target.selectionEnd = start + varText.length;
    target.focus();
 });
+
+// Font upload — show hint when a file is selected
+(function() {
+   const inp  = document.getElementById('font_upload_input');
+   const hint = document.getElementById('font_upload_name');
+   if (!inp || !hint) return;
+   inp.addEventListener('change', function() {
+      hint.style.display = this.files.length ? '' : 'none';
+   });
+})();
 </script>
 HTML;
 

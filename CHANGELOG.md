@@ -6,6 +6,31 @@ Versioning follows [Semantic Versioning](https://semver.org/).
 
 ---
 
+## [1.5.0] — 2026-03-22
+
+### Added
+- **Custom font upload**: administrators can now upload TTF and OTF font files (max. 2 MB)
+  from the new **Fonts** tab in the plugin configuration page. Uploaded fonts are stored in
+  `GLPI_PLUGIN_DOC_DIR/signatures/fonts/` and survive plugin updates.
+- **Per-role font selection**: two dropdowns (**Bold font** and **Regular font**) let
+  administrators choose which font to use for the name field and all other fields
+  respectively. Selecting "Built-in (Avenir)" always falls back to the bundled Avenir fonts.
+- **Font validation via magic bytes**: uploaded files are validated against known TTF/OTF
+  magic byte signatures (`00 01 00 00`, `true`, `OTTO`) before being saved, preventing
+  disguised non-font files regardless of extension or MIME type reported by the browser.
+- **Font serving endpoint** (`resource.send.php?resource=font&name=`): serves user-uploaded
+  fonts to the browser for live `@font-face` preview in the position editor.
+- **Installed fonts table**: lists all uploaded fonts with their active role badge (Bold /
+  Regular) and a per-font delete button with its own CSRF token.
+- **`PluginSignaturesPaths::resolvedFontBold/Regular()`**: resolve the active font path
+  at generation time — user font if configured and readable, built-in Avenir otherwise.
+- **`PluginSignaturesSignature::validateFontFile()`**: magic-byte validation for uploaded fonts.
+- **`PluginSignaturesSignature::sanitizeFontFilename()`**: sanitizes uploaded font filenames
+  to ASCII-safe names before writing to disk.
+- 24 new translatable strings added to all locales (es_MX, en_US, en_GB, fr_FR).
+
+---
+
 ## [1.4.0] — 2026-03-22
 
 ### Changed
@@ -19,6 +44,9 @@ Versioning follows [Semantic Versioning](https://semver.org/).
   - `es_MX.po` — msgids updated to English; Spanish `msgstr` values preserved.
   - `en_US.po` — msgids updated to English; `msgstr` entries left empty (base language).
   - `en_GB.po` / `fr_FR.po` — msgids updated to English; existing translations preserved.
+- **License upgraded from GPL v2+ to GPL v3+**: aligns with GLPI's own license.
+  `LICENSE` file replaced with the official GPL v3 text. Updated in `setup.php`,
+  `plugin.xml`, and `README.md`.
 
 ---
 

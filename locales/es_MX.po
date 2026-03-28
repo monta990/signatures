@@ -1,7 +1,7 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Email Signatures 1.4.0\n"
+"Project-Id-Version: Email Signatures 1.5.0\n"
 "Report-Msgid-Bugs-To: https://github.com/monta990/signatures/issues\n"
 "POT-Creation-Date: 2026-03-22 00:00+0000\n"
 "PO-Revision-Date: 2026-03-22 00:00+0000\n"
@@ -19,11 +19,23 @@ msgstr "Plantilla con celular eliminada"
 msgid "No-mobile template deleted"
 msgstr "Plantilla sin celular eliminada"
 
+msgid "Font deleted"
+msgstr "Fuente eliminada"
+
 msgid "File too large (Max. 300 KB)"
 msgstr "Archivo demasiado grande (Máx. 300 KB)"
 
 msgid "Invalid format, only PNG files are allowed"
 msgstr "Formato inválido, solo se permiten archivos PNG"
+
+msgid "Font file too large (Max. 2 MB)"
+msgstr "Archivo de fuente demasiado grande (Máx. 2 MB)"
+
+msgid "Invalid font file. Only TTF and OTF files are accepted."
+msgstr "Archivo de fuente inválido. Solo se aceptan archivos TTF y OTF."
+
+msgid "Font \"%s\" uploaded successfully."
+msgstr "Fuente \"%s\" subida correctamente."
 
 msgid "Configuration saved successfully"
 msgstr "Configuración guardada correctamente"
@@ -45,6 +57,9 @@ msgstr "Sin celular"
 
 msgid "Positions"
 msgstr "Posiciones"
+
+msgid "Fonts"
+msgstr "Fuentes"
 
 msgid "General settings"
 msgstr "Configuración general"
@@ -251,6 +266,75 @@ msgstr "Plantilla con celular — Editor de posiciones"
 msgid "Template without mobile — Position editor"
 msgstr "Plantilla sin celular — Editor de posiciones"
 
+msgid "Upload font"
+msgstr "Subir fuente"
+
+msgid "Accepted formats: TTF · OTF · Max. 2 MB"
+msgstr "Formatos aceptados: TTF · OTF · Máx. 2 MB"
+
+msgid "Upload"
+msgstr "Subir"
+
+msgid "The font display name will be read automatically after uploading."
+msgstr ""
+"El nombre de visualización de la fuente se leerá automáticamente al subir."
+
+msgid "Active fonts"
+msgstr "Fuentes activas"
+
+msgid ""
+"Select the font for each role. Avenir Black and Avenir Roman are always "
+"available as built-in options."
+msgstr ""
+"Selecciona la fuente para cada rol. Avenir Black y Avenir Roman siempre "
+"están disponibles como opciones integradas."
+
+msgid "Name font"
+msgstr "Fuente nombre"
+
+msgid "Font used to render the signature name."
+msgstr "Fuente para renderizar el nombre en la firma."
+
+msgid "Avenir Black (built-in)"
+msgstr "Avenir Black (integrada)"
+
+msgid "Avenir Roman (built-in)"
+msgstr "Avenir Roman (integrada)"
+
+msgid "Body font"
+msgstr "Fuente cuerpo"
+
+msgid "Font used for all other fields in the signature."
+msgstr "Fuente para todos los demás campos de la firma."
+
+msgid "Installed fonts"
+msgstr "Fuentes instaladas"
+
+msgid ""
+"Avenir Black and Avenir Roman are built-in fonts, always available as "
+"options and cannot be deleted."
+msgstr ""
+"Avenir Black y Avenir Roman son fuentes integradas, siempre disponibles como"
+" opciones y no se pueden eliminar."
+
+msgid "No custom fonts uploaded yet."
+msgstr "Aún no se han subido fuentes personalizadas."
+
+msgid "File"
+msgstr "Archivo"
+
+msgid "Used as"
+msgstr "Usada como"
+
+msgid "Bold"
+msgstr "Negrita"
+
+msgid "Regular"
+msgstr "Regular"
+
+msgid "Delete this font?"
+msgstr "¿Eliminar esta fuente?"
+
 msgid "There are unsaved position changes. Click Save to apply them."
 msgstr ""
 "Hay cambios en las posiciones sin guardar. Haz clic en Guardar para "
@@ -278,11 +362,14 @@ msgstr "texto"
 msgid "Could not generate the signature. Check the GLPI log for details."
 msgstr "No se pudo generar la firma. Revisa el log de GLPI para más detalles."
 
+msgid "Invalid font resource"
+msgstr "Recurso de fuente inválido"
+
 msgid "Invalid resource"
 msgstr "Recurso inválido"
 
-msgid "Template not found"
-msgstr "Plantilla no encontrada"
+msgid "Resource not found"
+msgstr "Recurso no encontrado"
 
 msgid "Could not retrieve the current user."
 msgstr "No se pudo obtener el usuario actual."

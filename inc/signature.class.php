@@ -14,12 +14,12 @@ class PluginSignaturesSignature {
          $errors[] = __('Templates are not correctly loaded. Please check the plugin configuration.', 'signatures');
       }
 
-      $font = PluginSignaturesPaths::getFontAvenirBlack();
+      $font = PluginSignaturesPaths::resolvedFontName();
       if (!is_readable($font)) {
          $errors[] = sprintf(__('TTF font not found: %s', 'signatures'), $font);
       }
 
-      $font2 = PluginSignaturesPaths::getFontAvenirRoman();
+      $font2 = PluginSignaturesPaths::resolvedFontBody();
       if (!is_readable($font2)) {
          $errors[] = sprintf(__('TTF font not found: %s', 'signatures'), $font2);
       }
@@ -114,8 +114,8 @@ class PluginSignaturesSignature {
       $black = imagecolorallocate($img, 0, 0, 0);
       $white = imagecolorallocate($img, 255, 255, 255);
 
-      $fontblack = PluginSignaturesPaths::getFontAvenirBlack();
-      $fontroman = PluginSignaturesPaths::getFontAvenirRoman();
+      $fontblack = PluginSignaturesPaths::resolvedFontName();
+      $fontroman = PluginSignaturesPaths::resolvedFontBody();
 
       /* ============================
        * ENTIDAD
@@ -268,8 +268,195 @@ class PluginSignaturesSignature {
    }
 
    /**
-    * Sanitiza el nombre completo de un usuario para usarlo como nombre de archivo.
-    * Transliterar UTF-8 → ASCII, reemplazar espacios por _, eliminar caracteres especiales.
+    * Valida que un archivo subido sea un font TTF u OTF real mediante magic bytes.
+    *
+    * Magic bytes:
+    *  - TTF: 00 01 00 00  (TrueType)
+    *  - TTF: 74 72 75 65  ("true" — Apple TrueType)
+    *  - OTF: 4F 54 54 4F  ("OTTO" — OpenType CFF)
+    *
+    * @param string $path Ruta al archivo temporal subido.
+    * @return bool True si el archivo es un font válido.
+    */
+   public static function validateFontFile(string $path): bool {
+      if (!is_readable($path)) {
+         return false;
+      }
+
+      $handle = fopen($path, 'rb');
+      if ($handle === false) {
+         return false;
+      }
+
+      $magic = fread($handle, 4);
+      fclose($handle);
+
+      if ($magic === false || strlen($magic) < 4) {
+         return false;
+      }
+
+      $signatures = [
+         "\x00\x01\x00\x00",  // TrueType
+         "true",               // Apple TrueType
+         "OTTO",               // OpenType CFF
+      ];
+
+      return in_array($magic, $signatures, true);
+   }
+
+   /**
+    * Sanitiza el nombre de un archivo de fuente para guardarlo en disco de forma segura.
+    * Solo permite letras, números, guiones y guiones bajos. Conserva la extensión.
+    *
+    * @param string $originalName Nombre original del archivo subido.
+    * @return string|null Nombre seguro con extensión, o null si la extensión no es válida.
+    */
+   public static function sanitizeFontFilename(string $originalName): ?string {
+      $ext = strtolower(pathinfo($originalName, PATHINFO_EXTENSION));
+      if (!in_array($ext, ['ttf', 'otf'], true)) {
+         return null;
+      }
+
+      $base = pathinfo($originalName, PATHINFO_FILENAME);
+      $base = iconv('UTF-8', 'ASCII//TRANSLIT//IGNORE', $base) ?: '';
+      $base = preg_replace('/\s+/', '_', $base);
+      $base = preg_replace('/[^A-Za-z0-9_\-]/', '', $base);
+      $base = trim($base, '_-');
+
+      if ($base === '') {
+         $base = 'font_' . uniqid('', true);
+      }
+
+      return $base . '.' . $ext;
+   }
+
+   /**
+    * Reads the human-readable font name from a TTF or OTF file's internal `name` table.
+    * Uses pure PHP binary reading — no external libraries required.
+    *
+    * Priority:
+    *   1. nameID 4 (Full font name, e.g. "Avenir Black") — platformID 3 (Windows, UTF-16BE)
+    *   2. nameID 4 — platformID 1 (Mac, Latin-1)
+    *   3. nameID 1 (Font family, e.g. "Avenir") — same platform priority
+    *   4. Filename basename (safe fallback if parsing fails)
+    *
+    * @param string $path  Full path to the TTF/OTF file.
+    * @return string       Display name, or the filename basename on failure.
+    */
+   public static function readFontDisplayName(string $path): string {
+      $fallback = pathinfo($path, PATHINFO_FILENAME);
+
+      $fh = @fopen($path, 'rb');
+      if ($fh === false) {
+         return $fallback;
+      }
+
+      try {
+         // ── Offset table ────────────────────────────────────────────────────
+         // sfVersion (4) + numTables (2) + searchRange (2) + entrySelector (2) + rangeShift (2)
+         $header = fread($fh, 12);
+         if ($header === false || strlen($header) < 12) {
+            return $fallback;
+         }
+
+         $numTables = unpack('n', substr($header, 4, 2))[1];
+
+         // ── Table directory ─────────────────────────────────────────────────
+         // Each entry: tag (4) + checkSum (4) + offset (4) + length (4) = 16 bytes
+         $nameOffset = null;
+         for ($i = 0; $i < $numTables; $i++) {
+            $entry = fread($fh, 16);
+            if ($entry === false || strlen($entry) < 16) {
+               break;
+            }
+            $tag = substr($entry, 0, 4);
+            if ($tag === 'name') {
+               $nameOffset = unpack('N', substr($entry, 8, 4))[1];
+               break;
+            }
+         }
+
+         if ($nameOffset === null) {
+            return $fallback;
+         }
+
+         // ── name table header ───────────────────────────────────────────────
+         // format (2) + count (2) + stringOffset (2)
+         fseek($fh, $nameOffset);
+         $nameHeader = fread($fh, 6);
+         if ($nameHeader === false || strlen($nameHeader) < 6) {
+            return $fallback;
+         }
+
+         $count        = unpack('n', substr($nameHeader, 2, 2))[1];
+         $stringOffset = unpack('n', substr($nameHeader, 4, 2))[1];
+         $stringsBase  = $nameOffset + $stringOffset;
+
+         // ── Name records ────────────────────────────────────────────────────
+         // platformID (2) + encodingID (2) + languageID (2) + nameID (2) + length (2) + offset (2)
+         $candidates = []; // [nameID][platformID] = ['offset'=>, 'length'=>]
+         for ($i = 0; $i < $count; $i++) {
+            $rec = fread($fh, 12);
+            if ($rec === false || strlen($rec) < 12) {
+               break;
+            }
+            $platformID = unpack('n', substr($rec, 0, 2))[1];
+            $nameID     = unpack('n', substr($rec, 6, 2))[1];
+            $length     = unpack('n', substr($rec, 8, 2))[1];
+            $strOff     = unpack('n', substr($rec, 10, 2))[1];
+
+            // Collect nameID 4 (full name) and nameID 1 (family) only
+            if ($nameID === 4 || $nameID === 1) {
+               $candidates[$nameID][$platformID] = [
+                  'offset' => $stringsBase + $strOff,
+                  'length' => $length,
+               ];
+            }
+         }
+
+         // ── Resolve best candidate ──────────────────────────────────────────
+         $resolve = static function (int $nameID) use ($fh, $candidates): ?string {
+            if (!isset($candidates[$nameID])) {
+               return null;
+            }
+
+            // Prefer platform 3 (Windows, UTF-16BE) then platform 1 (Mac, Latin-1)
+            foreach ([3, 1] as $pid) {
+               if (!isset($candidates[$nameID][$pid])) {
+                  continue;
+               }
+               $rec = $candidates[$nameID][$pid];
+               fseek($fh, $rec['offset']);
+               $raw = fread($fh, $rec['length']);
+               if ($raw === false || $raw === '') {
+                  continue;
+               }
+
+               $name = ($pid === 3)
+                  ? mb_convert_encoding($raw, 'UTF-8', 'UTF-16BE')
+                  : $raw;
+
+               $name = trim($name);
+               if ($name !== '') {
+                  return $name;
+               }
+            }
+
+            return null;
+         };
+
+         // nameID 4 first, then nameID 1 as fallback
+         $name = $resolve(4) ?? $resolve(1);
+         return ($name !== null && $name !== '') ? $name : $fallback;
+
+      } finally {
+         fclose($fh);
+      }
+   }
+
+   /**
+    * Sanitizes a user's full name for use as a filename.
+    * Transliterates UTF-8 → ASCII, replaces spaces with _, removes special characters.
     *
     * @param string $name     Nombre a sanitizar (getFriendlyName)
     * @param string $fallback Valor de respaldo si el resultado queda vacío

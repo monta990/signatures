@@ -10,7 +10,7 @@
    
 <p align="center">
   <a href="https://github.com/glpi-project/glpi" target="_blank"><img src="https://img.shields.io/badge/GLPI-11.0%2B-blue" alt="GLPI compatibility"></a>
-  <a href="https://www.gnu.org/licenses/old-licenses/gpl-2.0.html" target="_blank"><img src="https://img.shields.io/badge/License-GPL%20v2%2B-green" alt="License"></a>
+  <a href="https://www.gnu.org/licenses/gpl-3.0.html" target="_blank"><img src="https://img.shields.io/badge/License-GPL%20v3%2B-green" alt="License"></a>
   <a href="https://php.net/" target="_blank"><img src="https://img.shields.io/badge/PHP-%3E%3D8.2-purple" alt="PHP"></a>
   <a href="https://github.com/monta990/signatures/releases" target="_blank"><img alt="GitHub Downloads (all assets, all releases)" src="https://img.shields.io/github/downloads/monta990/signatures/total"></a>
 </p>
@@ -366,7 +366,7 @@ Access checks use `Session::haveRight('config', UPDATE)` and
 
 | Code | Language |
 |---|---|
-| `es_MX` | Spanish (Mexico) — primary development language |
+| `es_MX` | Spanish (Mexico) |
 | `en_US` | English (United States) |
 | `en_GB` | English (United Kingdom) |
 | `fr_FR` | French (France) |
@@ -448,7 +448,7 @@ If you like my work, you can support me with a donation:
 
 ## License
 
-GPL-2.0-or-later — see [LICENSE](LICENSE).
+GPL-3.0-or-later — see [LICENSE](LICENSE).
 
 ## Issues
 
@@ -468,7 +468,7 @@ Report bugs or request features on the [issue tracker](https://github.com/monta9
    
 <p align="center">
   <a href="https://github.com/glpi-project/glpi" target="_blank"><img src="https://img.shields.io/badge/GLPI-11.0%2B-blue" alt="GLPI compatibility"></a>
-  <a href="https://www.gnu.org/licenses/old-licenses/gpl-2.0.html" target="_blank"><img src="https://img.shields.io/badge/License-GPL%20v2%2B-green" alt="License"></a>
+  <a href="https://www.gnu.org/licenses/gpl-3.0.html" target="_blank"><img src="https://img.shields.io/badge/License-GPL%20v3%2B-green" alt="License"></a>
   <a href="https://php.net/" target="_blank"><img src="https://img.shields.io/badge/PHP-%3E%3D8.2-purple" alt="PHP"></a>
   <a href="https://github.com/monta990/signatures/releases" target="_blank"><img alt="GitHub Downloads (all assets, all releases)" src="https://img.shields.io/github/downloads/monta990/signatures/total"></a>
 </p>
@@ -497,7 +497,7 @@ La firma se renderiza dinámicamente sobre una plantilla PNG configurable usando
 | **Tamaño de fuente por campo** | Input numérico en la tabla del editor, actualización en vivo. |
 | **Badges de variables** | Inserción al cursor con un clic. |
 | **Indicador de cambios** | Punto naranja + banner cuando hay posiciones sin guardar. |
-| **Validación de upload** | Solo PNG hasta 300 KB (límite duro). Dimensiones recomendadas: 650×250 px, mostradas como hint debajo del input. |
+| **Validación de upload** | Solo PNG hasta 300 KB (límite duro). Dimensiones recomendadas: 650×250 px. |
 | **Badge de config incompleta** | `!` naranja en la pestaña del perfil si falta plantilla o config de correo. |
 | **Formularios de eliminación independientes** | Botones "Eliminar" desacoplados del form principal, con CSRF propio. |
 | **Multiidioma** | es_MX · en_US · en_GB · fr_FR |
@@ -521,7 +521,7 @@ La firma se renderiza dinámicamente sobre una plantilla PNG configurable usando
 
 ### Vía ZIP
 
-1. Descarga el `.zip` de la útima  versión desde [GitHub releases](https://github.com/monta990/signatures/releases).
+1. Descarga el `.zip` de la última versión desde [GitHub releases](https://github.com/monta990/signatures/releases).
 2. En GLPI: **Configuración → Complementos → Subir un complemento**.
 3. Selecciona el ZIP.
 4. Haz clic en **Instalar** y luego en **Habilitar**.
@@ -666,7 +666,7 @@ URL `https://wa.me/{pais}{celular}` → `TCPDF2DBarcode` genera PNG temporal →
 
 | Código | Idioma |
 |---|---|
-| `es_MX` | Español (México) — idioma primario |
+| `es_MX` | Español (México) |
 | `en_US` | English (United States) |
 | `en_GB` | English (United Kingdom) |
 | `fr_FR` | Français (France) |
@@ -695,7 +695,7 @@ Si te gusta mi trabajo, me puedes apoyar con una donación:
 
 ## Licencia
 
-GPL v2 o posterior. Ver [LICENSE](https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
+GPL v3 o posterior. Ver [LICENSE](https://www.gnu.org/licenses/gpl-3.0.html).
 
 ## Problemas
 
