@@ -19,7 +19,7 @@
 
 ## Overview
 
-Each signature is rendered dynamically over a configurable PNG template using PHP GD and Avenir TTF fonts, with an optional WhatsApp QR code. Finished signatures can be downloaded directly or sent to the user's registered email address in one click.
+Each signature is rendered dynamically over a configurable PNG template using PHP GD and Avenir TTF or custom fonts, with an optional WhatsApp QR code. Finished signatures can be downloaded directly or sent to the user's registered email address in one click.
 
 ---
 
@@ -503,7 +503,7 @@ Report bugs or request features on the [issue tracker](https://github.com/monta9
 
 ## Overview
 
-La firma se renderiza dinámicamente sobre una plantilla PNG configurable usando PHP GD y fuentes TTF Avenir, con código QR de WhatsApp opcional. Las firmas terminadas se pueden descargar directamente o enviar al correo del usuario con un solo clic.
+La firma se renderiza dinámicamente sobre una plantilla PNG configurable usando PHP GD y fuentes TTF Avenir o personalizadas, con código QR de WhatsApp opcional. Las firmas terminadas se pueden descargar directamente o enviar al correo del usuario con un solo clic.
 
 ---
 
