@@ -19,7 +19,7 @@
 
 ## Overview
 
-Each signature is rendered dynamically over a configurable PNG template using PHP GD and Avenir TTF fonts, with an optional WhatsApp QR code. Finished signatures can be downloaded directly or sent to the user's registered email address in one click.
+Each signature is rendered dynamically over a configurable PNG template using PHP GD and Avenir TTF or custom fonts, with an optional WhatsApp QR code. Finished signatures can be downloaded directly or sent to the user's registered email address in one click.
 
 ---
 
@@ -45,6 +45,8 @@ Each signature is rendered dynamically over a configurable PNG template using PH
 | **Incomplete config badge** | Orange `!` badge on the user profile tab when the relevant template is missing or email is not configured. |
 | **Independent delete forms** | Delete-template buttons use their own `<form>` with dedicated CSRF tokens, decoupled from the main config form. |
 | **CSRF protection** | All POST endpoints use GLPI's built-in CSRF token validation. |
+| **Custom fonts** | Upload TTF or OTF font files from the Fonts tab. The plugin reads each file's internal `name` table to display its real name. Built-in Avenir Black and Avenir Roman are always available. |
+| **Per-role font selection** | Choose **Name font** (used for the signature name) and **Body font** (used for all other fields) independently. Both built-in and uploaded fonts are available for either role. |
 | **Multilanguage** | es_MX · en_US · en_GB · fr_FR |
 
 ---
@@ -78,7 +80,7 @@ Each signature is rendered dynamically over a configurable PNG template using PH
 
 ```bash
 cd /var/www/glpi/plugins
-unzip signatures-1.4.0.zip
+unzip signatures-X.X.X.zip
 # The folder must be named exactly "signatures"
 ```
 
@@ -148,7 +150,7 @@ includes a yellow warning banner.
 
 ---
 
-### With mobile tab (Con celular)
+### With mobile tab
 
 Manages `base.png` — the template used for users who have a mobile number set in
 their GLPI profile.
@@ -169,7 +171,7 @@ their GLPI profile.
 
 ---
 
-### Without mobile tab (Sin celular)
+### Without mobile tab
 
 Identical to "With mobile" but manages `base2.png`, used for users without a mobile
 number. Typically has a slightly different layout without the WhatsApp QR area.
@@ -236,6 +238,22 @@ editor and the stored values consistent at any display size.
 
 ---
 
+### Fonts tab
+
+Upload and manage custom fonts for signature rendering.
+
+| Element | Description |
+|---|---|
+| **Upload font** | TTF or OTF files, max 2 MB. The plugin reads the file's internal `name` table and shows the real font name everywhere (selects, table). |
+| **Name font** | Font used to render the user's name in the signature. Defaults to Avenir Black. |
+| **Body font** | Font used for all other fields (title, email, phone, etc.). Defaults to Avenir Roman. |
+| **Installed fonts** | Table of uploaded fonts showing real name, filename, current role badge, and a delete button. |
+
+> Avenir Black and Avenir Roman are always available as built-in options and cannot be deleted.
+> Both fonts are available for either role — you can assign Avenir Roman as the name font or Avenir Black as the body font if needed.
+
+---
+
 ## Email variables
 
 | Variable | Resolved from |
@@ -294,8 +312,6 @@ it. Useful for verifying the layout before sending.
 
 ---
 
-## How signature generation works
-
 ### Template selection
 
 ```
@@ -323,6 +339,14 @@ with per-key fallback to built-in defaults if not yet configured.
 | Facebook | `plugin_signatures.facebook_page` config | 11 px |
 | Website | `Entity::website` | 11 px |
 | QR code | TCPDF2DBarcode → imagecopyresampled | 100×100 px |
+
+### Font resolution
+
+The active font for each role is resolved at generation time:
+
+1. If a custom font is configured and its file exists in `GLPI_PLUGIN_DOC_DIR/signatures/fonts/` → use it.
+2. If a built-in font is explicitly selected (`AvenirBlack.ttf` or `AvenirRoman.ttf`) → use the bundled file.
+3. Otherwise → fall back to the default built-in (Avenir Black for name, Avenir Roman for body).
 
 ### Font and name auto-fit
 
@@ -391,8 +415,8 @@ msgfmt locales/de_DE.po -o locales/de_DE.mo
 ```
 signatures/
 ├── fonts/
-│   ├── AvenirBlack.ttf          Bold font — name field
-│   └── AvenirRoman.ttf          Regular font — all other fields
+│   ├── AvenirBlack.ttf          Built-in name font (Avenir Black)
+│   └── AvenirRoman.ttf          Built-in body font (Avenir Roman)
 ├── front/
 │   ├── config.form.php          Plugin configuration UI (4-tab page)
 │   ├── download.php             Generates and streams the PNG download
@@ -404,7 +428,7 @@ signatures/
 │   ├── signature.class.php      Image generation, email assembly, QR composition
 │   └── user.class.php           GLPI tab registration, user-facing UI
 ├── locales/
-│   ├── signatures.pot           Translation template (118 strings)
+│   ├── signatures.pot           Translation template
 │   ├── es_MX.po / es_MX.mo
 │   ├── en_US.po / en_US.mo
 │   ├── en_GB.po / en_GB.mo
@@ -455,248 +479,3 @@ GPL-3.0-or-later — see [LICENSE](LICENSE).
 Report bugs or request features on the [issue tracker](https://github.com/monta990/signatures/issues).
 
 ---
-
-<p align="center">
-  <img src="logo.png" alt="Email Signatures">
-</p>
-
-<h1 align="center">Email Signatures</h1>
-
-<p align="center">
-  <strong>GLPI plugin — Genera firmas de correo corporativas en PNG personalizadas para cada usuario de GLPI</strong>
-</p>
-   
-<p align="center">
-  <a href="https://github.com/glpi-project/glpi" target="_blank"><img src="https://img.shields.io/badge/GLPI-11.0%2B-blue" alt="GLPI compatibility"></a>
-  <a href="https://www.gnu.org/licenses/gpl-3.0.html" target="_blank"><img src="https://img.shields.io/badge/License-GPL%20v3%2B-green" alt="License"></a>
-  <a href="https://php.net/" target="_blank"><img src="https://img.shields.io/badge/PHP-%3E%3D8.2-purple" alt="PHP"></a>
-  <a href="https://github.com/monta990/signatures/releases" target="_blank"><img alt="GitHub Downloads (all assets, all releases)" src="https://img.shields.io/github/downloads/monta990/signatures/total"></a>
-</p>
-
----
-
-## Overview
-
-La firma se renderiza dinámicamente sobre una plantilla PNG configurable usando PHP GD y fuentes TTF Avenir, con código QR de WhatsApp opcional. Las firmas terminadas se pueden descargar directamente o enviar al correo del usuario con un solo clic.
-
----
-
-## Características
-
-| Función | Detalle |
-|---|---|
-| **Dos plantillas PNG** | Una para usuarios con celular, otra sin. Selección automática por campo `mobile`. |
-| **Texto dinámico** | Nombre, título, correo, teléfonos, Facebook, web — con fuentes Avenir via PHP GD. |
-| **Auto-ajuste del nombre** | Tamaño de fuente ajustado arriba/abajo dentro del rango configurado. |
-| **QR de WhatsApp** | Con TCPDF (incluido en GLPI). Compuesto con `imagecopyresampled()` a tamaño real. |
-| **Descarga** | PNG en tiempo real, sin almacenamiento permanente. |
-| **Envío por correo** | PNG adjunto vía `GLPIMailer`. |
-| **Correo de prueba** | Al administrador, con prefijo `[PRUEBA]` y banner de aviso. |
-| **Vista previa** | Modal con el PNG final antes de descargar o enviar. |
-| **Editor visual** | Drag & drop con mouse y toque. Escala dinámica según ancho de pantalla. |
-| **Tamaño de fuente por campo** | Input numérico en la tabla del editor, actualización en vivo. |
-| **Badges de variables** | Inserción al cursor con un clic. |
-| **Indicador de cambios** | Punto naranja + banner cuando hay posiciones sin guardar. |
-| **Validación de upload** | Solo PNG hasta 300 KB (límite duro). Dimensiones recomendadas: 650×250 px. |
-| **Badge de config incompleta** | `!` naranja en la pestaña del perfil si falta plantilla o config de correo. |
-| **Formularios de eliminación independientes** | Botones "Eliminar" desacoplados del form principal, con CSRF propio. |
-| **Multiidioma** | es_MX · en_US · en_GB · fr_FR |
-
----
-
-## Requisitos
-
-| Requisito | Mínimo |
-|---|---|
-| GLPI | ≥ 11.0.0 |
-| PHP | ≥ 8.2 |
-| Ext PHP: **GD** | Requerida |
-| Ext PHP: **fileinfo** | Requerida |
-| TCPDF | Incluido en GLPI |
-| Servidor de correo saliente | Solo para envío de correo |
-
----
-
-## Instalación
-
-### Vía ZIP
-
-1. Descarga el `.zip` de la última versión desde [GitHub releases](https://github.com/monta990/signatures/releases).
-2. En GLPI: **Configuración → Complementos → Subir un complemento**.
-3. Selecciona el ZIP.
-4. Haz clic en **Instalar** y luego en **Habilitar**.
-
-### Manual
-
-```bash
-cd /var/www/glpi/plugins
-unzip signatures-1.4.0.zip
-# El directorio debe llamarse exactamente "signatures"
-```
-
-> El directorio debe llamarse `signatures` en minúsculas.
-
----
-
-## Desinstalación
-
-**Configuración → Complementos → Deshabilitar → Desinstalar.**
-
-Elimina las claves de `glpi_configs`. Los PNG de plantilla en disco NO se eliminan.
-
----
-
-## Configuración
-
-**Configuración → Complementos → Email Signatures → Configurar.**
-
-### Pestaña General
-
-| Campo | Descripción |
-|---|---|
-| **Página de Facebook** | Handle de la página corporativa. Vacío = omitir campo en la firma. |
-| **Código de país WhatsApp** | Número sin `+` (ej. `52` para México). Vacío = sin QR. |
-| **Asunto del correo** | Texto plano. Soporta `{nombre}`, `{empresa}`, `{fecha}`. |
-| **Cuerpo del correo** | HTML. Soporta variables y `**negrita**`. |
-| **Pie del correo** | Párrafo final opcional. Mismo soporte de variables. |
-
-Haz clic en cualquier badge de variable para insertarla en el cursor del último campo
-enfocado. El botón **Enviar correo de prueba** envía la configuración guardada con
-prefijo `[PRUEBA]` al correo del administrador.
-
-### Pestaña Con celular
-
-Gestiona `base.png` (plantilla para usuarios con número celular).
-
-- Vista previa de la plantilla actual. Clic → descarga.
-- Subir nueva: PNG, máx. 300 KB (límite duro). Validación MIME con `finfo`. Dimensiones recomendadas: 650×250 px.
-- Eliminar: formulario independiente con CSRF propio.
-
-**Recomendación de diseño:** 650×250 px, 96 dpi. Deja áreas en blanco para los campos.
-
-### Pestaña Sin celular
-
-Idéntica a "Con celular", gestiona `base2.png` (para usuarios sin celular).
-
-### Pestaña Posiciones
-
-Editor drag & drop visual.
-
-1. **Abre la pestaña** → los overlays se escalan automáticamente al tamaño visible.
-2. **Arrastra campos** con mouse o toque.
-3. **Ajusta tamaño de fuente** en la tabla (input numérico por campo).
-4. **Lee coordenadas** en la columna Posición (espacio GD en px).
-5. **Reset** → Restaurar posiciones por defecto.
-6. **Guarda** → botón Guardar con spinner anti-doble clic.
-
-Los cambios sin guardar muestran punto naranja en la pestaña y banner de aviso.
-
----
-
-## Variables de correo
-
-| Variable | Fuente |
-|---|---|
-| `{nombre}` | `User::getFriendlyName()` |
-| `{empresa}` | `Entity::name` de la entidad del usuario |
-| `{fecha}` | `date('d/m/Y')` al enviar |
-
----
-
-## Uso de la firma
-
-Cada perfil de usuario muestra la pestaña **Firma de correo**.
-Badge naranja `!` = plantilla o configuración de correo incompleta.
-
-- **Descargar firma** → PNG generado en tiempo real. Checkbox para incluir/omitir QR.
-- **Enviar por correo** → PNG adjunto al correo registrado del usuario.
-- **Vista previa** → modal con el PNG final.
-
-**Instalar en el cliente de correo:**
-
-| Cliente | Pasos |
-|---|---|
-| **Outlook (escritorio)** | Archivo → Opciones → Correo → Firmas → Nueva → Insertar → Imagen. |
-| **Outlook Web** | Configuración → Ver toda la config → Correo → Redactar y responder → icono de imagen. |
-| **Gmail** | Configuración → Ver toda la config → General → Firma → Nueva → icono de imagen. |
-| **Apple Mail** | Mail → Preferencias → Firmas. Arrastra el PNG. |
-| **Thunderbird** | Config. de cuenta → Texto de firma → Adjuntar desde archivo. |
-
----
-
-## Cómo funciona la generación
-
-### Selección de plantilla
-
-```
-¿Usuario tiene celular?  →  SÍ: base.png  /  NO: base2.png
-```
-
-### Campos renderizados
-
-Nombre (Avenir Black, auto-ajuste 40 px) → Título → Correo → Celular →
-Teléfono entidad → Extensión → Facebook → Web → QR WhatsApp.
-
-Coordenadas y tamaños desde `glpi_configs`, con fallback a defaults integrados.
-
-### Auto-ajuste del nombre
-
-Ciclo: mide ancho con `imagettfbbox()` → si desborda, baja 1 px → si hay espacio, sube 1 px → repite hasta que el texto llene el ancho disponible sin overflow.
-
-### QR de WhatsApp
-
-URL `https://wa.me/{pais}{celular}` → `TCPDF2DBarcode` genera PNG temporal →
-`imagecopyresampled()` con dimensiones reales del QR → archivo temporal eliminado.
-
----
-
-## Control de acceso
-
-| Acción | Quién |
-|---|---|
-| Descargar/enviar propia firma | Cualquier usuario autenticado |
-| Descargar/enviar firma de otro | `config UPDATE` |
-| Configurar el plugin | `config UPDATE` |
-| Subir / eliminar plantillas | `config UPDATE` |
-| Correo de prueba | `config UPDATE` |
-
----
-
-## Localización
-
-| Código | Idioma |
-|---|---|
-| `es_MX` | Español (México) |
-| `en_US` | English (United States) |
-| `en_GB` | English (United Kingdom) |
-| `fr_FR` | Français (France) |
-
----
-
-## Cambios
-
-Ver [CHANGELOG.md](CHANGELOG.md).
-
----
-
-## Autor
-
-**Edwin Elias Alvarez** — [GitHub](https://github.com/monta990)
-
----
-
-## Comprame un cafe :)
-
-Si te gusta mi trabajo, me puedes apoyar con una donación:
-
-<a href="https://www.buymeacoffee.com/monta990" target="_blank"><img src="https://cdn.buymeacoffee.com/buttons/default-yellow.png" alt="Buy Me A Coffee" height="51px" width="210px"></a>
-
----
-
-## Licencia
-
-GPL v3 o posterior. Ver [LICENSE](https://www.gnu.org/licenses/gpl-3.0.html).
-
-## Problemas
-
-Reporta errores o solicita funcionalidades en el [issue tracker](https://github.com/monta990/signatures/issues).
