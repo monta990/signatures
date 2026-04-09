@@ -19,7 +19,7 @@
 
 ## Overview
 
-Each signature is rendered dynamically over a configurable PNG template using PHP GD and Avenir TTF or custom fonts, with an optional WhatsApp QR code. Finished signatures can be downloaded directly or sent to the user's registered email address in one click.
+Each signature is rendered dynamically over a configurable PNG template using PHP GD and Avenir TTF fonts, with an optional WhatsApp QR code. Finished signatures can be downloaded directly or sent to the user's registered email address in one click.
 
 ---
 
@@ -45,8 +45,6 @@ Each signature is rendered dynamically over a configurable PNG template using PH
 | **Incomplete config badge** | Orange `!` badge on the user profile tab when the relevant template is missing or email is not configured. |
 | **Independent delete forms** | Delete-template buttons use their own `<form>` with dedicated CSRF tokens, decoupled from the main config form. |
 | **CSRF protection** | All POST endpoints use GLPI's built-in CSRF token validation. |
-| **Custom fonts** | Upload TTF or OTF font files from the Fonts tab. The plugin reads each file's internal `name` table to display its real name. Built-in Avenir Black and Avenir Roman are always available. |
-| **Per-role font selection** | Choose **Name font** (used for the signature name) and **Body font** (used for all other fields) independently. Both built-in and uploaded fonts are available for either role. |
 | **Multilanguage** | es_MX · en_US · en_GB · fr_FR |
 
 ---
@@ -80,7 +78,7 @@ Each signature is rendered dynamically over a configurable PNG template using PH
 
 ```bash
 cd /var/www/glpi/plugins
-unzip signatures-1.5.0.zip
+unzip signatures-1.4.0.zip
 # The folder must be named exactly "signatures"
 ```
 
@@ -150,7 +148,7 @@ includes a yellow warning banner.
 
 ---
 
-### With mobile tab
+### With mobile tab (Con celular)
 
 Manages `base.png` — the template used for users who have a mobile number set in
 their GLPI profile.
@@ -171,7 +169,7 @@ their GLPI profile.
 
 ---
 
-### Without mobile tab
+### Without mobile tab (Sin celular)
 
 Identical to "With mobile" but manages `base2.png`, used for users without a mobile
 number. Typically has a slightly different layout without the WhatsApp QR area.
@@ -235,22 +233,6 @@ editor and the stored values consistent at any display size.
 | `ext` | Extension or office phone | Avenir Roman |
 | `facebook` | Facebook page name | Avenir Roman |
 | `web` | Corporate website | Avenir Roman |
-
----
-
-### Fonts tab
-
-Upload and manage custom fonts for signature rendering.
-
-| Element | Description |
-|---|---|
-| **Upload font** | TTF or OTF files, max 2 MB. The plugin reads the file's internal `name` table and shows the real font name everywhere (selects, table). |
-| **Name font** | Font used to render the user's name in the signature. Defaults to Avenir Black. |
-| **Body font** | Font used for all other fields (title, email, phone, etc.). Defaults to Avenir Roman. |
-| **Installed fonts** | Table of uploaded fonts showing real name, filename, current role badge, and a delete button. |
-
-> Avenir Black and Avenir Roman are always available as built-in options and cannot be deleted.
-> Both fonts are available for either role — you can assign Avenir Roman as the name font or Avenir Black as the body font if needed.
 
 ---
 
@@ -342,14 +324,6 @@ with per-key fallback to built-in defaults if not yet configured.
 | Website | `Entity::website` | 11 px |
 | QR code | TCPDF2DBarcode → imagecopyresampled | 100×100 px |
 
-### Font resolution
-
-The active font for each role is resolved at generation time:
-
-1. If a custom font is configured and its file exists in `GLPI_PLUGIN_DOC_DIR/signatures/fonts/` → use it.
-2. If a built-in font is explicitly selected (`AvenirBlack.ttf` or `AvenirRoman.ttf`) → use the bundled file.
-3. Otherwise → fall back to the default built-in (Avenir Black for name, Avenir Roman for body).
-
 ### Font and name auto-fit
 
 1. Start at the configured maximum size (default 40 px).
@@ -417,8 +391,8 @@ msgfmt locales/de_DE.po -o locales/de_DE.mo
 ```
 signatures/
 ├── fonts/
-│   ├── AvenirBlack.ttf          Built-in name font (Avenir Black)
-│   └── AvenirRoman.ttf          Built-in body font (Avenir Roman)
+│   ├── AvenirBlack.ttf          Bold font — name field
+│   └── AvenirRoman.ttf          Regular font — all other fields
 ├── front/
 │   ├── config.form.php          Plugin configuration UI (4-tab page)
 │   ├── download.php             Generates and streams the PNG download
@@ -430,7 +404,7 @@ signatures/
 │   ├── signature.class.php      Image generation, email assembly, QR composition
 │   └── user.class.php           GLPI tab registration, user-facing UI
 ├── locales/
-│   ├── signatures.pot           Translation template (144 strings)
+│   ├── signatures.pot           Translation template (118 strings)
 │   ├── es_MX.po / es_MX.mo
 │   ├── en_US.po / en_US.mo
 │   ├── en_GB.po / en_GB.mo
@@ -503,7 +477,7 @@ Report bugs or request features on the [issue tracker](https://github.com/monta9
 
 ## Overview
 
-La firma se renderiza dinámicamente sobre una plantilla PNG configurable usando PHP GD y fuentes TTF Avenir o personalizadas, con código QR de WhatsApp opcional. Las firmas terminadas se pueden descargar directamente o enviar al correo del usuario con un solo clic.
+La firma se renderiza dinámicamente sobre una plantilla PNG configurable usando PHP GD y fuentes TTF Avenir, con código QR de WhatsApp opcional. Las firmas terminadas se pueden descargar directamente o enviar al correo del usuario con un solo clic.
 
 ---
 
@@ -526,8 +500,6 @@ La firma se renderiza dinámicamente sobre una plantilla PNG configurable usando
 | **Validación de upload** | Solo PNG hasta 300 KB (límite duro). Dimensiones recomendadas: 650×250 px. |
 | **Badge de config incompleta** | `!` naranja en la pestaña del perfil si falta plantilla o config de correo. |
 | **Formularios de eliminación independientes** | Botones "Eliminar" desacoplados del form principal, con CSRF propio. |
-| **Fuentes personalizadas** | Sube archivos TTF u OTF desde la pestaña Fuentes. El plugin lee la tabla `name` interna para mostrar el nombre real. Avenir Black y Avenir Roman siempre están disponibles. |
-| **Selección de fuente por rol** | Elige **Fuente nombre** (para el nombre en la firma) y **Fuente cuerpo** (para los demás campos) de forma independiente. |
 | **Multiidioma** | es_MX · en_US · en_GB · fr_FR |
 
 ---
@@ -558,7 +530,7 @@ La firma se renderiza dinámicamente sobre una plantilla PNG configurable usando
 
 ```bash
 cd /var/www/glpi/plugins
-unzip signatures-1.5.0.zip
+unzip signatures-1.4.0.zip
 # El directorio debe llamarse exactamente "signatures"
 ```
 
@@ -618,21 +590,6 @@ Editor drag & drop visual.
 6. **Guarda** → botón Guardar con spinner anti-doble clic.
 
 Los cambios sin guardar muestran punto naranja en la pestaña y banner de aviso.
-
----
-
-### Pestaña Fuentes
-
-Sube y gestiona fuentes personalizadas para el renderizado de la firma.
-
-| Elemento | Descripción |
-|---|---|
-| **Subir fuente** | Archivos TTF u OTF, máx. 2 MB. El plugin lee la tabla `name` interna y muestra el nombre real en los selects y la tabla. |
-| **Fuente nombre** | Fuente para el nombre del usuario en la firma. Por defecto: Avenir Black. |
-| **Fuente cuerpo** | Fuente para todos los demás campos. Por defecto: Avenir Roman. |
-| **Fuentes instaladas** | Tabla con nombre real, archivo, badge de rol activo y botón de eliminar. |
-
-> Avenir Black y Avenir Roman siempre están disponibles como opciones integradas y no se pueden eliminar.
 
 ---
 

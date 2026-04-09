@@ -1057,7 +1057,7 @@ if (empty($userFontsList)) {
                   "<span class='badge' style='background:#f0a500;color:#000;font-weight:600;'>" . $r . "</span>",
                $usedAs
            ))
-         : "<span class='text-body-secondary'>—</span>";
+         : "<span class='text-body-primary'>—</span>";
 
       $fnameEsc    = htmlspecialchars($fname, ENT_QUOTES, 'UTF-8');
       $displayName = htmlspecialchars($userFontsMap[$fname] ?? $fname, ENT_QUOTES, 'UTF-8');

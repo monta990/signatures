@@ -124,7 +124,7 @@ class PluginSignaturesUser extends CommonGLPI {
              </div>";
       }
 
-      echo "<p class='text-body-secondary mb-3'>" .
+      echo "<p class='text-body-primary mb-3'>" .
                sprintf(
                   __('Generating signature for: %s', 'signatures'),
                   $user->getFriendlyName()
@@ -146,7 +146,7 @@ class PluginSignaturesUser extends CommonGLPI {
                   <i class='ti ti-brand-whatsapp ms-1'></i></label>
                </div>";
       } else {
-         echo "<p class='text-body-secondary'><i class='ti ti-info-circle me-1'></i>" .
+         echo "<p class='text-body-primary'><i class='ti ti-info-circle me-1'></i>" .
               __('This user has no mobile number; the QR code will not be available.', 'signatures') .
               "</p>";
       }

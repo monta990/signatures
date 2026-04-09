@@ -6,6 +6,13 @@ Versioning follows [Semantic Versioning](https://semver.org/).
 
 ---
 
+## [1.5.1] — 2026-04-09
+
+### Fixed
+- **Incorrect CSS in labels**: fixed in correct type of CSS in user text for user.class.
+
+---
+
 ## [1.5.0] — 2026-03-22
 
 ### Added
