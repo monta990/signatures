@@ -47,6 +47,7 @@ Each signature is rendered dynamically over a configurable PNG template using PH
 | **CSRF protection** | All POST endpoints use GLPI's built-in CSRF token validation. |
 | **Custom fonts** | Upload TTF or OTF font files from the Fonts tab. The plugin reads each file's internal `name` table to display its real name. Built-in Avenir Black and Avenir Roman are always available. |
 | **Per-role font selection** | Choose **Name font** (used for the signature name) and **Body font** (used for all other fields) independently. Both built-in and uploaded fonts are available for either role. |
+| **Per-field visibility toggle** | Checkbox next to each field in the position editor enables or disables that field independently per template. Hidden fields are skipped during PNG generation — no blank space left. |
 | **Multilanguage** | es_MX · en_US · en_GB · fr_FR |
 
 ---
@@ -186,15 +187,18 @@ Live drag-and-drop editor for field placement per template.
 
 1. **Open the tab** — the editor initializes. The background image renders at
    responsive width and all field overlays are scaled to match.
-2. **Drag fields** — grab any labeled overlay with the mouse or a finger (touch
+2. **Toggle fields** — check or uncheck the checkbox at the start of each row to
+   show or hide that field. Hidden fields disappear from the canvas and are skipped
+   during PNG generation.
+3. **Drag fields** — grab any labeled overlay with the mouse or a finger (touch
    supported). The overlay moves and the hidden GD-coordinate inputs update in real time.
-3. **Adjust font size** — use the number input in the table below the editor.
+4. **Adjust font size** — use the number input in the table below the editor.
    The overlay font size updates immediately.
-4. **Read coordinates** — the *Position* column in the table shows X,Y in GD space
+5. **Read coordinates** — the *Position* column in the table shows X,Y in GD space
    (natural image pixels) — the exact values that will be stored.
-5. **Reset** — click **Restore default positions** to revert all fields for that
+6. **Reset** — click **Restore default positions** to revert all fields for that
    template to factory defaults.
-6. **Save** — click **Save** at the bottom right. The button is disabled and shows a
+7. **Save** — click **Save** at the bottom right. The button is disabled and shows a
    spinner while submitting to prevent double clicks.
 
 An orange dot appears on the tab label and a warning banner shows at the bottom of

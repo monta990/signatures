@@ -1,7 +1,7 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Email Signatures 1.5.0\n"
+"Project-Id-Version: Email Signatures 1.6.0\n"
 "Report-Msgid-Bugs-To: https://github.com/monta990/signatures/issues\n"
 "POT-Creation-Date: 2026-03-22 00:00+0000\n"
 "PO-Revision-Date: 2026-03-22 00:00+0000\n"
@@ -462,4 +462,7 @@ msgid "PHP 8.1 or higher is required to install this plugin."
 msgstr ""
 
 msgid "The PHP GD extension is required to install this plugin."
+msgstr ""
+
+msgid "Enabled"
 msgstr ""

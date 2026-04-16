@@ -6,6 +6,22 @@ Versioning follows [Semantic Versioning](https://semver.org/).
 
 ---
 
+## [1.6.0] — 2026-04-12
+
+### Added
+- **Per-field visibility toggle**: each field in the position editor table now has a
+  checkbox (**Show / hide**) that controls whether that field is rendered in the
+  generated PNG. When unchecked, the overlay is hidden in the drag-and-drop editor
+  and the field is skipped entirely during PNG generation — no empty space is left.
+  - Applies independently to both templates (With mobile / Without mobile).
+  - State stored in `glpi_configs` as `sig_{base}_{field}_enabled` (1 = visible,
+    0 = hidden). Defaults to 1 for all fields.
+  - `plugin_signatures_getDefaults()` updated with the new keys; existing
+    installations receive them automatically on the next update via
+    `plugin_signatures_update()`.
+
+---
+
 ## [1.5.1] — 2026-04-09
 
 ### Fixed

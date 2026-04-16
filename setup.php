@@ -19,7 +19,7 @@ function plugin_init_signatures(): void {
 function plugin_version_signatures(): array {
    return [
       'name'         => 'Email Signatures',
-      'version'      => '1.5.1',
+      'version'      => '1.6.0',
       'author'       => 'Edwin Elias Alvarez',
       'license'      => 'GPLv3+',
       'homepage'     => 'https://sontechs.com',
@@ -62,6 +62,16 @@ function plugin_signatures_getDefaults(): array {
       'sig_b2_ext_x'            => 160, 'sig_b2_ext_y'      => 161, 'sig_b2_ext_size'      => 11,
       'sig_b2_facebook_x'       => 63,  'sig_b2_facebook_y' => 183, 'sig_b2_facebook_size' => 11,
       'sig_b2_web_x'            => 185, 'sig_b2_web_y'      => 183, 'sig_b2_web_size'      => 11,
+      // ── Campos habilitados (1 = visible, 0 = oculto) ──────────────────────
+      'sig_b1_nombre_enabled'   => 1,   'sig_b1_titulo_enabled'   => 1,
+      'sig_b1_email_enabled'    => 1,   'sig_b1_mobile_enabled'   => 1,
+      'sig_b1_tel_enabled'      => 1,   'sig_b1_ext_enabled'      => 1,
+      'sig_b1_facebook_enabled' => 1,   'sig_b1_web_enabled'      => 1,
+      'sig_b1_qr_enabled'       => 1,
+      'sig_b2_nombre_enabled'   => 1,   'sig_b2_titulo_enabled'   => 1,
+      'sig_b2_email_enabled'    => 1,   'sig_b2_tel_enabled'      => 1,
+      'sig_b2_ext_enabled'      => 1,   'sig_b2_facebook_enabled' => 1,
+      'sig_b2_web_enabled'      => 1,
    ];
 }
 

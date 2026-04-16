@@ -220,6 +220,22 @@ if (isset($_POST['save'])) {
    if (!empty($posToSave)) {
       Config::setConfigurationValues('plugin_signatures', $posToSave);
    }
+
+   /* ================= CAMPOS HABILITADOS ================= */
+   $_enabledFieldsMap = [
+      'b1' => ['nombre','titulo','email','mobile','tel','ext','facebook','web','qr'],
+      'b2' => ['nombre','titulo','email','tel','ext','facebook','web'],
+   ];
+   $_enabledToSave = [];
+   foreach ($_enabledFieldsMap as $_eBase => $_eFields) {
+      foreach ($_eFields as $_eFid) {
+         $k = "sig_{$_eBase}_{$_eFid}_enabled";
+         $_enabledToSave[$k] = isset($_POST[$k]) ? 1 : 0;
+      }
+   }
+   Config::setConfigurationValues('plugin_signatures', $_enabledToSave);
+   /* ================= FIN CAMPOS HABILITADOS ================= */
+
    /* ================= FIN POSICIONES ================= */
 
    PluginSignaturesConfig::invalidate();
@@ -722,9 +738,13 @@ $_renderEditor = static function (
    string $bgUrl,
    array  $fields,
    bool   $hasTemplate
-) use ($_fontBlackUrl, $_fontRomanUrl): void {
+) use ($_fontBlackUrl, $_fontRomanUrl, $_c): void {
 
    $ASCENT_FACTOR = 0.72; // fracción del tamaño que es ascenso sobre baseline
+
+   $isEnabled = static function (string $fieldId) use ($baseId, $_c): bool {
+      return ($_c["sig_{$baseId}_{$fieldId}_enabled"] ?? '1') !== '0';
+   };
 
    echo "<div class='card mt-2 rounded-0'>";
    signaturesRibbonSubHeader('ti-vector-bezier', htmlspecialchars($title, ENT_QUOTES, 'UTF-8'));
@@ -768,6 +788,7 @@ $_renderEditor = static function (
       $cssLeft     = $gdX;
       $cssFontSize = $gdSize;
 
+      $fieldOpacity = $isEnabled($fieldId) ? '1' : '0.25';
       if ($isQr) {
          echo "<div class='sig-field sig-field-qr'
                     id='field-{$baseId}-{$fieldId}'
@@ -784,6 +805,7 @@ $_renderEditor = static function (
                            cursor:grab;
                            display:flex;align-items:center;justify-content:center;
                            font-size:13px;color:rgba(255,140,0,0.9);
+                           opacity:{$fieldOpacity};
                            user-select:none;'>
                  <i class='ti ti-qrcode' style='font-size:24px;'></i>
               </div>";
@@ -808,6 +830,7 @@ $_renderEditor = static function (
                            padding:1px 3px;
                            border:1px dashed rgba(255,140,0,0.6);
                            background:rgba(255,140,0,0.08);
+                           opacity:{$fieldOpacity};
                            user-select:none;
                            line-height:1;'>
                     {$sampleEsc}
@@ -827,8 +850,9 @@ $_renderEditor = static function (
 
    // Tabla de controles de tamaño de fuente
    echo "<div class='mt-3'>";
-   echo "<table class='table table-sm table-bordered sig-pos-table' style='max-width:420px'>";
+   echo "<table class='table table-sm table-bordered sig-pos-table' style='max-width:460px'>";
    echo "<thead><tr>
+      <th style='width:36px' class='text-center' title='" . htmlspecialchars(__('Enabled', 'signatures'), ENT_QUOTES, 'UTF-8') . "'><i class='ti ti-eye'></i></th>
       <th>" . __('Field', 'signatures') . "</th>
       <th style='width:100px'>" . __('Size (px)', 'signatures') . "</th>
       <th style='width:140px'>" . __('Position X / Y', 'signatures') . "</th>
@@ -836,9 +860,17 @@ $_renderEditor = static function (
 
    foreach ($fields as [$fieldId, $label, $gdX, $gdY, $gdSize]) {
       $inputBase = "sig_{$baseId}_{$fieldId}";
+      $cbChecked = $isEnabled($fieldId) ? "checked" : "";
+      $cbName    = "sig_{$baseId}_{$fieldId}_enabled";
       if ($fieldId === 'qr') {
          // #4: QR aparece en la tabla con su posición X,Y pero sin input de tamaño de fuente
       echo "<tr>
+            <td class='text-center'>
+               <input type='checkbox' class='form-check-input sig-enable-cb'
+                      name='{$cbName}' value='1'
+                      data-base='{$baseId}' data-field='{$fieldId}'
+                      {$cbChecked}>
+            </td>
             <td><small>{$label}</small></td>
             <td><small class='text-muted'>—</small></td>
             <td>
@@ -861,6 +893,12 @@ $_renderEditor = static function (
          continue;
       }
       echo "<tr>
+         <td class='text-center'>
+            <input type='checkbox' class='form-check-input sig-enable-cb'
+                   name='{$cbName}' value='1'
+                   data-base='{$baseId}' data-field='{$fieldId}'
+                   {$cbChecked}>
+         </td>
          <td><small>{$label}</small></td>
          <td>
             <input type='number' min='6' max='80'
@@ -1665,6 +1703,17 @@ document.addEventListener('click', e => {
       hint.style.display = this.files.length ? '' : 'none';
    });
 })();
+
+// ── Checkbox habilitar/deshabilitar campo ─────────────────────────────
+document.addEventListener('change', e => {
+   const cb = e.target.closest('.sig-enable-cb');
+   if (!cb) return;
+   const base  = cb.dataset.base;
+   const field = cb.dataset.field;
+   const el    = document.getElementById('field-' + base + '-' + field);
+   if (el) el.style.opacity = cb.checked ? '1' : '0.25';
+   markPositionsDirty();
+});
 </script>
 HTML;
 

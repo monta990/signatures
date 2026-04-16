@@ -174,6 +174,11 @@ class PluginSignaturesSignature {
          return isset($_defaults[$pfx . $key]) ? (int)$_defaults[$pfx . $key] : $default;
       };
 
+      // Devuelve true si el campo está habilitado (default: true)
+      $en = static function (string $field) use ($configsig, $pfx): bool {
+         return ($configsig[$pfx . $field . '_enabled'] ?? '1') !== '0';
+      };
+
       /* ============================
        * AJUSTE AUTOMÁTICO NOMBRE
        * ============================ */
@@ -202,38 +207,52 @@ class PluginSignaturesSignature {
       /* ============================
        * TEXTO SOBRE IMAGEN
        * ============================ */
-      imagettftext($img, $size, 0, $startX, $nombreY, $white, $fontblack, $name);
-      imagettftext($img, $p('titulo_size', 11), 0, $p('titulo_x', 20),  $p('titulo_y', 104),  $white, $fontblack, $titulo);
-      imagettftext($img, $p('email_size',  11), 0, $p('email_x',  63),  $p('email_y',  138),  $black, $fontroman, $email);
+      if ($en('nombre')) {
+         imagettftext($img, $size, 0, $startX, $nombreY, $white, $fontblack, $name);
+      }
+      if ($en('titulo')) {
+         imagettftext($img, $p('titulo_size', 11), 0, $p('titulo_x', 20), $p('titulo_y', 104), $white, $fontblack, $titulo);
+      }
+      if ($en('email')) {
+         imagettftext($img, $p('email_size', 11), 0, $p('email_x', 63), $p('email_y', 138), $black, $fontroman, $email);
+      }
 
       /* ============================
        * TELÉFONOS DINÁMICOS
        * ============================ */
       if ($hasMobile) {
 
-         imagettftext($img, $p('mobile_size', 11), 0, $p('mobile_x', 63),  $p('mobile_y', 161), $black, $fontroman, $mobile);
-         imagettftext($img, $p('tel_size',    11), 0, $p('tel_x',    185), $p('tel_y',    161), $black, $fontroman, $phone_entity);
-
-         if ($extraPhone !== '') {
+         if ($en('mobile')) {
+            imagettftext($img, $p('mobile_size', 11), 0, $p('mobile_x', 63), $p('mobile_y', 161), $black, $fontroman, $mobile);
+         }
+         if ($en('tel')) {
+            imagettftext($img, $p('tel_size', 11), 0, $p('tel_x', 185), $p('tel_y', 161), $black, $fontroman, $phone_entity);
+         }
+         if ($extraPhone !== '' && $en('ext')) {
             imagettftext($img, $p('ext_size', 11), 0, $p('ext_x', 283), $p('ext_y', 161), $black, $fontroman, $extraLabel . $extraPhone);
          }
 
       } else {
 
-         imagettftext($img, $p('tel_size', 11), 0, $p('tel_x', 63),  $p('tel_y', 161), $black, $fontroman, $phone_entity);
-
-         if ($extraPhone !== '') {
+         if ($en('tel')) {
+            imagettftext($img, $p('tel_size', 11), 0, $p('tel_x', 63), $p('tel_y', 161), $black, $fontroman, $phone_entity);
+         }
+         if ($extraPhone !== '' && $en('ext')) {
             imagettftext($img, $p('ext_size', 11), 0, $p('ext_x', 160), $p('ext_y', 161), $black, $fontroman, $extraLabel . $extraPhone);
          }
       }
 
-      imagettftext($img, $p('facebook_size', 11), 0, $p('facebook_x', 63),  $p('facebook_y', 183), $black, $fontroman, $facebook);
-      imagettftext($img, $p('web_size',      11), 0, $p('web_x',      185), $p('web_y',      183), $black, $fontroman, $web);
+      if ($en('facebook')) {
+         imagettftext($img, $p('facebook_size', 11), 0, $p('facebook_x', 63), $p('facebook_y', 183), $black, $fontroman, $facebook);
+      }
+      if ($en('web')) {
+         imagettftext($img, $p('web_size', 11), 0, $p('web_x', 185), $p('web_y', 183), $black, $fontroman, $web);
+      }
 
       /* ============================
        * QR SOLO SI HAY CELULAR
        * ============================ */
-      if ($include_qr && $hasMobile) {
+      if ($include_qr && $hasMobile && $en('qr')) {
 
          require_once GLPI_ROOT . '/vendor/tecnickcom/tcpdf/tcpdf_barcodes_2d.php';
 
