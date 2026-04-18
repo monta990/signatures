@@ -6,6 +6,28 @@ Versioning follows [Semantic Versioning](https://semver.org/).
 
 ---
 
+## [1.6.1] — 2026-04-17
+
+### Added
+- **Social media fields — X (Twitter), LinkedIn, Instagram, Snapchat**: four new
+  configurable text fields available in the plugin's **General** settings tab.
+  Each value is rendered on the PNG signature as plain text, positioned independently
+  per template (With mobile / Without mobile) via the drag-and-drop editor.
+  - Default positions: row at Y=205 px — X at (63,205), LinkedIn at (185,205),
+    Instagram at (320,205), Snapchat at (450,205) in GD pixel space.
+  - Each field has its own **enabled/disabled toggle** in the position editor table,
+    independent per template. Hidden fields are skipped entirely during PNG generation.
+  - Fields are only rendered if the configured value is non-empty (same behavior as
+    the existing Facebook field).
+  - Config keys: `x_page`, `linkedin_page`, `instagram_page`, `snapchat_page` stored
+    in `glpi_configs` under `plugin_signatures`.
+  - All position/size/enabled keys added to `plugin_signatures_getDefaults()` — existing
+    installations receive them automatically on next update via `plugin_signatures_update()`.
+  - UI uses Tabler icons: `ti-brand-x`, `ti-brand-linkedin`, `ti-brand-instagram`,
+    `ti-brand-snapchat`.
+
+---
+
 ## [1.6.0] — 2026-04-12
 
 ### Added

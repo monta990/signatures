@@ -68,7 +68,11 @@ class PluginSignaturesSignature {
    public static function generatePNG(User $user, bool $include_qr): string {
 
       $configsig = PluginSignaturesConfig::getAll();
-      $facebook  = $configsig['facebook_page'] ?? '';
+      $facebook  = $configsig['facebook_page']  ?? '';
+      $x_page    = $configsig['x_page']         ?? '';
+      $linkedin  = $configsig['linkedin_page']  ?? '';
+      $instagram = $configsig['instagram_page'] ?? '';
+      $snapchat  = $configsig['snapchat_page']  ?? '';
 
       /* ============================
        * CELULAR / EXT / OFICINA
@@ -247,6 +251,18 @@ class PluginSignaturesSignature {
       }
       if ($en('web')) {
          imagettftext($img, $p('web_size', 11), 0, $p('web_x', 185), $p('web_y', 183), $black, $fontroman, $web);
+      }
+      if ($x_page !== '' && $en('x')) {
+         imagettftext($img, $p('x_size', 11), 0, $p('x_x', 63), $p('x_y', 205), $black, $fontroman, $x_page);
+      }
+      if ($linkedin !== '' && $en('linkedin')) {
+         imagettftext($img, $p('linkedin_size', 11), 0, $p('linkedin_x', 185), $p('linkedin_y', 205), $black, $fontroman, $linkedin);
+      }
+      if ($instagram !== '' && $en('instagram')) {
+         imagettftext($img, $p('instagram_size', 11), 0, $p('instagram_x', 320), $p('instagram_y', 205), $black, $fontroman, $instagram);
+      }
+      if ($snapchat !== '' && $en('snapchat')) {
+         imagettftext($img, $p('snapchat_size', 11), 0, $p('snapchat_x', 450), $p('snapchat_y', 205), $black, $fontroman, $snapchat);
       }
 
       /* ============================

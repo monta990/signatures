@@ -16,7 +16,7 @@
       <long>
          <en><![CDATA[
 Email Signatures generates personalized PNG email signature images for each GLPI user.
-The signature includes full name, title, email address, phone numbers, Facebook page, corporate website and an optional WhatsApp QR code.
+The signature includes full name, title, email address, phone numbers, Facebook, X (Twitter), LinkedIn, Instagram, Snapchat, corporate website and an optional WhatsApp QR code.
 
 **Key features:**
 - Two configurable PNG templates: one for users with a mobile number and one without.
@@ -25,7 +25,7 @@ The signature includes full name, title, email address, phone numbers, Facebook 
 - WhatsApp QR code generated with TCPDF (bundled with GLPI).
 - Send the signature directly to the user's email via GLPI's outgoing mail system.
 - Dedicated tab on each user's profile with download and send buttons.
-- Centralized configuration: templates, Facebook page, WhatsApp country code, email subject, body and footer.
+- Centralized configuration: templates, social media pages (Facebook, X/Twitter, LinkedIn, Instagram, Snapchat), WhatsApp country code, email subject, body and footer.
 - Visual drag-and-drop position editor per template — no PHP editing required.
 - Live PNG preview before downloading or sending.
 - Clickable variable badges (`{nombre}`, `{empresa}`, `{fecha}`) for quick insertion into email fields.
@@ -35,7 +35,7 @@ The signature includes full name, title, email address, phone numbers, Facebook 
          ]]></en>
          <fr><![CDATA[
 Email Signatures génère des images de signature d'e-mail PNG personnalisées pour chaque utilisateur GLPI.
-La signature inclut le nom complet, le titre, l'adresse e-mail, les numéros de téléphone, la page Facebook, le site web et, en option, un code QR WhatsApp.
+La signature inclut le nom complet, le titre, l'adresse e-mail, les numéros de téléphone, Facebook, X (Twitter), LinkedIn, Instagram, Snapchat, le site web et, en option, un code QR WhatsApp.
 
 **Fonctionnalités principales :**
 - Deux modèles PNG configurables : un pour les utilisateurs avec un numéro de portable et un sans.
@@ -52,7 +52,7 @@ La signature inclut le nom complet, le titre, l'adresse e-mail, les numéros de 
          ]]></fr>
          <es><![CDATA[
 Email Signatures genera imágenes PNG personalizadas de firma de correo para cada usuario de GLPI.
-La firma incluye nombre completo, título, correo, teléfonos, página de Facebook, sitio web y, opcionalmente, un código QR de WhatsApp.
+La firma incluye nombre completo, título, correo, teléfonos, Facebook, X (Twitter), LinkedIn, Instagram, Snapchat, sitio web y, opcionalmente, un código QR de WhatsApp.
 
 **Características principales:**
 - Dos plantillas PNG configurables: con o sin número celular.
@@ -83,15 +83,9 @@ La firma incluye nombre completo, título, correo, teléfonos, página de Facebo
    <versions>
 
       <version>
-         <num>1.6.0</num>
+         <num>1.6.1</num>
          <compatibility>~11.0.0</compatibility>
-         <download_url>https://github.com/monta990/signatures/releases/download/1.6.0/signatures-1.6.0.zip</download_url>
-      </version>
-
-      <version>
-         <num>1.5.1</num>
-         <compatibility>~11.0.0</compatibility>
-         <download_url>https://github.com/monta990/signatures/releases/download/1.5.1/signatures-1.5.1.zip</download_url>
+         <download_url>https://github.com/monta990/signatures/releases/download/1.6.1/signatures-1.6.1.zip</download_url>
       </version>
 
    </versions>

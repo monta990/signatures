@@ -97,6 +97,12 @@ if (isset($_POST['save'])) {
       );
    }
 
+   foreach (['x_page', 'linkedin_page', 'instagram_page', 'snapchat_page'] as $_snKey) {
+      if (isset($_POST[$_snKey])) {
+         Config::setConfigurationValues('plugin_signatures', [$_snKey => trim($_POST[$_snKey])]);
+      }
+   }
+
    if (isset($_POST['whatsapp_country_code'])) {
       Config::setConfigurationValues(
          'plugin_signatures',
@@ -223,8 +229,8 @@ if (isset($_POST['save'])) {
 
    /* ================= CAMPOS HABILITADOS ================= */
    $_enabledFieldsMap = [
-      'b1' => ['nombre','titulo','email','mobile','tel','ext','facebook','web','qr'],
-      'b2' => ['nombre','titulo','email','tel','ext','facebook','web'],
+      'b1' => ['nombre','titulo','email','mobile','tel','ext','facebook','web','x','linkedin','instagram','snapchat','qr'],
+      'b2' => ['nombre','titulo','email','tel','ext','facebook','web','x','linkedin','instagram','snapchat'],
    ];
    $_enabledToSave = [];
    foreach ($_enabledFieldsMap as $_eBase => $_eFields) {
@@ -243,12 +249,16 @@ if (isset($_POST['save'])) {
    Html::redirect($self . '#tab-' . $activeTab);
 }
 
-$config       = PluginSignaturesConfig::getAll();
-$facebookPage = $config['facebook_page']        ?? '';
-$countryCode  = $config['whatsapp_country_code'] ?? '';
-$emailSubject = $config['email_subject']         ?? '';
-$emailBody    = $config['email_body']            ?? '';
-$emailFooter  = $config['email_footer']          ?? '';
+$config        = PluginSignaturesConfig::getAll();
+$facebookPage  = $config['facebook_page']        ?? '';
+$xPage         = $config['x_page']               ?? '';
+$linkedinPage  = $config['linkedin_page']         ?? '';
+$instagramPage = $config['instagram_page']        ?? '';
+$snapchatPage  = $config['snapchat_page']         ?? '';
+$countryCode   = $config['whatsapp_country_code'] ?? '';
+$emailSubject  = $config['email_subject']         ?? '';
+$emailBody     = $config['email_body']            ?? '';
+$emailFooter   = $config['email_footer']          ?? '';
 
 /* ========================== HEADER ========================== */
 
@@ -348,6 +358,62 @@ echo "<input type='text'
              value='" . Html::cleanInputText($facebookPage) . "'
              placeholder='" . htmlspecialchars(__('Ex: AcmeCorp', 'signatures'), ENT_QUOTES, 'UTF-8') . "'>";
 echo "<div class='form-text'>" . __('Name only, no URL or @', 'signatures') . "</div>";
+echo "</div>";
+
+/* X / TWITTER */
+echo "<div class='mb-4'>";
+echo "<label class='form-label fw-bold'>
+        <i class='ti ti-brand-x me-2'></i>
+        " . __('X (Twitter) handle', 'signatures') . "
+      </label>";
+echo "<input type='text'
+             name='x_page'
+             class='form-control'
+             value='" . Html::cleanInputText($xPage) . "'
+             placeholder='" . htmlspecialchars(__('Ex: @AcmeCorp', 'signatures'), ENT_QUOTES, 'UTF-8') . "'>";
+echo "<div class='form-text'>" . __('Handle with or without @', 'signatures') . "</div>";
+echo "</div>";
+
+/* LINKEDIN */
+echo "<div class='mb-4'>";
+echo "<label class='form-label fw-bold'>
+        <i class='ti ti-brand-linkedin me-2'></i>
+        " . __('LinkedIn page', 'signatures') . "
+      </label>";
+echo "<input type='text'
+             name='linkedin_page'
+             class='form-control'
+             value='" . Html::cleanInputText($linkedinPage) . "'
+             placeholder='" . htmlspecialchars(__('Ex: company/acmecorp', 'signatures'), ENT_QUOTES, 'UTF-8') . "'>";
+echo "<div class='form-text'>" . __('LinkedIn slug or URL path', 'signatures') . "</div>";
+echo "</div>";
+
+/* INSTAGRAM */
+echo "<div class='mb-4'>";
+echo "<label class='form-label fw-bold'>
+        <i class='ti ti-brand-instagram me-2'></i>
+        " . __('Instagram handle', 'signatures') . "
+      </label>";
+echo "<input type='text'
+             name='instagram_page'
+             class='form-control'
+             value='" . Html::cleanInputText($instagramPage) . "'
+             placeholder='" . htmlspecialchars(__('Ex: @acmecorp', 'signatures'), ENT_QUOTES, 'UTF-8') . "'>";
+echo "<div class='form-text'>" . __('Handle with or without @', 'signatures') . "</div>";
+echo "</div>";
+
+/* SNAPCHAT */
+echo "<div class='mb-4'>";
+echo "<label class='form-label fw-bold'>
+        <i class='ti ti-brand-snapchat me-2'></i>
+        " . __('Snapchat username', 'signatures') . "
+      </label>";
+echo "<input type='text'
+             name='snapchat_page'
+             class='form-control'
+             value='" . Html::cleanInputText($snapchatPage) . "'
+             placeholder='" . htmlspecialchars(__('Ex: acmecorp', 'signatures'), ENT_QUOTES, 'UTF-8') . "'>";
+echo "<div class='form-text'>" . __('Username only, no URL', 'signatures') . "</div>";
 echo "</div>";
 
 /* CÓDIGO PAÍS WHATSAPP */
@@ -716,9 +782,13 @@ $_fieldsB1 = [
    ['mobile',   __('Mobile', 'signatures'), $_pos('sig_b1_mobile_x'),   $_pos('sig_b1_mobile_y'),   $_pos('sig_b1_mobile_size'),   'roman', 'black',  $_uMobile],
    ['tel',      __('Entity phone', 'signatures'), $_pos('sig_b1_tel_x'),      $_pos('sig_b1_tel_y'),      $_pos('sig_b1_tel_size'),      'roman', 'black',  $_phoneEnt],
    ['ext',      __('Ext/Office', 'signatures'), $_pos('sig_b1_ext_x'),      $_pos('sig_b1_ext_y'),      $_pos('sig_b1_ext_size'),      'roman', 'black',  $_extraLabel . $_extraPhone],
-   ['facebook', __('Facebook', 'signatures'), $_pos('sig_b1_facebook_x'), $_pos('sig_b1_facebook_y'), $_pos('sig_b1_facebook_size'), 'roman', 'black',  $facebookPage ?: 'cyalimentos'],
-   ['web',      __('Website', 'signatures'), $_pos('sig_b1_web_x'),      $_pos('sig_b1_web_y'),      $_pos('sig_b1_web_size'),      'roman', 'black',  $_web],
-   ['qr',       __('WhatsApp QR', 'signatures'), $_pos('sig_b1_qr_x'),       $_pos('sig_b1_qr_y'),       0,                            'roman', 'black',  '▣ QR'],
+   ['facebook',  __('Facebook', 'signatures'),    $_pos('sig_b1_facebook_x'),  $_pos('sig_b1_facebook_y'),  $_pos('sig_b1_facebook_size'),  'roman', 'black', $facebookPage ?: 'cyalimentos'],
+   ['web',       __('Website', 'signatures'),    $_pos('sig_b1_web_x'),       $_pos('sig_b1_web_y'),       $_pos('sig_b1_web_size'),       'roman', 'black', $_web],
+   ['x',         __('X / Twitter', 'signatures'), $_pos('sig_b1_x_x'),         $_pos('sig_b1_x_y'),         $_pos('sig_b1_x_size'),         'roman', 'black', $xPage ?: '@empresa'],
+   ['linkedin',  __('LinkedIn', 'signatures'),   $_pos('sig_b1_linkedin_x'),  $_pos('sig_b1_linkedin_y'),  $_pos('sig_b1_linkedin_size'),  'roman', 'black', $linkedinPage ?: 'empresa'],
+   ['instagram', __('Instagram', 'signatures'),  $_pos('sig_b1_instagram_x'), $_pos('sig_b1_instagram_y'), $_pos('sig_b1_instagram_size'), 'roman', 'black', $instagramPage ?: '@empresa'],
+   ['snapchat',  __('Snapchat', 'signatures'),   $_pos('sig_b1_snapchat_x'),  $_pos('sig_b1_snapchat_y'),  $_pos('sig_b1_snapchat_size'),  'roman', 'black', $snapchatPage ?: 'empresa'],
+   ['qr',        __('WhatsApp QR', 'signatures'), $_pos('sig_b1_qr_x'),        $_pos('sig_b1_qr_y'),        0,                             'roman', 'black', '▣ QR'],
 ];
 
 $_fieldsB2 = [
@@ -727,8 +797,12 @@ $_fieldsB2 = [
    ['email',    __('Email', 'signatures'), $_pos('sig_b2_email_x'),    $_pos('sig_b2_email_y'),    $_pos('sig_b2_email_size'),    'roman', 'black',  $_uEmail],
    ['tel',      __('Entity phone', 'signatures'), $_pos('sig_b2_tel_x'),      $_pos('sig_b2_tel_y'),      $_pos('sig_b2_tel_size'),      'roman', 'black',  $_phoneEnt],
    ['ext',      __('Ext/Office', 'signatures'), $_pos('sig_b2_ext_x'),      $_pos('sig_b2_ext_y'),      $_pos('sig_b2_ext_size'),      'roman', 'black',  $_extraLabel . $_extraPhone],
-   ['facebook', __('Facebook', 'signatures'), $_pos('sig_b2_facebook_x'), $_pos('sig_b2_facebook_y'), $_pos('sig_b2_facebook_size'), 'roman', 'black',  $facebookPage ?: 'cyalimentos'],
-   ['web',      __('Website', 'signatures'), $_pos('sig_b2_web_x'),      $_pos('sig_b2_web_y'),      $_pos('sig_b2_web_size'),      'roman', 'black',  $_web],
+   ['facebook',  __('Facebook', 'signatures'),    $_pos('sig_b2_facebook_x'),  $_pos('sig_b2_facebook_y'),  $_pos('sig_b2_facebook_size'),  'roman', 'black', $facebookPage ?: 'cyalimentos'],
+   ['web',       __('Website', 'signatures'),    $_pos('sig_b2_web_x'),       $_pos('sig_b2_web_y'),       $_pos('sig_b2_web_size'),       'roman', 'black', $_web],
+   ['x',         __('X / Twitter', 'signatures'), $_pos('sig_b2_x_x'),         $_pos('sig_b2_x_y'),         $_pos('sig_b2_x_size'),         'roman', 'black', $xPage ?: '@empresa'],
+   ['linkedin',  __('LinkedIn', 'signatures'),   $_pos('sig_b2_linkedin_x'),  $_pos('sig_b2_linkedin_y'),  $_pos('sig_b2_linkedin_size'),  'roman', 'black', $linkedinPage ?: 'empresa'],
+   ['instagram', __('Instagram', 'signatures'),  $_pos('sig_b2_instagram_x'), $_pos('sig_b2_instagram_y'), $_pos('sig_b2_instagram_size'), 'roman', 'black', $instagramPage ?: '@empresa'],
+   ['snapchat',  __('Snapchat', 'signatures'),   $_pos('sig_b2_snapchat_x'),  $_pos('sig_b2_snapchat_y'),  $_pos('sig_b2_snapchat_size'),  'roman', 'black', $snapchatPage ?: 'empresa'],
 ];
 
 // ── Renderizar editor ─────────────────────────────────────────────────
@@ -1155,24 +1229,32 @@ echo "<form id='sig-test-mail-form' method='post' action='" . htmlspecialchars($
 /* ========================== JS PREVIEW + EDITOR ========================== */
 $_defaults_js = json_encode([
    'b1' => [
-      'nombre'   => ['x'=>20,  'y'=>75,  'size'=>40],
-      'titulo'   => ['x'=>20,  'y'=>104, 'size'=>11],
-      'email'    => ['x'=>63,  'y'=>138, 'size'=>11],
-      'mobile'   => ['x'=>63,  'y'=>161, 'size'=>11],
-      'tel'      => ['x'=>185, 'y'=>161, 'size'=>11],
-      'ext'      => ['x'=>283, 'y'=>161, 'size'=>11],
-      'facebook' => ['x'=>63,  'y'=>183, 'size'=>11],
-      'web'      => ['x'=>185, 'y'=>183, 'size'=>11],
-      'qr'       => ['x'=>560, 'y'=>130],
+      'nombre'    => ['x'=>20,  'y'=>75,  'size'=>40],
+      'titulo'    => ['x'=>20,  'y'=>104, 'size'=>11],
+      'email'     => ['x'=>63,  'y'=>138, 'size'=>11],
+      'mobile'    => ['x'=>63,  'y'=>161, 'size'=>11],
+      'tel'       => ['x'=>185, 'y'=>161, 'size'=>11],
+      'ext'       => ['x'=>283, 'y'=>161, 'size'=>11],
+      'facebook'  => ['x'=>63,  'y'=>183, 'size'=>11],
+      'web'       => ['x'=>185, 'y'=>183, 'size'=>11],
+      'x'         => ['x'=>63,  'y'=>205, 'size'=>11],
+      'linkedin'  => ['x'=>185, 'y'=>205, 'size'=>11],
+      'instagram' => ['x'=>320, 'y'=>205, 'size'=>11],
+      'snapchat'  => ['x'=>450, 'y'=>205, 'size'=>11],
+      'qr'        => ['x'=>560, 'y'=>130],
    ],
    'b2' => [
-      'nombre'   => ['x'=>20,  'y'=>75,  'size'=>40],
-      'titulo'   => ['x'=>20,  'y'=>104, 'size'=>11],
-      'email'    => ['x'=>63,  'y'=>138, 'size'=>11],
-      'tel'      => ['x'=>63,  'y'=>161, 'size'=>11],
-      'ext'      => ['x'=>160, 'y'=>161, 'size'=>11],
-      'facebook' => ['x'=>63,  'y'=>183, 'size'=>11],
-      'web'      => ['x'=>185, 'y'=>183, 'size'=>11],
+      'nombre'    => ['x'=>20,  'y'=>75,  'size'=>40],
+      'titulo'    => ['x'=>20,  'y'=>104, 'size'=>11],
+      'email'     => ['x'=>63,  'y'=>138, 'size'=>11],
+      'tel'       => ['x'=>63,  'y'=>161, 'size'=>11],
+      'ext'       => ['x'=>160, 'y'=>161, 'size'=>11],
+      'facebook'  => ['x'=>63,  'y'=>183, 'size'=>11],
+      'web'       => ['x'=>185, 'y'=>183, 'size'=>11],
+      'x'         => ['x'=>63,  'y'=>205, 'size'=>11],
+      'linkedin'  => ['x'=>185, 'y'=>205, 'size'=>11],
+      'instagram' => ['x'=>320, 'y'=>205, 'size'=>11],
+      'snapchat'  => ['x'=>450, 'y'=>205, 'size'=>11],
    ],
 ], JSON_UNESCAPED_UNICODE);
 

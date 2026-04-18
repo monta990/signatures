@@ -1,7 +1,7 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Email Signatures 1.6.0\n"
+"Project-Id-Version: Email Signatures 1.6.1\n"
 "Report-Msgid-Bugs-To: https://github.com/monta990/signatures/issues\n"
 "POT-Creation-Date: 2026-03-22 00:00+0000\n"
 "PO-Revision-Date: 2026-03-22 00:00+0000\n"
@@ -465,4 +465,49 @@ msgid "The PHP GD extension is required to install this plugin."
 msgstr ""
 
 msgid "Enabled"
+msgstr ""
+
+msgid "X / Twitter"
+msgstr ""
+
+msgid "X (Twitter) handle"
+msgstr ""
+
+msgid "Ex: @AcmeCorp"
+msgstr ""
+
+msgid "Handle with or without @"
+msgstr ""
+
+msgid "LinkedIn"
+msgstr ""
+
+msgid "LinkedIn page"
+msgstr ""
+
+msgid "Ex: company/acmecorp"
+msgstr ""
+
+msgid "LinkedIn slug or URL path"
+msgstr ""
+
+msgid "Instagram"
+msgstr ""
+
+msgid "Instagram handle"
+msgstr ""
+
+msgid "Ex: @acmecorp"
+msgstr ""
+
+msgid "Snapchat"
+msgstr ""
+
+msgid "Snapchat username"
+msgstr ""
+
+msgid "Ex: acmecorp"
+msgstr ""
+
+msgid "Username only, no URL"
 msgstr ""

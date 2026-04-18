@@ -5,7 +5,7 @@
 <h1 align="center">Email Signatures</h1>
 
 <p align="center">
-  <strong>GLPI plugin — Generate personalized corporate PNG email signatures for GLPI users</strong>
+  <strong>GLPI plugin — Generate personalized corporate PNG email signatures for every GLPI user</strong>
 </p>
    
 <p align="center">
@@ -28,7 +28,7 @@ Each signature is rendered dynamically over a configurable PNG template using PH
 | Feature | Details |
 |---|---|
 | **Two PNG templates** | One for users with a mobile number, one without. Template selection is automatic based on the user's `mobile` field. |
-| **Dynamic text overlay** | Name, title, email, phone, extension, Facebook page, corporate website — rendered with PHP GD using Avenir Black/Roman TTF fonts. |
+| **Dynamic text overlay** | Name, title, email, phone, extension, Facebook, X (Twitter), LinkedIn, Instagram, Snapchat, corporate website — rendered with PHP GD using Avenir Black/Roman TTF fonts. |
 | **Name auto-fit** | Font size is adjusted up and down (within the configured range) so short names use the full allocated width and long names never overflow. |
 | **WhatsApp QR code** | Generated with TCPDF (bundled with GLPI) and composited with `imagecopyresampled()` using the QR's actual pixel dimensions to avoid cropping. |
 | **Download** | PNG generated on the fly and streamed as a browser download — no permanent file stored. |
@@ -111,10 +111,17 @@ The page has four tabs.
 
 ### General tab
 
-#### Facebook page
+#### Social media fields
 
-Enter the Facebook page name or handle (e.g. `MiEmpresa`) to show in the signature.
-Leave empty to omit the Facebook field entirely.
+| Field | Config key | Notes |
+|---|---|---|
+| **Facebook page** | `facebook_page` | Page name or handle (e.g. `MiEmpresa`). Leave empty to omit. |
+| **X (Twitter) handle** | `x_page` | Handle with or without `@` (e.g. `@AcmeCorp`). Leave empty to omit. |
+| **LinkedIn page** | `linkedin_page` | LinkedIn slug or URL path (e.g. `company/acmecorp`). Leave empty to omit. |
+| **Instagram handle** | `instagram_page` | Handle with or without `@`. Leave empty to omit. |
+| **Snapchat username** | `snapchat_page` | Username only, no URL. Leave empty to omit. |
+
+Each social media field is rendered as plain text on the PNG signature. Position and font size are configurable per template in the **Positions** tab. Fields are only rendered if the configured value is non-empty.
 
 #### WhatsApp country code
 
@@ -226,6 +233,10 @@ editor and the stored values consistent at any display size.
 | `ext` | `phone2` if set, otherwise `phone` | Avenir Roman |
 | `facebook` | Facebook page name (from plugin config) | Avenir Roman |
 | `web` | Corporate website (from entity) | Avenir Roman |
+| `x` | X (Twitter) handle (from plugin config) | Avenir Roman |
+| `linkedin` | LinkedIn page slug (from plugin config) | Avenir Roman |
+| `instagram` | Instagram handle (from plugin config) | Avenir Roman |
+| `snapchat` | Snapchat username (from plugin config) | Avenir Roman |
 | `qr` | WhatsApp QR code image (composited, not text) | — |
 
 #### Fields — Without mobile template
@@ -239,6 +250,10 @@ editor and the stored values consistent at any display size.
 | `ext` | Extension or office phone | Avenir Roman |
 | `facebook` | Facebook page name | Avenir Roman |
 | `web` | Corporate website | Avenir Roman |
+| `x` | X (Twitter) handle | Avenir Roman |
+| `linkedin` | LinkedIn page slug | Avenir Roman |
+| `instagram` | Instagram handle | Avenir Roman |
+| `snapchat` | Snapchat username | Avenir Roman |
 
 ---
 
@@ -342,6 +357,10 @@ with per-key fallback to built-in defaults if not yet configured.
 | Extension | `User::fields['phone2']` if set, else `phone` | 11 px |
 | Facebook | `plugin_signatures.facebook_page` config | 11 px |
 | Website | `Entity::website` | 11 px |
+| X (Twitter) | `plugin_signatures.x_page` config | 11 px |
+| LinkedIn | `plugin_signatures.linkedin_page` config | 11 px |
+| Instagram | `plugin_signatures.instagram_page` config | 11 px |
+| Snapchat | `plugin_signatures.snapchat_page` config | 11 px |
 | QR code | TCPDF2DBarcode → imagecopyresampled | 100×100 px |
 
 ### Font resolution
