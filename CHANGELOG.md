@@ -6,6 +6,22 @@ Versioning follows [Semantic Versioning](https://semver.org/).
 
 ---
 
+## [1.6.2] — 2026-04-18
+
+### Added
+- **TikTok field**: new configurable text field in the **General** settings tab.
+  Value is rendered on the PNG signature as plain text, positioned independently
+  per template via the drag-and-drop editor.
+  - Default position: Y=227 px, X=63 in GD pixel space (new row below the social row).
+  - Has its own **enabled/disabled toggle** in the position editor table, independent per template.
+  - Only rendered if the configured value is non-empty.
+  - Config key: `tiktok_page` stored in `glpi_configs` under `plugin_signatures`.
+  - Position/size/enabled keys added to `plugin_signatures_getDefaults()` — existing
+    installations receive them automatically on next update via `plugin_signatures_update()`.
+  - UI uses Tabler icon: `ti-brand-tiktok`.
+
+---
+
 ## [1.6.1] — 2026-04-17
 
 ### Added

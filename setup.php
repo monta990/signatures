@@ -19,7 +19,7 @@ function plugin_init_signatures(): void {
 function plugin_version_signatures(): array {
    return [
       'name'         => 'Email Signatures',
-      'version'      => '1.6.1',
+      'version'      => '1.6.2',
       'author'       => 'Edwin Elias Alvarez',
       'license'      => 'GPLv3+',
       'homepage'     => 'https://sontechs.com',
@@ -41,6 +41,7 @@ function plugin_signatures_getDefaults(): array {
       'linkedin_page'           => '',
       'instagram_page'          => '',
       'snapchat_page'           => '',
+      'tiktok_page'             => '',
       'whatsapp_country_code'   => '52',
       'email_subject'           => '',
       'email_body'              => '',
@@ -61,6 +62,7 @@ function plugin_signatures_getDefaults(): array {
       'sig_b1_linkedin_x'        => 185, 'sig_b1_linkedin_y'   => 205, 'sig_b1_linkedin_size'   => 11,
       'sig_b1_instagram_x'       => 320, 'sig_b1_instagram_y'  => 205, 'sig_b1_instagram_size'  => 11,
       'sig_b1_snapchat_x'        => 450, 'sig_b1_snapchat_y'   => 205, 'sig_b1_snapchat_size'   => 11,
+      'sig_b1_tiktok_x'          => 63,  'sig_b1_tiktok_y'     => 227, 'sig_b1_tiktok_size'     => 11,
       'sig_b1_qr_x'              => 560, 'sig_b1_qr_y'         => 130,
       // ── Posiciones plantilla SIN celular (base2) ──────────────────────
       'sig_b2_nombre_x'          => 20,  'sig_b2_nombre_y'     => 75,  'sig_b2_nombre_size'     => 40,
@@ -74,6 +76,7 @@ function plugin_signatures_getDefaults(): array {
       'sig_b2_linkedin_x'        => 185, 'sig_b2_linkedin_y'   => 205, 'sig_b2_linkedin_size'   => 11,
       'sig_b2_instagram_x'       => 320, 'sig_b2_instagram_y'  => 205, 'sig_b2_instagram_size'  => 11,
       'sig_b2_snapchat_x'        => 450, 'sig_b2_snapchat_y'   => 205, 'sig_b2_snapchat_size'   => 11,
+      'sig_b2_tiktok_x'          => 63,  'sig_b2_tiktok_y'     => 227, 'sig_b2_tiktok_size'     => 11,
       // ── Campos habilitados (1 = visible, 0 = oculto) ──────────────────────
       'sig_b1_nombre_enabled'    => 1,   'sig_b1_titulo_enabled'    => 1,
       'sig_b1_email_enabled'     => 1,   'sig_b1_mobile_enabled'    => 1,
@@ -81,13 +84,13 @@ function plugin_signatures_getDefaults(): array {
       'sig_b1_facebook_enabled'  => 1,   'sig_b1_web_enabled'       => 1,
       'sig_b1_x_enabled'         => 1,   'sig_b1_linkedin_enabled'  => 1,
       'sig_b1_instagram_enabled' => 1,   'sig_b1_snapchat_enabled'  => 1,
-      'sig_b1_qr_enabled'        => 1,
+      'sig_b1_tiktok_enabled'    => 1,   'sig_b1_qr_enabled'        => 1,
       'sig_b2_nombre_enabled'    => 1,   'sig_b2_titulo_enabled'    => 1,
       'sig_b2_email_enabled'     => 1,   'sig_b2_tel_enabled'       => 1,
       'sig_b2_ext_enabled'       => 1,   'sig_b2_facebook_enabled'  => 1,
       'sig_b2_web_enabled'       => 1,   'sig_b2_x_enabled'         => 1,
       'sig_b2_linkedin_enabled'  => 1,   'sig_b2_instagram_enabled' => 1,
-      'sig_b2_snapchat_enabled'  => 1,
+      'sig_b2_snapchat_enabled'  => 1,   'sig_b2_tiktok_enabled'    => 1,
    ];
 }
 

@@ -1,7 +1,7 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Email Signatures 1.6.1\n"
+"Project-Id-Version: Email Signatures 1.6.2\n"
 "Report-Msgid-Bugs-To: https://github.com/monta990/signatures/issues\n"
 "POT-Creation-Date: 2026-03-22 00:00+0000\n"
 "PO-Revision-Date: 2026-03-22 00:00+0000\n"
@@ -504,6 +504,12 @@ msgid "Snapchat"
 msgstr ""
 
 msgid "Snapchat username"
+msgstr ""
+
+msgid "TikTok handle"
+msgstr ""
+
+msgid "TikTok"
 msgstr ""
 
 msgid "Ex: acmecorp"

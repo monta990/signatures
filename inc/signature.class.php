@@ -73,6 +73,7 @@ class PluginSignaturesSignature {
       $linkedin  = $configsig['linkedin_page']  ?? '';
       $instagram = $configsig['instagram_page'] ?? '';
       $snapchat  = $configsig['snapchat_page']  ?? '';
+      $tiktok    = $configsig['tiktok_page']    ?? '';
 
       /* ============================
        * CELULAR / EXT / OFICINA
@@ -263,6 +264,9 @@ class PluginSignaturesSignature {
       }
       if ($snapchat !== '' && $en('snapchat')) {
          imagettftext($img, $p('snapchat_size', 11), 0, $p('snapchat_x', 450), $p('snapchat_y', 205), $black, $fontroman, $snapchat);
+      }
+      if ($tiktok !== '' && $en('tiktok')) {
+         imagettftext($img, $p('tiktok_size', 11), 0, $p('tiktok_x', 63), $p('tiktok_y', 227), $black, $fontroman, $tiktok);
       }
 
       /* ============================

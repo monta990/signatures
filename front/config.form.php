@@ -97,7 +97,7 @@ if (isset($_POST['save'])) {
       );
    }
 
-   foreach (['x_page', 'linkedin_page', 'instagram_page', 'snapchat_page'] as $_snKey) {
+   foreach (['x_page', 'linkedin_page', 'instagram_page', 'snapchat_page', 'tiktok_page'] as $_snKey) {
       if (isset($_POST[$_snKey])) {
          Config::setConfigurationValues('plugin_signatures', [$_snKey => trim($_POST[$_snKey])]);
       }
@@ -229,8 +229,8 @@ if (isset($_POST['save'])) {
 
    /* ================= CAMPOS HABILITADOS ================= */
    $_enabledFieldsMap = [
-      'b1' => ['nombre','titulo','email','mobile','tel','ext','facebook','web','x','linkedin','instagram','snapchat','qr'],
-      'b2' => ['nombre','titulo','email','tel','ext','facebook','web','x','linkedin','instagram','snapchat'],
+      'b1' => ['nombre','titulo','email','mobile','tel','ext','facebook','web','x','linkedin','instagram','snapchat','tiktok','qr'],
+      'b2' => ['nombre','titulo','email','tel','ext','facebook','web','x','linkedin','instagram','snapchat','tiktok'],
    ];
    $_enabledToSave = [];
    foreach ($_enabledFieldsMap as $_eBase => $_eFields) {
@@ -254,8 +254,9 @@ $facebookPage  = $config['facebook_page']        ?? '';
 $xPage         = $config['x_page']               ?? '';
 $linkedinPage  = $config['linkedin_page']         ?? '';
 $instagramPage = $config['instagram_page']        ?? '';
-$snapchatPage  = $config['snapchat_page']         ?? '';
-$countryCode   = $config['whatsapp_country_code'] ?? '';
+$snapchatPage  = $config['snapchat_page']          ?? '';
+$tiktokPage    = $config['tiktok_page']            ?? '';
+$countryCode   = $config['whatsapp_country_code']  ?? '';
 $emailSubject  = $config['email_subject']         ?? '';
 $emailBody     = $config['email_body']            ?? '';
 $emailFooter   = $config['email_footer']          ?? '';
@@ -414,6 +415,20 @@ echo "<input type='text'
              value='" . Html::cleanInputText($snapchatPage) . "'
              placeholder='" . htmlspecialchars(__('Ex: acmecorp', 'signatures'), ENT_QUOTES, 'UTF-8') . "'>";
 echo "<div class='form-text'>" . __('Username only, no URL', 'signatures') . "</div>";
+echo "</div>";
+
+/* TIKTOK */
+echo "<div class='mb-4'>";
+echo "<label class='form-label fw-bold'>
+        <i class='ti ti-brand-tiktok me-2'></i>
+        " . __('TikTok handle', 'signatures') . "
+      </label>";
+echo "<input type='text'
+             name='tiktok_page'
+             class='form-control'
+             value='" . Html::cleanInputText($tiktokPage) . "'
+             placeholder='" . htmlspecialchars(__('Ex: @acmecorp', 'signatures'), ENT_QUOTES, 'UTF-8') . "'>";
+echo "<div class='form-text'>" . __('Handle with or without @', 'signatures') . "</div>";
 echo "</div>";
 
 /* CÓDIGO PAÍS WHATSAPP */
@@ -788,6 +803,7 @@ $_fieldsB1 = [
    ['linkedin',  __('LinkedIn', 'signatures'),   $_pos('sig_b1_linkedin_x'),  $_pos('sig_b1_linkedin_y'),  $_pos('sig_b1_linkedin_size'),  'roman', 'black', $linkedinPage ?: 'empresa'],
    ['instagram', __('Instagram', 'signatures'),  $_pos('sig_b1_instagram_x'), $_pos('sig_b1_instagram_y'), $_pos('sig_b1_instagram_size'), 'roman', 'black', $instagramPage ?: '@empresa'],
    ['snapchat',  __('Snapchat', 'signatures'),   $_pos('sig_b1_snapchat_x'),  $_pos('sig_b1_snapchat_y'),  $_pos('sig_b1_snapchat_size'),  'roman', 'black', $snapchatPage ?: 'empresa'],
+   ['tiktok',    __('TikTok', 'signatures'),     $_pos('sig_b1_tiktok_x'),    $_pos('sig_b1_tiktok_y'),    $_pos('sig_b1_tiktok_size'),    'roman', 'black', $tiktokPage ?: '@empresa'],
    ['qr',        __('WhatsApp QR', 'signatures'), $_pos('sig_b1_qr_x'),        $_pos('sig_b1_qr_y'),        0,                             'roman', 'black', '▣ QR'],
 ];
 
@@ -803,6 +819,7 @@ $_fieldsB2 = [
    ['linkedin',  __('LinkedIn', 'signatures'),   $_pos('sig_b2_linkedin_x'),  $_pos('sig_b2_linkedin_y'),  $_pos('sig_b2_linkedin_size'),  'roman', 'black', $linkedinPage ?: 'empresa'],
    ['instagram', __('Instagram', 'signatures'),  $_pos('sig_b2_instagram_x'), $_pos('sig_b2_instagram_y'), $_pos('sig_b2_instagram_size'), 'roman', 'black', $instagramPage ?: '@empresa'],
    ['snapchat',  __('Snapchat', 'signatures'),   $_pos('sig_b2_snapchat_x'),  $_pos('sig_b2_snapchat_y'),  $_pos('sig_b2_snapchat_size'),  'roman', 'black', $snapchatPage ?: 'empresa'],
+   ['tiktok',    __('TikTok', 'signatures'),     $_pos('sig_b2_tiktok_x'),    $_pos('sig_b2_tiktok_y'),    $_pos('sig_b2_tiktok_size'),    'roman', 'black', $tiktokPage ?: '@empresa'],
 ];
 
 // ── Renderizar editor ─────────────────────────────────────────────────
@@ -1241,6 +1258,7 @@ $_defaults_js = json_encode([
       'linkedin'  => ['x'=>185, 'y'=>205, 'size'=>11],
       'instagram' => ['x'=>320, 'y'=>205, 'size'=>11],
       'snapchat'  => ['x'=>450, 'y'=>205, 'size'=>11],
+      'tiktok'    => ['x'=>63,  'y'=>227, 'size'=>11],
       'qr'        => ['x'=>560, 'y'=>130],
    ],
    'b2' => [
@@ -1255,6 +1273,7 @@ $_defaults_js = json_encode([
       'linkedin'  => ['x'=>185, 'y'=>205, 'size'=>11],
       'instagram' => ['x'=>320, 'y'=>205, 'size'=>11],
       'snapchat'  => ['x'=>450, 'y'=>205, 'size'=>11],
+      'tiktok'    => ['x'=>63,  'y'=>227, 'size'=>11],
    ],
 ], JSON_UNESCAPED_UNICODE);
 
