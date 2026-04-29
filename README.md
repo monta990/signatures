@@ -48,6 +48,7 @@ Each signature is rendered dynamically over a configurable PNG template using PH
 | **Custom fonts** | Upload TTF or OTF font files from the Fonts tab. The plugin reads each file's internal `name` table to display its real name. Built-in Avenir Black and Avenir Roman are always available. |
 | **Per-role font selection** | Choose **Name font** (used for the signature name) and **Body font** (used for all other fields) independently. Both built-in and uploaded fonts are available for either role. |
 | **Per-field visibility toggle** | Checkbox next to each field in the position editor enables or disables that field independently per template. Hidden fields are skipped during PNG generation — no blank space left. |
+| **GLPI mail log integration** — Write tagged entries to `files/_log/mail.log`, through `Toolbox::logInFile()`. |
 | **Multilanguage** | es_MX · fr_FR · Default languague: English |
 
 ---

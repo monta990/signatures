@@ -7,10 +7,14 @@ Thumbs.db
 .vscode/
 *.swp
 *.swo
+.gitignore
+CLAUDE.md
 
 # Build/temp
 *.zip
 /tmp/
+/.claude/
+/.code-review-graph/
 
 # GLPI plugin doc dir (templates uploaded by users — not part of the repo)
 templates/
