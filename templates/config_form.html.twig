@@ -1,0 +1,720 @@
+{#
+  Config form — Email Signature plugin
+  vars: self, active_tab, csrf_token, test_csrf_token, test_url,
+        facebook_page, x_page, linkedin_page, instagram_page, snapchat_page, tiktok_page,
+        country_code, email_subject, email_body, email_footer,
+        mail_ok, has_email_config, btn_tooltip,
+        hasbase1, hasbase2, base1_url, base2_url, cache_bust1, cache_bust2, csrf1, csrf2,
+        fields_b1, fields_b2, font_black_url, font_roman_url,
+        user_fonts_map, current_name, current_body, builtin_name, builtin_body,
+        plugin_web_dir, cfg_js_json
+#}
+
+{# ── Macros ──────────────────────────────────────────────────────────────── #}
+{% macro ribbon_header(icon, title) %}
+<div class="card-header mb-1 py-1 position-relative">
+  <div class="ribbon ribbon-bookmark ribbon-top ribbon-start bg-blue s-1">
+    <i class="fs-2x ti {{ icon }}" aria-hidden="true"></i>
+  </div>
+  <h3 class="card-subtitle ms-5 mb-0">{{ title }}</h3>
+</div>
+{% endmacro %}
+
+{% macro format_toolbar() %}
+<div class="sig-format-toolbar mb-1 d-flex gap-1 align-items-center">
+  <button type="button" class="btn btn-sm btn-outline-secondary sig-fmt-btn" data-wrap="**"
+          title="{{ __('Bold — **text**', 'signatures') }}">
+    <b>B</b>&nbsp;<small class="fw-normal opacity-75">**</small>
+  </button>
+  <button type="button" class="btn btn-sm btn-outline-secondary sig-fmt-btn" data-wrap="*"
+          title="{{ __('Italic — *text*', 'signatures') }}">
+    <i>I</i>&nbsp;<small class="fw-normal opacity-75">*</small>
+  </button>
+  <button type="button" class="btn btn-sm btn-outline-secondary sig-fmt-btn" data-wrap="__"
+          title="{{ __('Underline — __text__', 'signatures') }}">
+    <u>U</u>&nbsp;<small class="fw-normal opacity-75">__</small>
+  </button>
+</div>
+{% endmacro %}
+
+{% macro editor(base, title, bg_url, has_template, fields, cache_bust) %}
+<div class="card mt-2 rounded-0">
+  <div class="card-header mb-1 py-1 position-relative">
+    <div class="ribbon ribbon-bookmark ribbon-top ribbon-start bg-blue s-1">
+      <i class="fs-2x ti ti-vector-bezier" aria-hidden="true"></i>
+    </div>
+    <h3 class="card-subtitle ms-5 mb-0">{{ title }}</h3>
+  </div>
+  <div class="card-body">
+
+    {% if not has_template %}
+    <div class="alert alert-warning">
+      <i class="ti ti-alert-triangle me-2"></i>
+      {{ __('No template loaded for this configuration. Upload one in the corresponding tab.', 'signatures') }}
+    </div>
+    {% else %}
+
+    <p class="text-muted small mb-2 sig-editor-hint">
+      <i class="ti ti-hand-move me-1"></i>
+      {{ __('Drag each field to its position. Use size inputs to adjust font size. Save with the Save button.', 'signatures') }}
+    </p>
+
+    <div class="sig-editor-wrap" id="editor-{{ base }}" style="position:relative;display:inline-block;overflow:visible;">
+      <img src="{{ bg_url }}&t={{ cache_bust }}"
+           id="img-{{ base }}"
+           class="sig-bg"
+           style="display:block;max-width:100%;pointer-events:none;"
+           draggable="false">
+
+      {% for field in fields %}
+        {% if field.is_qr %}
+        <div class="sig-field sig-field-qr"
+             id="field-{{ base }}-{{ field.id }}"
+             data-base="{{ base }}"
+             data-field="{{ field.id }}"
+             data-is-qr="1"
+             data-gd-x="{{ field.x }}"
+             data-gd-y="{{ field.y }}"
+             style="position:absolute;left:{{ field.css_left }}px;top:{{ field.css_top }}px;
+                    width:100px;height:100px;border:2px dashed rgba(255,140,0,0.8);
+                    background:rgba(255,140,0,0.15);cursor:grab;display:flex;
+                    align-items:center;justify-content:center;font-size:13px;
+                    color:rgba(255,140,0,0.9);opacity:{{ field.enabled ? '1' : '0.25' }};
+                    user-select:none;">
+          <i class="ti ti-qrcode" style="font-size:24px;"></i>
+        </div>
+        {% else %}
+        <div class="sig-field"
+             id="field-{{ base }}-{{ field.id }}"
+             data-base="{{ base }}"
+             data-field="{{ field.id }}"
+             data-font-size="{{ field.size }}"
+             data-gd-x="{{ field.x }}"
+             data-gd-y="{{ field.y }}"
+             title="{{ field.label }}"
+             style="position:absolute;left:{{ field.css_left }}px;top:{{ field.css_top }}px;
+                    font-family:{{ field.font_css }},sans-serif;font-size:{{ field.size }}px;
+                    color:{{ field.color_css }};white-space:nowrap;cursor:grab;
+                    padding:1px 3px;border:1px dashed rgba(255,140,0,0.6);
+                    background:rgba(255,140,0,0.08);
+                    opacity:{{ field.enabled ? '1' : '0.25' }};
+                    user-select:none;line-height:1;">
+          {{ field.sample }}
+        </div>
+        {% endif %}
+        {% if not field.is_qr %}
+        <input type="hidden" name="sig_{{ base }}_{{ field.id }}_size" id="inp-{{ base }}-{{ field.id }}-size" value="{{ field.size }}">
+        {% endif %}
+      {% endfor %}
+    </div>{# /sig-editor-wrap #}
+
+    <div class="mt-3">
+      <table class="table table-sm table-bordered sig-pos-table" style="max-width:460px">
+        <thead>
+          <tr>
+            <th style="width:36px" class="text-center" title="{{ __('Enabled', 'signatures') }}">
+              <i class="ti ti-eye"></i>
+            </th>
+            <th>{{ __('Field', 'signatures') }}</th>
+            <th style="width:100px">{{ __('Size (px)', 'signatures') }}</th>
+            <th style="width:140px">{{ __('Position X / Y', 'signatures') }}</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for field in fields %}
+          <tr>
+            <td class="text-center">
+              <input type="checkbox" class="form-check-input sig-enable-cb"
+                     name="sig_{{ base }}_{{ field.id }}_enabled" value="1"
+                     data-base="{{ base }}" data-field="{{ field.id }}"
+                     {{ field.enabled ? 'checked' : '' }}>
+            </td>
+            <td><small>{{ field.label }}</small></td>
+            <td>
+              {% if field.is_qr %}
+              <small class="text-muted">—</small>
+              {% else %}
+              <input type="number" min="6" max="80"
+                     class="form-control form-control-sm sig-size-input"
+                     data-base="{{ base }}" data-field="{{ field.id }}"
+                     value="{{ field.size }}" style="width:70px;">
+              {% endif %}
+            </td>
+            <td>
+              <div class="d-flex gap-1 align-items-center">
+                <input type="number" min="0"
+                       class="form-control form-control-sm sig-pos-input sig-pos-input-x"
+                       data-base="{{ base }}" data-field="{{ field.id }}"
+                       id="pos-{{ base }}-{{ field.id }}-x"
+                       name="sig_{{ base }}_{{ field.id }}_x"
+                       placeholder="X" value="{{ field.x }}" style="width:60px;">
+                <input type="number" min="0"
+                       class="form-control form-control-sm sig-pos-input sig-pos-input-y"
+                       data-base="{{ base }}" data-field="{{ field.id }}"
+                       id="pos-{{ base }}-{{ field.id }}-y"
+                       name="sig_{{ base }}_{{ field.id }}_y"
+                       placeholder="Y" value="{{ field.y }}" style="width:60px;">
+              </div>
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+
+    <button type="button" class="btn btn-sm btn-outline-secondary sig-reset-btn" data-base="{{ base }}">
+      <i class="ti ti-refresh me-1"></i>{{ __('Restore default positions', 'signatures') }}
+    </button>
+
+    {% endif %}{# has_template #}
+  </div>
+</div>
+{% endmacro %}
+
+{% import _self as m %}
+
+{# ── Main form ────────────────────────────────────────────────────────────── #}
+<form method="post" action="{{ self }}" enctype="multipart/form-data">
+  <input type="hidden" name="active_tab" id="active_tab_input" value="{{ active_tab }}">
+  <input type="hidden" name="_glpi_csrf_token" value="{{ csrf_token }}">
+  <input type="hidden" name="save" value="1">
+
+  <div class="card mt-2 rounded-0">
+
+    <div class="card-header mb-3 py-1 border-top position-relative">
+      <div class="ribbon ribbon-bookmark ribbon-top ribbon-start bg-blue s-1">
+        <i class="fs-2x ti ti-settings"></i>
+      </div>
+      <h4 class="card-title ms-5 mb-0">{{ __('Email Signature Configuration', 'signatures') }}</h4>
+    </div>
+
+    {# ── Tab nav ── #}
+    {%- set _tabs = ['general','cel','nocel','positions','fonts'] -%}
+    <ul class="nav nav-tabs mb-3 sig-tab-nav" role="tablist">
+      <li class="nav-item">
+        <button class="nav-link{{ active_tab == 'general' ? ' active' : '' }}" data-bs-toggle="tab" data-bs-target="#tab-general" type="button">
+          <i class="ti ti-settings me-1"></i> {{ __('General', 'signatures') }}
+        </button>
+      </li>
+      <li class="nav-item">
+        <button class="nav-link{{ active_tab == 'cel' ? ' active' : '' }}" data-bs-toggle="tab" data-bs-target="#tab-cel" type="button">
+          <i class="ti ti-device-mobile me-1"></i> {{ __('With mobile', 'signatures') }}
+        </button>
+      </li>
+      <li class="nav-item">
+        <button class="nav-link{{ active_tab == 'nocel' ? ' active' : '' }}" data-bs-toggle="tab" data-bs-target="#tab-nocel" type="button">
+          <i class="ti ti-phone-off me-1"></i> {{ __('Without mobile', 'signatures') }}
+        </button>
+      </li>
+      <li class="nav-item">
+        <button class="nav-link{{ active_tab == 'positions' ? ' active' : '' }}" id="btn-tab-positions"
+                data-bs-toggle="tab" data-bs-target="#tab-positions" type="button">
+          <i class="ti ti-vector-bezier me-1"></i> {{ __('Positions', 'signatures') }}
+        </button>
+      </li>
+      <li class="nav-item">
+        <button class="nav-link{{ active_tab == 'fonts' ? ' active' : '' }}" data-bs-toggle="tab" data-bs-target="#tab-fonts" type="button">
+          <i class="ti ti-typography me-1"></i> {{ __('Fonts', 'signatures') }}
+        </button>
+      </li>
+    </ul>
+
+    <div class="tab-content">
+
+      {# ══════════════════════════════════════════════════════════════════════
+         TAB GENERAL
+         ══════════════════════════════════════════════════════════════════════ #}
+      <div class="tab-pane fade{{ active_tab == 'general' ? ' show active' : '' }}" id="tab-general">
+
+        <div class="card mt-2 rounded-0">
+          {{ m.ribbon_header('ti-settings', __('General settings', 'signatures')) }}
+          <div class="card-body">
+
+            <div class="mb-4">
+              <label class="form-label fw-bold">
+                <i class="ti ti-brand-facebook me-2"></i>{{ __('Facebook page name', 'signatures') }}
+              </label>
+              <input type="text" name="facebook_page" class="form-control"
+                     value="{{ facebook_page }}"
+                     placeholder="{{ __('Ex: AcmeCorp', 'signatures') }}">
+              <div class="form-text">{{ __('Name only, no URL or @', 'signatures') }}</div>
+            </div>
+
+            <div class="mb-4">
+              <label class="form-label fw-bold">
+                <i class="ti ti-brand-x me-2"></i>{{ __('X (Twitter) handle', 'signatures') }}
+              </label>
+              <input type="text" name="x_page" class="form-control"
+                     value="{{ x_page }}"
+                     placeholder="{{ __('Ex: @AcmeCorp', 'signatures') }}">
+              <div class="form-text">{{ __('Handle with or without @', 'signatures') }}</div>
+            </div>
+
+            <div class="mb-4">
+              <label class="form-label fw-bold">
+                <i class="ti ti-brand-linkedin me-2"></i>{{ __('LinkedIn page', 'signatures') }}
+              </label>
+              <input type="text" name="linkedin_page" class="form-control"
+                     value="{{ linkedin_page }}"
+                     placeholder="{{ __('Ex: company/acmecorp', 'signatures') }}">
+              <div class="form-text">{{ __('LinkedIn slug or URL path', 'signatures') }}</div>
+            </div>
+
+            <div class="mb-4">
+              <label class="form-label fw-bold">
+                <i class="ti ti-brand-instagram me-2"></i>{{ __('Instagram handle', 'signatures') }}
+              </label>
+              <input type="text" name="instagram_page" class="form-control"
+                     value="{{ instagram_page }}"
+                     placeholder="{{ __('Ex: @acmecorp', 'signatures') }}">
+              <div class="form-text">{{ __('Handle with or without @', 'signatures') }}</div>
+            </div>
+
+            <div class="mb-4">
+              <label class="form-label fw-bold">
+                <i class="ti ti-brand-snapchat me-2"></i>{{ __('Snapchat username', 'signatures') }}
+              </label>
+              <input type="text" name="snapchat_page" class="form-control"
+                     value="{{ snapchat_page }}"
+                     placeholder="{{ __('Ex: acmecorp', 'signatures') }}">
+              <div class="form-text">{{ __('Username only, no URL', 'signatures') }}</div>
+            </div>
+
+            <div class="mb-4">
+              <label class="form-label fw-bold">
+                <i class="ti ti-brand-tiktok me-2"></i>{{ __('TikTok handle', 'signatures') }}
+              </label>
+              <input type="text" name="tiktok_page" class="form-control"
+                     value="{{ tiktok_page }}"
+                     placeholder="{{ __('Ex: @acmecorp', 'signatures') }}">
+              <div class="form-text">{{ __('Handle with or without @', 'signatures') }}</div>
+            </div>
+
+            <div class="mb-4">
+              <label class="form-label fw-bold">
+                <i class="ti ti-brand-whatsapp me-2"></i>{{ __('Country code for WhatsApp QR', 'signatures') }}
+              </label>
+              <input type="text" name="whatsapp_country_code" class="form-control"
+                     value="{{ country_code }}"
+                     placeholder="{{ __('Ex: 1', 'signatures') }}"
+                     maxlength="5" inputmode="numeric" pattern="[0-9]*"
+                     oninput='this.value=this.value.replace(/[^0-9]/g,"")'>
+              <div class="form-text">
+                {{ __('Numeric country code only, no + or spaces. Ex: 1 (USA), used to generate the WhatsApp link in the QR code.', 'signatures') }}
+              </div>
+            </div>
+
+          </div>
+        </div>{# /card general settings #}
+
+        {# ── Email options card ── #}
+        <div class="card mt-2 rounded-0">
+          {{ m.ribbon_header('ti-mail-forward', __('Email Options', 'signatures')) }}
+          <div class="card-body">
+
+            {# Variables panel #}
+            <div class="card mb-4 border-info rounded-1" style="background:#f0f8ff;">
+              <div class="card-header py-1 d-flex align-items-center justify-content-between"
+                   style="cursor:pointer;background:#e0f0ff;"
+                   data-bs-toggle="collapse"
+                   data-bs-target="#sigVarsPanel"
+                   aria-expanded="false">
+                <span class="fw-bold text-info">
+                  <i class="ti ti-variable me-1"></i>
+                  {{ __('Available variables', 'signatures') }}
+                  &nbsp;<code class="ms-2" style="font-size:0.82em;background:#c8e6fa;padding:1px 5px;border-radius:3px;">
+                    <b>**{{ __('bold', 'signatures') }}**</b>
+                    &nbsp;·&nbsp;
+                    <i>*{{ __('italic', 'signatures') }}*</i>
+                    &nbsp;·&nbsp;
+                    <u>__{{ __('underline', 'signatures') }}__</u>
+                  </code>
+                </span>
+                <i class="ti ti-chevron-down text-info"></i>
+              </div>
+              <div class="collapse" id="sigVarsPanel">
+                <div class="card-body py-2" style="font-size:0.9em;">
+                  <p class="text-muted mb-2" style="font-size:0.85em;">
+                    <i class="ti ti-hand-click me-1"></i>{{ __('Click a variable to insert it into the active field.', 'signatures') }}
+                  </p>
+                  <table class="table table-borderless table-sm mb-0">
+                    <tbody>
+                      <tr>
+                        <td>
+                          <code class="sig-var-badge" data-var="{nombre}"
+                                style="background:#ddeeff;padding:2px 6px;border-radius:3px;cursor:pointer;"
+                                title="{{ __('Click to insert', 'signatures') }}">{nombre}</code>
+                        </td>
+                        <td class="text-muted">— {{ __("User's full name", 'signatures') }}</td>
+                      </tr>
+                      <tr>
+                        <td>
+                          <code class="sig-var-badge" data-var="{empresa}"
+                                style="background:#ddeeff;padding:2px 6px;border-radius:3px;cursor:pointer;"
+                                title="{{ __('Click to insert', 'signatures') }}">{empresa}</code>
+                        </td>
+                        <td class="text-muted">— {{ __('Company name (configured in General settings)', 'signatures') }}</td>
+                      </tr>
+                      <tr>
+                        <td>
+                          <code class="sig-var-badge" data-var="{fecha}"
+                                style="background:#ddeeff;padding:2px 6px;border-radius:3px;cursor:pointer;"
+                                title="{{ __('Click to insert', 'signatures') }}">{fecha}</code>
+                        </td>
+                        <td class="text-muted">— {{ __("Today's date in dd/mm/yyyy format", 'signatures') }}</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+
+            {# Email subject #}
+            <div class="mb-4">
+              <label class="form-label fw-bold">
+                <i class="ti ti-text-size me-2"></i>{{ __('Email subject', 'signatures') }}
+              </label>
+              <input type="text" name="email_subject" id="sig-email-subject"
+                     class="form-control"
+                     value="{{ email_subject }}"
+                     placeholder="{{ __('E.g.: Your corporate email signature', 'signatures') }}">
+              <div class="form-text">{{ __('You can use the variables {nombre}, {empresa} and {fecha}.', 'signatures') }}</div>
+            </div>
+
+            {# Email body #}
+            <div class="mb-4">
+              <label class="form-label fw-bold">
+                <i class="ti ti-align-left me-2"></i>{{ __('Email body', 'signatures') }}
+              </label>
+              {{ m.format_toolbar() }}
+              <textarea name="email_body" id="sig-email-body" class="form-control" rows="4"
+                        placeholder="{{ __('E.g.: Attached you will find your corporate email signature. Save it and use it in your email client.', 'signatures') }}">{{ email_body }}</textarea>
+              <div class="form-text">{{ __('You can use the variables {nombre}, {empresa} and {fecha}.', 'signatures') }}</div>
+            </div>
+
+            {# Email footer #}
+            <div class="mb-4">
+              <label class="form-label fw-bold">
+                <i class="ti ti-section me-2"></i>{{ __('Email footer', 'signatures') }}
+              </label>
+              {{ m.format_toolbar() }}
+              <textarea name="email_footer" id="sig-email-footer" class="form-control" rows="2"
+                        placeholder="{{ __('E.g.: This email was automatically generated by the GLPI system.', 'signatures') }}">{{ email_footer }}</textarea>
+              <div class="form-text">{{ __('You can use the variables {nombre}, {empresa} and {fecha}.', 'signatures') }}</div>
+            </div>
+
+            {# Test email button #}
+            {% set btn_disabled = not mail_ok or not has_email_config %}
+            <div class="d-flex align-items-center gap-3 flex-wrap mt-3">
+              <span data-bs-toggle="tooltip" title="{{ btn_tooltip }}" class="d-inline-block">
+                <button type="submit" form="sig-test-mail-form"
+                        class="btn btn-outline-secondary{% if btn_disabled %} disabled{% endif %}"
+                        {% if btn_disabled %}aria-disabled="true" style="pointer-events:none;opacity:.65"{% endif %}>
+                  <i class="ti ti-send me-2"></i>{{ __('Send test email', 'signatures') }}
+                </button>
+              </span>
+              <span class="text-muted" style="font-size:0.85em;">
+                <i class="ti ti-info-circle me-1"></i>
+                {{ __('The email will be sent to the address registered in your GLPI profile.', 'signatures') }}
+              </span>
+            </div>
+
+          </div>
+        </div>{# /card email options #}
+      </div>{# /tab-general #}
+
+      {# ══════════════════════════════════════════════════════════════════════
+         TAB WITH MOBILE
+         ══════════════════════════════════════════════════════════════════════ #}
+      <div class="tab-pane fade{{ active_tab == 'cel' ? ' show active' : '' }}" id="tab-cel">
+        <div class="card mt-2 rounded-0">
+          {{ m.ribbon_header('ti-device-mobile', __('Template with mobile', 'signatures')) }}
+          <div class="card-body">
+
+            {% if hasbase1 %}
+            <div class="mb-4">
+              <label class="fw-bold">{{ __('Current', 'signatures') }}</label><br>
+              <a href="{{ base1_url }}" download="plantilla_con_celular.png">
+                <img src="{{ base1_url }}" style="max-width:100%;border:1px solid #ccc">
+              </a><br><br>
+              <button type="button" class="btn btn-danger"
+                      data-sig-post-url="{{ self }}"
+                      data-sig-post-csrf="{{ csrf1 }}"
+                      data-sig-post-field="delete_base1"
+                      data-sig-post-value="1">
+                <i class="ti ti-trash"></i> {{ __('Delete', 'signatures') }}
+              </button>
+            </div>
+            {% endif %}
+
+            <label class="fw-bold">{{ __('Upload new', 'signatures') }}</label>
+            <input type="file" name="base1" class="form-control" accept="image/png"
+                   onchange='preview(this,"new-base1-preview","wrap1")'>
+            <div class="form-text">
+              {{ __('PNG only · Max. 300 KB · Recommended dimensions: 650×250 px', 'signatures') }}
+            </div>
+            <div id="wrap1" class="d-none mt-2">
+              <img id="new-base1-preview" style="max-width:100%;border:1px dashed #999">
+            </div>
+
+          </div>
+        </div>
+      </div>{# /tab-cel #}
+
+      {# ══════════════════════════════════════════════════════════════════════
+         TAB WITHOUT MOBILE
+         ══════════════════════════════════════════════════════════════════════ #}
+      <div class="tab-pane fade{{ active_tab == 'nocel' ? ' show active' : '' }}" id="tab-nocel">
+        <div class="card mt-2 rounded-0">
+          {{ m.ribbon_header('ti-phone-off', __('Template without mobile', 'signatures')) }}
+          <div class="card-body">
+
+            {% if hasbase2 %}
+            <div class="mb-4">
+              <label class="fw-bold">{{ __('Current', 'signatures') }}</label><br>
+              <a href="{{ base2_url }}" download="plantilla_sin_celular.png">
+                <img src="{{ base2_url }}" style="max-width:100%;border:1px solid #ccc">
+              </a><br><br>
+              <button type="button" class="btn btn-danger"
+                      data-sig-post-url="{{ self }}"
+                      data-sig-post-csrf="{{ csrf2 }}"
+                      data-sig-post-field="delete_base2"
+                      data-sig-post-value="1">
+                <i class="ti ti-trash"></i> {{ __('Delete', 'signatures') }}
+              </button>
+            </div>
+            {% endif %}
+
+            <label class="fw-bold">{{ __('Upload new', 'signatures') }}</label>
+            <input type="file" name="base2" class="form-control" accept="image/png"
+                   onchange='preview(this,"new-base2-preview","wrap2")'>
+            <div class="form-text">
+              {{ __('PNG only · Max. 300 KB · Recommended dimensions: 650×250 px', 'signatures') }}
+            </div>
+            <div id="wrap2" class="d-none mt-2">
+              <img id="new-base2-preview" style="max-width:100%;border:1px dashed #999">
+            </div>
+
+          </div>
+        </div>
+      </div>{# /tab-nocel #}
+
+      {# ══════════════════════════════════════════════════════════════════════
+         TAB POSITIONS
+         ══════════════════════════════════════════════════════════════════════ #}
+      <div class="tab-pane fade{{ active_tab == 'positions' ? ' show active' : '' }}" id="tab-positions">
+        {{ m.editor('b1',
+            __('Template with mobile — Position editor', 'signatures'),
+            raw_base1_url, hasbase1, fields_b1, cache_bust1) }}
+        {{ m.editor('b2',
+            __('Template without mobile — Position editor', 'signatures'),
+            raw_base2_url, hasbase2, fields_b2, cache_bust2) }}
+      </div>{# /tab-positions #}
+
+      {# ══════════════════════════════════════════════════════════════════════
+         TAB FONTS
+         ══════════════════════════════════════════════════════════════════════ #}
+      <div class="tab-pane fade{{ active_tab == 'fonts' ? ' show active' : '' }}" id="tab-fonts">
+        <div class="card mt-2 rounded-0">
+          {{ m.ribbon_header('ti-typography', __('Fonts', 'signatures')) }}
+          <div class="card-body">
+
+            {# Upload #}
+            <div class="mb-4">
+              {{ m.ribbon_header('ti-upload', __('Upload font', 'signatures')) }}
+              <div class="card-body pt-2">
+                <p class="form-text">{{ __('Accepted formats: TTF · OTF · Max. 2 MB', 'signatures') }}</p>
+                <div class="input-group" style="max-width:480px;">
+                  <input type="file" name="font_upload" id="font_upload_input" class="form-control" accept=".ttf,.otf">
+                  <button type="submit" name="upload_font_action" value="1" class="btn btn-secondary">
+                    <i class="ti ti-upload me-1"></i>{{ __('Upload', 'signatures') }}
+                  </button>
+                </div>
+                <p class="form-text mt-1" id="font_upload_name" style="display:none;">
+                  <i class="ti ti-info-circle me-1"></i>
+                  {{ __('The font display name will be read automatically after uploading.', 'signatures') }}
+                </p>
+              </div>
+            </div>
+
+            {# Active fonts selector #}
+            <div class="mb-4 mt-2">
+              {{ m.ribbon_header('ti-text-size', __('Active fonts', 'signatures')) }}
+              <div class="card-body pt-2">
+                <p class="form-text mb-3">
+                  {{ __('Select the font for each role. Avenir Black and Avenir Roman are always available as built-in options.', 'signatures') }}
+                </p>
+                <div class="row g-3">
+
+                  <div class="col-md-6">
+                    <label class="form-label fw-bold">{{ __('Name font', 'signatures') }}</label>
+                    <p class="form-text mb-1">{{ __('Font used to render the signature name.', 'signatures') }}</p>
+                    <select name="font_name" class="form-select">
+                      <option value="{{ builtin_name }}"
+                              {{ (current_name == '' or current_name == builtin_name) ? 'selected' : '' }}>
+                        {{ __('Avenir Black (built-in)', 'signatures') }}
+                      </option>
+                      <option value="{{ builtin_body }}"
+                              {{ current_name == builtin_body ? 'selected' : '' }}>
+                        {{ __('Avenir Roman (built-in)', 'signatures') }}
+                      </option>
+                      {% if user_fonts_map|length > 0 %}
+                      <option disabled>──────────────</option>
+                      {% for fname, display_name in user_fonts_map %}
+                      <option value="{{ fname }}" {{ current_name == fname ? 'selected' : '' }}>
+                        {{ display_name }}
+                      </option>
+                      {% endfor %}
+                      {% endif %}
+                    </select>
+                  </div>
+
+                  <div class="col-md-6">
+                    <label class="form-label fw-bold">{{ __('Body font', 'signatures') }}</label>
+                    <p class="form-text mb-1">{{ __('Font used for all other fields in the signature.', 'signatures') }}</p>
+                    <select name="font_body" class="form-select">
+                      <option value="{{ builtin_body }}"
+                              {{ (current_body == '' or current_body == builtin_body) ? 'selected' : '' }}>
+                        {{ __('Avenir Roman (built-in)', 'signatures') }}
+                      </option>
+                      <option value="{{ builtin_name }}"
+                              {{ current_body == builtin_name ? 'selected' : '' }}>
+                        {{ __('Avenir Black (built-in)', 'signatures') }}
+                      </option>
+                      {% if user_fonts_map|length > 0 %}
+                      <option disabled>──────────────</option>
+                      {% for fname, display_name in user_fonts_map %}
+                      <option value="{{ fname }}" {{ current_body == fname ? 'selected' : '' }}>
+                        {{ display_name }}
+                      </option>
+                      {% endfor %}
+                      {% endif %}
+                    </select>
+                  </div>
+
+                </div>
+              </div>
+            </div>
+
+            {# Installed fonts list #}
+            <div class="mt-2">
+              {{ m.ribbon_header('ti-list', __('Installed fonts', 'signatures')) }}
+              <div class="card-body pt-2">
+                <p class="form-text mb-3">
+                  <i class="ti ti-shield-check me-1"></i>
+                  {{ __('Avenir Black and Avenir Roman are built-in fonts, always available as options and cannot be deleted.', 'signatures') }}
+                </p>
+
+                {% if user_fonts_map|length == 0 %}
+                <div class="alert alert-info d-flex align-items-center gap-2 py-2" style="font-size:0.9em;">
+                  <i class="ti ti-info-circle fs-5"></i>
+                  <span>{{ __('No custom fonts uploaded yet.', 'signatures') }}</span>
+                </div>
+                {% else %}
+                <table class="table table-sm table-hover align-middle">
+                  <thead>
+                    <tr>
+                      <th>{{ __('File', 'signatures') }}</th>
+                      <th>{{ __('Used as', 'signatures') }}</th>
+                      <th></th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {% for fname, display_name in user_fonts_map %}
+                    {% set used_as = [] %}
+                    {% if current_name == fname %}{% set used_as = used_as|merge([__('Bold', 'signatures')]) %}{% endif %}
+                    {% if current_body == fname %}{% set used_as = used_as|merge([__('Regular', 'signatures')]) %}{% endif %}
+                    <tr>
+                      <td>
+                        <i class="ti ti-file-typography me-1"></i>
+                        <span class="fw-semibold">{{ display_name }}</span>
+                        <br><span class="form-text" style="font-size:0.78em;">{{ fname }}</span>
+                      </td>
+                      <td>
+                        {% if used_as|length > 0 %}
+                          {% for role in used_as %}
+                          <span class="badge" style="background:#f0a500;color:#000;font-weight:600;">{{ role }}</span>
+                          {% endfor %}
+                        {% else %}
+                          <span class="text-body-primary">—</span>
+                        {% endif %}
+                      </td>
+                      <td class="text-end">
+                        <button type="button" class="btn btn-sm btn-outline-danger"
+                                data-sig-post-url="{{ self }}"
+                                data-sig-post-csrf="{{ font_delete_tokens[fname] ?? '' }}"
+                                data-sig-post-field="delete_font"
+                                data-sig-post-value="{{ fname }}"
+                                data-sig-post-confirm="{{ __('Delete this font?', 'signatures')|e('html_attr') }}">
+                          <i class="ti ti-trash me-1"></i>{{ __('Delete', 'signatures') }}
+                        </button>
+                      </td>
+                    </tr>
+                    {% endfor %}
+                  </tbody>
+                </table>
+                {% endif %}
+
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>{# /tab-fonts #}
+
+    </div>{# /tab-content #}
+
+    {# Unsaved changes banner #}
+    <div id="sig-unsaved-banner" class="alert alert-warning d-none mb-0 mx-0 py-2 px-3 rounded-0" style="font-size:0.88em;">
+      <i class="ti ti-alert-triangle me-2"></i>
+      {{ __('There are unsaved position changes. Click Save to apply them.', 'signatures') }}
+    </div>
+
+    <div class="card-footer text-end">
+      <button type="submit" name="save" id="btn-save-config" class="btn btn-warning">
+        <i class="ti ti-device-floppy me-1" id="icon-save-config"></i>
+        {{ __('Save', 'signatures') }}
+      </button>
+    </div>
+
+  </div>{# /card exterior #}
+</form>
+
+{# Hidden test-mail form — outside main form (prevents nested form, uses HTML5 form= attr) #}
+<form id="sig-test-mail-form" method="post" action="{{ test_url }}" style="display:none;">
+  <input type="hidden" name="_glpi_csrf_token" value="{{ test_csrf_token }}">
+  <input type="hidden" name="is_test" value="1">
+</form>
+
+{# ── Styles ────────────────────────────────────────────────────────────── #}
+<style>
+.sig-field { touch-action: none; }
+.sig-field:hover { border-color: rgba(255,100,0,0.9) !important; }
+#btn-save-config, #btn-save-config:hover { color: #000 !important; }
+.sig-editor-wrap { cursor: default; }
+.sig-var-badge:hover { background:#b8d8ff !important; outline:1px solid #6ab0ff; }
+.sig-format-toolbar .sig-fmt-btn { padding:1px 7px; font-size:0.82em; line-height:1.4; }
+.form-text {
+  color: var(--bs-secondary-color, var(--bs-body-color));
+  opacity: 0.80;
+}
+.sig-tab-nav .nav-link {
+  color: var(--bs-nav-tabs-link-color, var(--bs-body-color));
+}
+.sig-tab-nav .nav-link.active {
+  color: var(--bs-nav-tabs-link-active-color, var(--bs-body-color));
+  font-weight: 600;
+}
+.sig-pos-table td,
+.sig-pos-table th,
+.sig-pos-table small {
+  color: var(--bs-body-color);
+}
+.sig-editor-hint {
+  color: var(--bs-secondary-color, var(--bs-body-color));
+  opacity: 0.80;
+}
+</style>
+
+{# ── JS config ─────────────────────────────────────────────────────────── #}
+<div id="sig-config-data" data-cfg="{{ cfg_js_json|e('html_attr') }}" hidden></div>

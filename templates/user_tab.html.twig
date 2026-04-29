@@ -1,0 +1,114 @@
+{#
+  User tab — Email Signature
+  vars: user_id, user_name, has_mobile, has_base, has_email,
+        download_url, send_url, csrf_token, plugin_web_dir, cfg_json
+#}
+<div id="sig-user-app">
+
+  <div class="card-header pt-2 position-relative">
+    <div class="ribbon ribbon-bookmark ribbon-top ribbon-start bg-blue s-1">
+      <i class="fs-2x ti ti-mail"></i>
+    </div>
+    <h4 class="card-title ms-5 mb-0">{{ __('Generate email signature', 'signatures') }}</h4>
+  </div>
+
+  <div class="card-body text-center">
+
+    {% if not has_base %}
+    <div class="alert alert-warning text-start">
+      <i class="ti ti-alert-triangle me-2"></i>
+      <strong>{{ __('Templates not found.', 'signatures') }}</strong><br>
+      {{ __('Please verify that the templates exist in the plugin configuration.', 'signatures') }}
+    </div>
+    {% endif %}
+
+    {% if not has_email %}
+    <div class="alert alert-info text-start">
+      <i class="ti ti-mail-off me-2"></i>
+      <strong>{{ __('Email sending is not available.', 'signatures') }}</strong><br>
+      {{ __('Configure the email subject and body in the plugin settings to enable it.', 'signatures') }}
+    </div>
+    {% endif %}
+
+    <p class="text-body-primary mb-3">
+      {{ __('Generating signature for: %s', 'signatures')|format(user_name) }}
+    </p>
+
+    {% if has_mobile %}
+    <div class="mb-3">
+      <label class="form-check d-inline-flex align-items-center gap-2">
+        <input type="checkbox" class="form-check-input" id="qr_check" value="1" checked>
+        {{ __('Include WhatsApp QR code', 'signatures') }}
+        <i class="ti ti-brand-whatsapp ms-1"></i>
+      </label>
+    </div>
+    {% else %}
+    <p class="text-body-primary">
+      <i class="ti ti-info-circle me-1"></i>
+      {{ __('This user has no mobile number; the QR code will not be available.', 'signatures') }}
+    </p>
+    {% endif %}
+
+    <div class="d-flex gap-3 justify-content-center mt-4">
+
+      <form method="get" action="{{ download_url }}" id="form-download">
+        <input type="hidden" name="userid" value="{{ user_id }}">
+        <input type="hidden" name="include_qr" id="qr_download" value="{{ has_mobile ? '1' : '' }}">
+        <button type="submit" class="btn btn-primary"
+                {% if not has_base %}disabled{% endif %}>
+          <i class="ti ti-download me-2"></i>
+          {{ __('Download signature', 'signatures') }}
+        </button>
+      </form>
+
+      <button type="button"
+              class="btn btn-outline-secondary"
+              id="btn-preview-sig"
+              data-userid="{{ user_id }}"
+              data-download-url="{{ download_url }}"
+              data-qrval="{{ has_mobile ? '1' : '' }}"
+              {% if not has_base %}disabled{% endif %}>
+        <i class="ti ti-eye me-2"></i>
+        {{ __('Preview', 'signatures') }}
+      </button>
+
+      <form method="post" action="{{ send_url }}" id="form-send">
+        <input type="hidden" name="_glpi_csrf_token" value="{{ csrf_token }}">
+        <input type="hidden" name="userid" value="{{ user_id }}">
+        <input type="hidden" name="include_qr" id="qr_send" value="{{ has_mobile ? '1' : '' }}">
+        <button type="submit" class="btn btn-primary"
+                {% if not has_base or not has_email %}disabled{% endif %}>
+          <i class="ti ti-send me-2"></i>
+          {{ __('Send by email', 'signatures') }}
+        </button>
+      </form>
+
+    </div>
+  </div>
+
+</div>{# /sig-user-app #}
+
+{# Preview Modal — outside Vue app for Bootstrap Modal compatibility #}
+<div class="modal fade" id="sig-preview-modal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-xl modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header py-2">
+        <h6 class="modal-title">
+          <i class="ti ti-eye me-2"></i>
+          {{ __('Signature preview', 'signatures') }}
+        </h6>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body text-center py-4">
+        <div id="sig-preview-loading" style="display:none;">
+          <span class="spinner-border spinner-border-sm me-2"></span>
+          {{ __('Generating preview...', 'signatures') }}
+        </div>
+        <img id="sig-preview-img" src="" alt="signature preview"
+             style="max-width:100%;display:none;border:1px solid #dee2e6;">
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="sig-user-data" data-cfg="{{ cfg_json|e('html_attr') }}" hidden></div>
