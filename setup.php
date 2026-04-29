@@ -9,6 +9,7 @@ function plugin_init_signatures(): void {
 
    $PLUGIN_HOOKS['csrf_compliant']['signatures'] = true;
    $PLUGIN_HOOKS['config_page']['signatures']    = 'front/config.form.php';
+   $PLUGIN_HOOKS['add_javascript']['signatures'] = ['js/signatures-user.js', 'js/signatures-config.js'];
 
    Plugin::registerClass(
       'PluginSignaturesUser',
@@ -19,10 +20,10 @@ function plugin_init_signatures(): void {
 function plugin_version_signatures(): array {
    return [
       'name'         => 'Email Signatures',
-      'version'      => '1.6.2',
+      'version'      => '1.7.0',
       'author'       => 'Edwin Elias Alvarez',
       'license'      => 'GPLv3+',
-      'homepage'     => 'https://sontechs.com',
+      'homepage'     => 'https://github.com/monta990/signatures',
       'requirements' => [
          'glpi' => ['min' => '11.0']
       ]

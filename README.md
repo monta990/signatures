@@ -48,7 +48,7 @@ Each signature is rendered dynamically over a configurable PNG template using PH
 | **Custom fonts** | Upload TTF or OTF font files from the Fonts tab. The plugin reads each file's internal `name` table to display its real name. Built-in Avenir Black and Avenir Roman are always available. |
 | **Per-role font selection** | Choose **Name font** (used for the signature name) and **Body font** (used for all other fields) independently. Both built-in and uploaded fonts are available for either role. |
 | **Per-field visibility toggle** | Checkbox next to each field in the position editor enables or disables that field independently per template. Hidden fields are skipped during PNG generation — no blank space left. |
-| **Multilanguage** | es_MX · en_US · en_GB · fr_FR |
+| **Multilanguage** | es_MX · fr_FR · Default languague: English |
 
 ---
 
@@ -56,7 +56,7 @@ Each signature is rendered dynamically over a configurable PNG template using PH
 
 | Requirement | Minimum |
 |---|---|
-| GLPI | ≥ 11.0.0 |
+| GLPI | ≥ 11.0. |
 | PHP | ≥ 8.2 |
 | PHP ext: **GD** | Required — image generation |
 | PHP ext: **fileinfo** | Required — MIME validation on template upload |
@@ -105,7 +105,7 @@ Uninstalling removes all `plugin_signatures` keys from `glpi_configs`.
 ## Configuration
 
 Go to **Setup → Plugins → Email Signatures → Configure**.
-The page has four tabs.
+The page has five tabs.
 
 ---
 
@@ -350,21 +350,24 @@ descriptive error message pointing to the configuration page.
 All coordinates and font sizes come from `glpi_configs` (set in the Positions tab),
 with per-key fallback to built-in defaults if not yet configured.
 
-| Field | Source | Default size |
-|---|---|---|
-| Name | `User::getFriendlyName()` | 40 px (auto-fit) |
-| Title | `glpi_usertitles` via `usertitles_id` | 11 px |
-| Email | `glpi_useremails` (`is_default=1`) | 11 px |
-| Mobile | `User::fields['mobile']` | 11 px |
-| Entity phone | `Entity::phonenumber` | 11 px |
-| Extension | `User::fields['phone2']` if set, else `phone` | 11 px |
-| Facebook | `plugin_signatures.facebook_page` config | 11 px |
-| Website | `Entity::website` | 11 px |
-| X (Twitter) | `plugin_signatures.x_page` config | 11 px |
-| LinkedIn | `plugin_signatures.linkedin_page` config | 11 px |
-| Instagram | `plugin_signatures.instagram_page` config | 11 px |
-| Snapchat | `plugin_signatures.snapchat_page` config | 11 px |
-| QR code | TCPDF2DBarcode → imagecopyresampled | 100×100 px |
+Fields marked **b1 only** appear in the With-mobile template; all others appear in both templates. Each field can be independently enabled or disabled per template from the Positions tab.
+
+| Field | Source | Default size | Template |
+|---|---|---|---|
+| Name | `User::getFriendlyName()` | 40 px (auto-fit) | both |
+| Title | `glpi_usertitles` via `usertitles_id` | 11 px | both |
+| Email | `glpi_useremails` (`is_default=1`) | 11 px | both |
+| Mobile | `User::fields['mobile']` | 11 px | b1 only |
+| Entity phone | `Entity::phonenumber` | 11 px | both |
+| Extension | `User::fields['phone2']` if set, else `phone` | 11 px | both |
+| Facebook | `plugin_signatures.facebook_page` config | 11 px | both |
+| Website | `Entity::website` | 11 px | both |
+| X (Twitter) | `plugin_signatures.x_page` config | 11 px | both |
+| LinkedIn | `plugin_signatures.linkedin_page` config | 11 px | both |
+| Instagram | `plugin_signatures.instagram_page` config | 11 px | both |
+| Snapchat | `plugin_signatures.snapchat_page` config | 11 px | both |
+| TikTok | `plugin_signatures.tiktok_page` config | 11 px | both |
+| QR code | TCPDF2DBarcode → imagecopyresampled | 100×100 px | b1 only |
 
 ### Font resolution
 
@@ -417,9 +420,9 @@ Access checks use `Session::haveRight('config', UPDATE)` and
 | Code | Language |
 |---|---|
 | `es_MX` | Spanish (Mexico) |
-| `en_US` | English (United States) |
-| `en_GB` | English (United Kingdom) |
 | `fr_FR` | French (France) |
+
+Default language is English.
 
 To add a new language:
 
@@ -440,28 +443,31 @@ msgfmt locales/de_DE.po -o locales/de_DE.mo
 
 ```
 signatures/
-├── fonts/
-│   ├── AvenirBlack.ttf          Built-in name font (Avenir Black)
-│   └── AvenirRoman.ttf          Built-in body font (Avenir Roman)
 ├── front/
-│   ├── config.form.php          Plugin configuration UI (4-tab page)
+│   ├── config.form.php          Plugin configuration UI (5-tab page)
 │   ├── download.php             Generates and streams the PNG download
 │   ├── resource.send.php        Serves template PNGs to the browser
 │   └── send.php                 Sends signature by email (normal + test mode via is_test=1)
 ├── inc/
 │   ├── config.class.php         glpi_configs read/write wrapper (request-cached)
 │   ├── paths.class.php          Centralizes all file paths and public URLs
+│   ├── renderer.class.php       Standalone Twig renderer (rooted at plugin /templates/)
 │   ├── signature.class.php      Image generation, email assembly, QR composition
 │   └── user.class.php           GLPI tab registration, user-facing UI
 ├── locales/
 │   ├── signatures.pot           Translation template
 │   ├── es_MX.po / es_MX.mo
-│   ├── en_US.po / en_US.mo
-│   ├── en_GB.po / en_GB.mo
 │   └── fr_FR.po / fr_FR.mo
-├── templates/                   Created on first upload — not in the ZIP
-│   ├── base.png                 Active template for users WITH mobile
-│   └── base2.png                Active template for users WITHOUT mobile
+├── public/
+│   └── js/
+│   │   ├── signatures-config.js  Config page: drag-and-drop editor, tab routing, field toggles
+│   │   └── signatures-user.js    User tab: preview modal, download, send-by-email handlers
+│   └── fonts/
+│       ├── AvenirBlack.ttf          Built-in name font (Avenir Black)
+│       └── AvenirRoman.ttf          Built-in body font (Avenir Roman)
+├── templates/
+│   ├── config_form.html.twig    Config page markup (5 tabs: General, With mobile, Without mobile, Positions, Fonts)
+│   └── user_tab.html.twig       User profile tab markup (Vue 3 components + preview modal)
 ├── .gitignore
 ├── CHANGELOG.md
 ├── LICENSE
@@ -471,8 +477,10 @@ signatures/
 └── setup.php                    Registration, install/uninstall/update hooks
 ```
 
-> `templates/` is auto-created on first template upload and is excluded from the
-> distribution ZIP. Uninstalling the plugin does not remove this directory.
+> The `GLPI_PLUGIN_DOC_DIR/signatures/` directory (outside the plugin folder) is
+> auto-created on install and stores uploaded PNG templates (`templates/`) and custom
+> fonts (`fonts/`). It is excluded from the distribution ZIP and is NOT removed on
+> uninstall.
 
 ---
 

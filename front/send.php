@@ -153,7 +153,7 @@ try {
     $mail->AddAttachment($file, $payload['attachName'], 'base64', 'image/png');
     $sent = $mail->Send();
 } catch (\Throwable $e) {
-    Toolbox::logError('signatures plugin - GLPIMailer: ' . $e->getMessage());
+    Toolbox::logInFile('mail', 'signatures plugin ERROR to ' . ($payload['toAddress'] ?? '?') . ': ' . $e->getMessage());
     $sent = false;
 }
 
@@ -172,11 +172,13 @@ if ($sent) {
         ? sprintf(__('Test email sent to %s.', 'signatures'), $payload['toAddress'])
         : sprintf(__('Signature successfully sent to %s.', 'signatures'), $payload['toAddress']);
     Session::addMessageAfterRedirect($successMsg, false, INFO);
+    Toolbox::logInFile('mail', 'signatures plugin: ' . ($isTest ? '[TEST] ' : '') . 'sent to ' . $payload['toAddress'] . ' (user: ' . $user->getFriendlyName() . ') subject: ' . $payload['subject']);
 } else {
     $errorMsg = $isTest
         ? __('Could not send the test email. Check the outgoing mail configuration in GLPI.', 'signatures')
         : __('Could not send the email. Please check the outgoing mail configuration in GLPI.', 'signatures');
     Session::addMessageAfterRedirect($errorMsg, false, ERROR);
+    Toolbox::logInFile('mail', 'signatures plugin FAILED to ' . ($payload['toAddress'] ?? '?') . ' (user: ' . $user->getFriendlyName() . ')');
 }
 
 Html::redirect($backUrl);

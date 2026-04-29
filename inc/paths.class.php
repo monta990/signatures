@@ -24,6 +24,7 @@ class PluginSignaturesPaths {
       throw new RuntimeException('Plugin directory "signatures" not found');
    }
 
+
    /**
     * Directorio físico de plantillas PNG (files/)
     */
@@ -62,14 +63,14 @@ class PluginSignaturesPaths {
     * Avenir Black — built-in name font (always available as fallback).
     */
    public static function builtinFontName(): string {
-      return self::pluginDir() . '/fonts/' . self::BUILTIN_FONT_NAME;
+      return self::pluginDir() . '/public/fonts/' . self::BUILTIN_FONT_NAME;
    }
 
    /**
     * Avenir Roman — built-in body font (always available as fallback).
     */
    public static function builtinFontBody(): string {
-      return self::pluginDir() . '/fonts/' . self::BUILTIN_FONT_BODY;
+      return self::pluginDir() . '/public/fonts/' . self::BUILTIN_FONT_BODY;
    }
 
    /**
@@ -159,19 +160,21 @@ class PluginSignaturesPaths {
    // ── URLs públicas ──────────────────────────────────────────────────────────
 
    public static function base1Url(): string {
-      return Plugin::getWebDir('signatures') . '/front/resource.send.php?resource=base1';
+      global $CFG_GLPI;
+      return ($CFG_GLPI['root_doc'] ?? '') . '/plugins/signatures/front/resource.send.php?resource=base1';
    }
 
    public static function base2Url(): string {
-      return Plugin::getWebDir('signatures') . '/front/resource.send.php?resource=base2';
+      global $CFG_GLPI;
+      return ($CFG_GLPI['root_doc'] ?? '') . '/plugins/signatures/front/resource.send.php?resource=base2';
    }
 
    /**
     * URL pública para servir una fuente de usuario al browser (para @font-face).
     */
    public static function userFontUrl(string $filename): string {
-      return Plugin::getWebDir('signatures')
-         . '/front/resource.send.php?resource=font&name='
+      global $CFG_GLPI;
+      return ($CFG_GLPI['root_doc'] ?? '') . '/plugins/signatures/front/resource.send.php?resource=font&name='
          . rawurlencode($filename);
    }
 }

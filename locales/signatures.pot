@@ -29,6 +29,9 @@ msgstr ""
 msgid "Font file too large (Max. 2 MB)"
 msgstr ""
 
+msgid "No font file selected."
+msgstr ""
+
 msgid "Invalid font file. Only TTF and OTF files are accepted."
 msgstr ""
 

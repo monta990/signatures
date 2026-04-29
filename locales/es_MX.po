@@ -31,6 +31,9 @@ msgstr "Formato inválido, solo se permiten archivos PNG"
 msgid "Font file too large (Max. 2 MB)"
 msgstr "Archivo de fuente demasiado grande (Máx. 2 MB)"
 
+msgid "No font file selected."
+msgstr "No se seleccionó ningún archivo de fuente."
+
 msgid "Invalid font file. Only TTF and OTF files are accepted."
 msgstr "Archivo de fuente inválido. Solo se aceptan archivos TTF y OTF."
 

@@ -6,6 +6,24 @@ Versioning follows [Semantic Versioning](https://semver.org/).
 
 ---
 
+## [1.7.0] — 2026-04-26
+
+### Added
+
+- **GLPI mail log integration** — successful deliveries now write tagged entries to `files/_log/mail.log`, through `Toolbox::logInFile()`.
+
+### Changed
+- **Twig templates.** HTML output migrated from inline PHP `echo` strings to Twig templates. All business logic, POST handlers, and redirects remain in PHP — only the HTML layer moved to Twig.
+- **`inc/renderer.class.php`** (`PluginPhonebgRenderer`): helper class that resolves template paths relative to `GLPI_ROOT` (handles both `plugins/` and `marketplace/` installation locations) and wraps `TemplateRenderer::getInstance()`.
+- **GLPI 11.0+ compatibility.** Plugin now works with GLPI 11.x, and is ready for 12+. `TemplateRenderer` (used internally by this plugin since this version).
+- Minimum GLPI version is from `11.0``.
+- Minimum PHP version is from `8.2` (actual minimum imposed by `mixed` return type and `GdImage` type hint).
+
+### Upgrade notes
+- **Safe to upgrade from any previous version.** No database changes. No data migration needed. All existing configuration, uploaded templates, and uploaded fonts are preserved.
+
+---
+
 ## [1.6.2] — 2026-04-18
 
 ### Added

@@ -1,0 +1,16 @@
+# OS
+.DS_Store
+Thumbs.db
+
+# Editors
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Build/temp
+*.zip
+/tmp/
+
+# GLPI plugin doc dir (templates uploaded by users — not part of the repo)
+templates/
