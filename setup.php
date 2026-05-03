@@ -20,7 +20,7 @@ function plugin_init_signatures(): void {
 function plugin_version_signatures(): array {
    return [
       'name'         => 'Email Signatures',
-      'version'      => '1.7.0',
+      'version'      => '1.7.1',
       'author'       => 'Edwin Elias Alvarez',
       'license'      => 'GPLv3+',
       'homepage'     => 'https://github.com/monta990/signatures',

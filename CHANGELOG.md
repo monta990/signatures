@@ -6,6 +6,11 @@ Versioning follows [Semantic Versioning](https://semver.org/).
 
 ---
 
+## [1.7.1] — 2026-05-02
+
+### Changed
+- Changed imagedestroy() to unset() for future PHP 8.6+ proof.
+
 ## [1.7.0] — 2026-04-26
 
 ### Added

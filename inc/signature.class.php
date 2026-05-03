@@ -291,7 +291,7 @@ class PluginSignaturesSignature {
             $qr_h  = imagesy($qr);
             // Escalar siempre a 100×100 para coincidencia exacta con el placeholder del editor
             imagecopyresampled($img, $qr, $p('qr_x', 560), $p('qr_y', 130), 0, 0, 100, 100, $qr_w, $qr_h);
-            imagedestroy($qr);
+            unset($qr);
             unlink($qr_tmp);
          }
       }
@@ -301,7 +301,7 @@ class PluginSignaturesSignature {
        * ============================ */
       $out = GLPI_TMP_DIR . '/signature_' . $user->getID() . '_' . uniqid('', true) . '.png';
       imagepng($img, $out);
-      imagedestroy($img);
+      unset($img);
 
       return $out;
    }
