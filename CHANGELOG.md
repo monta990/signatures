@@ -6,6 +6,13 @@ Versioning follows [Semantic Versioning](https://semver.org/).
 
 ---
 
+## [1.7.2] — 2026-05-08
+
+### Changed
+- Replace deprecated `finfo_open()` / `finfo_close()` with OOP `new finfo()` for better GLPI 11/12 and PHP compatibility.
+
+---
+
 ## [1.7.1] — 2026-05-02
 
 ### Changed

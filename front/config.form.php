@@ -123,9 +123,9 @@ if (isset($_POST['save'])) {
       }
       $tmp  = $_FILES[$field]['tmp_name'];
       $size = $_FILES[$field]['size'];
-      $finfo = finfo_open(FILEINFO_MIME_TYPE);
-      $mime  = finfo_file($finfo, $tmp);
-      finfo_close($finfo);
+      $finfo = new finfo(FILEINFO_MIME_TYPE);
+      $mime  = $finfo->file($tmp);
+      unset($finfo);
 
       if ($size > $maxSize) {
          Session::addMessageAfterRedirect(__('File too large (Max. 300 KB)', 'signatures'), false, ERROR);
