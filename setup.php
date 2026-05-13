@@ -20,7 +20,7 @@ function plugin_init_signatures(): void {
 function plugin_version_signatures(): array {
    return [
       'name'         => 'Email Signatures',
-      'version'      => '1.7.2',
+      'version'      => '1.7.3',
       'author'       => 'Edwin Elias Alvarez',
       'license'      => 'GPLv3+',
       'homepage'     => 'https://github.com/monta990/signatures',
@@ -64,7 +64,7 @@ function plugin_signatures_getDefaults(): array {
       'sig_b1_instagram_x'       => 320, 'sig_b1_instagram_y'  => 205, 'sig_b1_instagram_size'  => 11,
       'sig_b1_snapchat_x'        => 450, 'sig_b1_snapchat_y'   => 205, 'sig_b1_snapchat_size'   => 11,
       'sig_b1_tiktok_x'          => 63,  'sig_b1_tiktok_y'     => 227, 'sig_b1_tiktok_size'     => 11,
-      'sig_b1_qr_x'              => 560, 'sig_b1_qr_y'         => 130,
+      'sig_b1_qr_x'              => 560, 'sig_b1_qr_y'         => 130, 'sig_b1_qr_size'  => 3,
       // ── Posiciones plantilla SIN celular (base2) ──────────────────────
       'sig_b2_nombre_x'          => 20,  'sig_b2_nombre_y'     => 75,  'sig_b2_nombre_size'     => 40,
       'sig_b2_titulo_x'          => 20,  'sig_b2_titulo_y'     => 104, 'sig_b2_titulo_size'     => 11,

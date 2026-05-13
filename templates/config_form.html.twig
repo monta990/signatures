@@ -76,7 +76,7 @@
              data-gd-x="{{ field.x }}"
              data-gd-y="{{ field.y }}"
              style="position:absolute;left:{{ field.css_left }}px;top:{{ field.css_top }}px;
-                    width:100px;height:100px;border:2px dashed rgba(255,140,0,0.8);
+                    width:{{ field.qr_px }}px;height:{{ field.qr_px }}px;border:2px dashed rgba(255,140,0,0.8);
                     background:rgba(255,140,0,0.15);cursor:grab;display:flex;
                     align-items:center;justify-content:center;font-size:13px;
                     color:rgba(255,140,0,0.9);opacity:{{ field.enabled ? '1' : '0.25' }};
@@ -132,7 +132,7 @@
             <td><small>{{ field.label }}</small></td>
             <td>
               {% if field.is_qr %}
-              <small class="text-muted">—</small>
+              <small class="text-muted">{{ field.qr_module }}px/mod</small>
               {% else %}
               <input type="number" min="6" max="80"
                      class="form-control form-control-sm sig-size-input"
@@ -301,6 +301,19 @@
                      oninput='this.value=this.value.replace(/[^0-9]/g,"")'>
               <div class="form-text">
                 {{ __('Numeric country code only, no + or spaces. Ex: 1 (USA), used to generate the WhatsApp link in the QR code.', 'signatures') }}
+              </div>
+            </div>
+
+            <div class="mb-4">
+              <label class="form-label fw-bold">
+                <i class="ti ti-qrcode me-2"></i>{{ __('QR module size', 'signatures') }}
+              </label>
+              <input type="number" name="sig_b1_qr_size" class="form-control"
+                     style="max-width:120px;"
+                     value="{{ qr_module }}"
+                     min="1" max="10" step="1" inputmode="numeric">
+              <div class="form-text">
+                {{ __('Pixels per QR module (1–10). Larger values produce a bigger QR code in the signature.', 'signatures') }}
               </div>
             </div>
 

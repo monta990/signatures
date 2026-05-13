@@ -85,6 +85,12 @@ msgid ""
 " WhatsApp link in the QR code."
 msgstr ""
 
+msgid "QR module size"
+msgstr ""
+
+msgid "Pixels per QR module (1–10). Larger values produce a bigger QR code in the signature."
+msgstr ""
+
 msgid "Email Options"
 msgstr ""
 

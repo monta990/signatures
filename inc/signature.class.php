@@ -279,18 +279,19 @@ class PluginSignaturesSignature {
          $mobile_clean = preg_replace('/\D+/', '', $mobile);
          $wa_url       = 'https://wa.me/' . trim($configsig['whatsapp_country_code'] ?? '') . $mobile_clean;
 
+         $qr_module = max(1, min(10, (int)(($configsig['sig_b1_qr_size'] ?? '') !== '' ? $configsig['sig_b1_qr_size'] : 3)));
+
          $barcode = new TCPDF2DBarcode($wa_url, 'QRCODE,M');
-         $qr_png  = $barcode->getBarcodePngData(3, 3, [0, 0, 0]);
+         $qr_png  = $barcode->getBarcodePngData($qr_module, $qr_module, [0, 0, 0]);
 
          $qr_tmp = GLPI_TMP_DIR . '/signature_qr_' . $user->getID() . '.png';
          file_put_contents($qr_tmp, $qr_png);
 
          if (is_readable($qr_tmp)) {
-            $qr    = imagecreatefrompng($qr_tmp);
-            $qr_w  = imagesx($qr);
-            $qr_h  = imagesy($qr);
-            // Escalar siempre a 100×100 para coincidencia exacta con el placeholder del editor
-            imagecopyresampled($img, $qr, $p('qr_x', 560), $p('qr_y', 130), 0, 0, 100, 100, $qr_w, $qr_h);
+            $qr   = imagecreatefrompng($qr_tmp);
+            $qr_w = imagesx($qr);
+            $qr_h = imagesy($qr);
+            imagecopy($img, $qr, $p('qr_x', 560), $p('qr_y', 130), 0, 0, $qr_w, $qr_h);
             unset($qr);
             unlink($qr_tmp);
          }

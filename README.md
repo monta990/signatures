@@ -31,7 +31,7 @@ Each signature is rendered dynamically over a configurable PNG template using PH
 | **Two PNG templates** | One for users with a mobile number, one without. Template selection is automatic based on the user's `mobile` field. |
 | **Dynamic text overlay** | Name, title, email, phone, extension, Facebook, X (Twitter), LinkedIn, Instagram, Snapchat, TikTok, corporate website — rendered with PHP GD using Avenir Black/Roman TTF fonts. |
 | **Name auto-fit** | Font size is adjusted up and down (within the configured range) so short names use the full allocated width and long names never overflow. |
-| **WhatsApp QR code** | Generated with TCPDF (bundled with GLPI) and composited with `imagecopyresampled()` using the QR's actual pixel dimensions to avoid cropping. |
+| **WhatsApp QR code** | Generated with TCPDF (bundled with GLPI). Module size configurable (1–10 px/module) from the General settings tab; rendered at native resolution with no resampling for a crisp result. |
 | **Download** | PNG generated on the fly and streamed as a browser download — no permanent file stored. |
 | **Email delivery** | Sends the PNG as an attachment using GLPI's outgoing mail system (`GLPIMailer`). |
 | **Admin test email** | Sends a sample to the administrator's own address with `[PRUEBA]` prefix and warning banner. |
