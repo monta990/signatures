@@ -85,6 +85,7 @@ msgid ""
 " WhatsApp link in the QR code."
 msgstr ""
 
+
 msgid "Email Options"
 msgstr ""
 

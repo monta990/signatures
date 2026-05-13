@@ -51,7 +51,8 @@
                : Math.max(0, (gdY - size * ASCENT) * scale)) + 'px';
 
             if (isQr) {
-               const px   = Math.round(100 * scale);
+               const qrPx = parseInt(el.dataset.qrPx || '87');
+               const px   = Math.round(qrPx * scale);
                el.style.width  = px + 'px';
                el.style.height = px + 'px';
                const icon = el.querySelector('i');
@@ -271,7 +272,8 @@
             el.style.top  = cssT + 'px';
 
             if (isQr) {
-               const px = Math.round(100 * scale);
+               const qrPx = parseInt(el.dataset.qrPx || '87');
+               const px   = Math.round(qrPx * scale);
                el.style.width  = px + 'px';
                el.style.height = px + 'px';
                const icon = el.querySelector('i');
@@ -295,6 +297,24 @@
          if (!cb) return;
          const el = document.getElementById('field-' + cb.dataset.base + '-' + cb.dataset.field);
          if (el) el.style.opacity = cb.checked ? '1' : '0.25';
+         markDirty();
+      });
+
+      // ── QR module size select → live resize of QR placeholder ─────────────
+      document.addEventListener('change', e => {
+         if (e.target.name !== 'sig_b1_qr_size') return;
+         const mod  = parseInt(e.target.value) || 3;
+         const qrPx = mod * 29;
+         const el   = document.getElementById('field-b1-qr');
+         if (!el) return;
+         el.dataset.qrPx = qrPx;
+         const wrap  = el.closest('.sig-editor-wrap');
+         const scale = parseFloat(wrap?.dataset.scale || '1') || 1;
+         const px    = Math.round(qrPx * scale);
+         el.style.width  = px + 'px';
+         el.style.height = px + 'px';
+         const icon = el.querySelector('i');
+         if (icon) icon.style.fontSize = Math.round(px * 0.45) + 'px';
          markDirty();
       });
 

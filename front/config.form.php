@@ -350,7 +350,8 @@ $ASCENT_FACTOR = 0.72;
 $formatFields  = static function (array $fields, string $base, array $cfg) use ($ASCENT_FACTOR): array {
    return array_map(static function (array $f) use ($base, $cfg, $ASCENT_FACTOR): array {
       [$id, $label, $x, $y, $size, $font, $color, $sample] = $f;
-      $isQr = ($id === 'qr');
+      $isQr    = ($id === 'qr');
+      $qrMod   = $isQr ? max(1, min(10, (int)(($cfg['sig_b1_qr_size'] ?? '') !== '' ? $cfg['sig_b1_qr_size'] : 3))) : 0;
       return [
          'id'        => $id,
          'label'     => $label,
@@ -362,6 +363,8 @@ $formatFields  = static function (array $fields, string $base, array $cfg) use (
          'sample'    => $sample,
          'enabled'   => ($cfg["sig_{$base}_{$id}_enabled"] ?? '1') !== '0',
          'is_qr'     => $isQr,
+         'qr_module' => $qrMod,
+         'qr_px'     => $isQr ? $qrMod * 29 : 0,
          'css_left'  => $x,
          'css_top'   => $isQr ? $y : max(0, (int)round($y - $size * $ASCENT_FACTOR)),
       ];
@@ -394,7 +397,7 @@ $defaults = [
       'instagram' => ['x' => 320, 'y' => 205, 'size' => 11],
       'snapchat'  => ['x' => 450, 'y' => 205, 'size' => 11],
       'tiktok'    => ['x' => 63,  'y' => 227, 'size' => 11],
-      'qr'        => ['x' => 560, 'y' => 130],
+      'qr'        => ['x' => 560, 'y' => 130, 'size' => 3],
    ],
    'b2' => [
       'nombre'    => ['x' => 20,  'y' => 75,  'size' => 40],

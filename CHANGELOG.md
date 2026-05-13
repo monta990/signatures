@@ -6,6 +6,13 @@ Versioning follows [Semantic Versioning](https://semver.org/).
 
 ---
 
+## [1.7.3] — 2026-05-13
+
+### Added
+- **Configurable QR module size** — new `QR module size` field (1–10 px/module, default 3) in General settings. Controls the physical size of the WhatsApp QR code in the generated signature. The QR is rendered at native resolution (no resampling), so each value produces a crisp, pixel-perfect result. The position editor placeholder updates to match on save.
+
+---
+
 ## [1.7.2] — 2026-05-08
 
 ### Changed
