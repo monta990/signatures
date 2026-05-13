@@ -463,7 +463,6 @@ PluginSignaturesRenderer::display(
       // Position editor
       'fields_b1'        => $formatFields($_fieldsB1, 'b1', $_c),
       'fields_b2'        => $formatFields($_fieldsB2, 'b2', $_c),
-      'qr_module'        => max(1, min(10, (int)(($_c['sig_b1_qr_size'] ?? '') !== '' ? $_c['sig_b1_qr_size'] : 3))),
 
       // Fonts tab
       'user_fonts_map'      => $userFontsMap,
