@@ -143,6 +143,7 @@
               {% else %}
               <input type="number" min="6" max="80"
                      class="form-control form-control-sm sig-size-input"
+                     id="size-{{ base }}-{{ field.id }}"
                      data-base="{{ base }}" data-field="{{ field.id }}"
                      value="{{ field.size }}" style="width:70px;">
               {% endif %}
@@ -238,70 +239,70 @@
           <div class="card-body">
 
             <div class="mb-4">
-              <label class="form-label fw-bold">
+              <label class="form-label fw-bold" for="sig-facebook-page">
                 <i class="ti ti-brand-facebook me-2"></i>{{ __('Facebook page name', 'signatures') }}
               </label>
-              <input type="text" name="facebook_page" class="form-control"
+              <input type="text" name="facebook_page" id="sig-facebook-page" class="form-control"
                      value="{{ facebook_page }}"
                      placeholder="{{ __('Ex: AcmeCorp', 'signatures') }}">
               <div class="form-text">{{ __('Name only, no URL or @', 'signatures') }}</div>
             </div>
 
             <div class="mb-4">
-              <label class="form-label fw-bold">
+              <label class="form-label fw-bold" for="sig-x-page">
                 <i class="ti ti-brand-x me-2"></i>{{ __('X (Twitter) handle', 'signatures') }}
               </label>
-              <input type="text" name="x_page" class="form-control"
+              <input type="text" name="x_page" id="sig-x-page" class="form-control"
                      value="{{ x_page }}"
                      placeholder="{{ __('Ex: @AcmeCorp', 'signatures') }}">
               <div class="form-text">{{ __('Handle with or without @', 'signatures') }}</div>
             </div>
 
             <div class="mb-4">
-              <label class="form-label fw-bold">
+              <label class="form-label fw-bold" for="sig-linkedin-page">
                 <i class="ti ti-brand-linkedin me-2"></i>{{ __('LinkedIn page', 'signatures') }}
               </label>
-              <input type="text" name="linkedin_page" class="form-control"
+              <input type="text" name="linkedin_page" id="sig-linkedin-page" class="form-control"
                      value="{{ linkedin_page }}"
                      placeholder="{{ __('Ex: company/acmecorp', 'signatures') }}">
               <div class="form-text">{{ __('LinkedIn slug or URL path', 'signatures') }}</div>
             </div>
 
             <div class="mb-4">
-              <label class="form-label fw-bold">
+              <label class="form-label fw-bold" for="sig-instagram-page">
                 <i class="ti ti-brand-instagram me-2"></i>{{ __('Instagram handle', 'signatures') }}
               </label>
-              <input type="text" name="instagram_page" class="form-control"
+              <input type="text" name="instagram_page" id="sig-instagram-page" class="form-control"
                      value="{{ instagram_page }}"
                      placeholder="{{ __('Ex: @acmecorp', 'signatures') }}">
               <div class="form-text">{{ __('Handle with or without @', 'signatures') }}</div>
             </div>
 
             <div class="mb-4">
-              <label class="form-label fw-bold">
+              <label class="form-label fw-bold" for="sig-snapchat-page">
                 <i class="ti ti-brand-snapchat me-2"></i>{{ __('Snapchat username', 'signatures') }}
               </label>
-              <input type="text" name="snapchat_page" class="form-control"
+              <input type="text" name="snapchat_page" id="sig-snapchat-page" class="form-control"
                      value="{{ snapchat_page }}"
                      placeholder="{{ __('Ex: acmecorp', 'signatures') }}">
               <div class="form-text">{{ __('Username only, no URL', 'signatures') }}</div>
             </div>
 
             <div class="mb-4">
-              <label class="form-label fw-bold">
+              <label class="form-label fw-bold" for="sig-tiktok-page">
                 <i class="ti ti-brand-tiktok me-2"></i>{{ __('TikTok handle', 'signatures') }}
               </label>
-              <input type="text" name="tiktok_page" class="form-control"
+              <input type="text" name="tiktok_page" id="sig-tiktok-page" class="form-control"
                      value="{{ tiktok_page }}"
                      placeholder="{{ __('Ex: @acmecorp', 'signatures') }}">
               <div class="form-text">{{ __('Handle with or without @', 'signatures') }}</div>
             </div>
 
             <div class="mb-4">
-              <label class="form-label fw-bold">
+              <label class="form-label fw-bold" for="sig-country-code">
                 <i class="ti ti-brand-whatsapp me-2"></i>{{ __('Country code for WhatsApp QR', 'signatures') }}
               </label>
-              <input type="text" name="whatsapp_country_code" class="form-control"
+              <input type="text" name="whatsapp_country_code" id="sig-country-code" class="form-control"
                      value="{{ country_code }}"
                      placeholder="{{ __('Ex: 1', 'signatures') }}"
                      maxlength="5" inputmode="numeric" pattern="[0-9]*"
@@ -378,7 +379,7 @@
 
             {# Email subject #}
             <div class="mb-4">
-              <label class="form-label fw-bold">
+              <label class="form-label fw-bold" for="sig-email-subject">
                 <i class="ti ti-text-size me-2"></i>{{ __('Email subject', 'signatures') }}
               </label>
               <input type="text" name="email_subject" id="sig-email-subject"
@@ -390,7 +391,7 @@
 
             {# Email body #}
             <div class="mb-4">
-              <label class="form-label fw-bold">
+              <label class="form-label fw-bold" for="sig-email-body">
                 <i class="ti ti-align-left me-2"></i>{{ __('Email body', 'signatures') }}
               </label>
               {{ m.format_toolbar() }}
@@ -401,7 +402,7 @@
 
             {# Email footer #}
             <div class="mb-4">
-              <label class="form-label fw-bold">
+              <label class="form-label fw-bold" for="sig-email-footer">
                 <i class="ti ti-section me-2"></i>{{ __('Email footer', 'signatures') }}
               </label>
               {{ m.format_toolbar() }}
@@ -440,7 +441,7 @@
 
             {% if hasbase1 %}
             <div class="mb-4">
-              <label class="fw-bold">{{ __('Current', 'signatures') }}</label><br>
+              <span class="fw-bold">{{ __('Current', 'signatures') }}</span><br>
               <a href="{{ base1_url }}" download="plantilla_con_celular.png">
                 <img src="{{ base1_url }}" style="max-width:100%;border:1px solid #ccc">
               </a><br><br>
@@ -454,8 +455,8 @@
             </div>
             {% endif %}
 
-            <label class="fw-bold">{{ __('Upload new', 'signatures') }}</label>
-            <input type="file" name="base1" class="form-control" accept="image/png"
+            <label class="fw-bold" for="sig-base1-file">{{ __('Upload new', 'signatures') }}</label>
+            <input type="file" name="base1" id="sig-base1-file" class="form-control" accept="image/png"
                    onchange='preview(this,"new-base1-preview","wrap1")'>
             <div class="form-text">
               {{ __('PNG only · Max. 300 KB · Recommended dimensions: 650×250 px', 'signatures') }}
@@ -478,7 +479,7 @@
 
             {% if hasbase2 %}
             <div class="mb-4">
-              <label class="fw-bold">{{ __('Current', 'signatures') }}</label><br>
+              <span class="fw-bold">{{ __('Current', 'signatures') }}</span><br>
               <a href="{{ base2_url }}" download="plantilla_sin_celular.png">
                 <img src="{{ base2_url }}" style="max-width:100%;border:1px solid #ccc">
               </a><br><br>
@@ -492,8 +493,8 @@
             </div>
             {% endif %}
 
-            <label class="fw-bold">{{ __('Upload new', 'signatures') }}</label>
-            <input type="file" name="base2" class="form-control" accept="image/png"
+            <label class="fw-bold" for="sig-base2-file">{{ __('Upload new', 'signatures') }}</label>
+            <input type="file" name="base2" id="sig-base2-file" class="form-control" accept="image/png"
                    onchange='preview(this,"new-base2-preview","wrap2")'>
             <div class="form-text">
               {{ __('PNG only · Max. 300 KB · Recommended dimensions: 650×250 px', 'signatures') }}
@@ -554,9 +555,9 @@
                 <div class="row g-3">
 
                   <div class="col-md-6">
-                    <label class="form-label fw-bold">{{ __('Name font', 'signatures') }}</label>
+                    <label class="form-label fw-bold" for="sig-font-name">{{ __('Name font', 'signatures') }}</label>
                     <p class="form-text mb-1">{{ __('Font used to render the signature name.', 'signatures') }}</p>
-                    <select name="font_name" class="form-select">
+                    <select name="font_name" id="sig-font-name" class="form-select">
                       <option value="{{ builtin_name }}"
                               {{ (current_name == '' or current_name == builtin_name) ? 'selected' : '' }}>
                         {{ __('Avenir Black (built-in)', 'signatures') }}
@@ -577,9 +578,9 @@
                   </div>
 
                   <div class="col-md-6">
-                    <label class="form-label fw-bold">{{ __('Body font', 'signatures') }}</label>
+                    <label class="form-label fw-bold" for="sig-font-body">{{ __('Body font', 'signatures') }}</label>
                     <p class="form-text mb-1">{{ __('Font used for all other fields in the signature.', 'signatures') }}</p>
-                    <select name="font_body" class="form-select">
+                    <select name="font_body" id="sig-font-body" class="form-select">
                       <option value="{{ builtin_body }}"
                               {{ (current_body == '' or current_body == builtin_body) ? 'selected' : '' }}>
                         {{ __('Avenir Roman (built-in)', 'signatures') }}
