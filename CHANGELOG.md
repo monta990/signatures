@@ -6,6 +6,13 @@ Versioning follows [Semantic Versioning](https://semver.org/).
 
 ---
 
+## [1.7.4] — 2026-05-22
+
+### Fixed
+- All form fields in the config form now have `id` attributes; all `<label>` elements have matching `for` attributes. Resolves 25 "no id or name" and 16 "label not associated" accessibility warnings with no functional changes.
+
+---
+
 ## [1.7.3] — 2026-05-13
 
 ### Added
