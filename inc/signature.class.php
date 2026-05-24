@@ -288,12 +288,14 @@ class PluginSignaturesSignature {
          file_put_contents($qr_tmp, $qr_png);
 
          if (is_readable($qr_tmp)) {
-            $qr   = imagecreatefrompng($qr_tmp);
-            $qr_w = imagesx($qr);
-            $qr_h = imagesy($qr);
-            imagecopy($img, $qr, $p('qr_x', 560), $p('qr_y', 130), 0, 0, $qr_w, $qr_h);
-            unset($qr);
+            $qr = imagecreatefrompng($qr_tmp);
             unlink($qr_tmp);
+            if ($qr !== false) {
+               $qr_w = imagesx($qr);
+               $qr_h = imagesy($qr);
+               imagecopy($img, $qr, $p('qr_x', 560), $p('qr_y', 130), 0, 0, $qr_w, $qr_h);
+               unset($qr);
+            }
          }
       }
 
@@ -301,7 +303,12 @@ class PluginSignaturesSignature {
        * SALIDA FINAL
        * ============================ */
       $out = GLPI_TMP_DIR . '/signature_' . $user->getID() . '_' . uniqid('', true) . '.png';
-      imagepng($img, $out);
+      if (!imagepng($img, $out)) {
+         unset($img);
+         throw new RuntimeException(
+            sprintf(__('Could not write signature file: %s', 'signatures'), $out)
+         );
+      }
       unset($img);
 
       return $out;

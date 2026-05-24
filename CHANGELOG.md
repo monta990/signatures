@@ -6,10 +6,21 @@ Versioning follows [Semantic Versioning](https://semver.org/).
 
 ---
 
+## [1.7.5] — 2026-05-23
+
+### Fixed
+- QR temp file is now always deleted even when `imagecreatefrompng()` returns `false`, preventing temp file leaks.
+- `imagecreatefrompng()` return value is now checked before use; avoids `TypeError` on corrupted QR data.
+- `imagepng()` failure now throws a `RuntimeException` instead of silently returning a missing file path.
+- Built-in font path in `resolveUserFont()` corrected from `/fonts/` to `/public/fonts/`.
+- Open redirect in test-email flow: back URL no longer uses `HTTP_REFERER`; now always redirects to the config page.
+
+---
+
 ## [1.7.4] — 2026-05-22
 
 ### Fixed
-- All form fields in the config form now have `id` attributes; all `<label>` elements have matching `for` attributes. Resolves 25 "no id or name" and 16 "label not associated" accessibility warnings with no functional changes.
+- All form fields in the config form now have `id` attributes; all `<label>` elements have matching `for` attributes. Resolves 25 "no id or name" and 16 "label not associated" browser accessibility warnings with no functional changes.
 
 ---
 

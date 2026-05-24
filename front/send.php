@@ -40,11 +40,11 @@ if ($isTest) {
             false,
             ERROR
         );
-        Html::redirect($_SERVER['HTTP_REFERER'] ?? $CFG_GLPI['root_doc']);
+        Html::redirect(($CFG_GLPI['root_doc'] ?? '') . '/plugins/signatures/front/config.form.php');
     }
 
     // URL de retorno: config page (venimos de ahí)
-    $backUrl = $_SERVER['HTTP_REFERER'] ?? $CFG_GLPI['root_doc'];
+    $backUrl = ($CFG_GLPI['root_doc'] ?? '') . '/plugins/signatures/front/config.form.php';
 
     // Para la prueba: el correo va al admin actual, el QR
     // se decide según si el admin tiene celular — consistente

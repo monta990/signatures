@@ -106,7 +106,7 @@ class PluginSignaturesPaths {
          }
 
          // Check built-in fonts directory (allows explicitly selecting Avenir Black/Roman)
-         $builtinPath = self::pluginDir() . '/fonts/' . $filename;
+         $builtinPath = self::pluginDir() . '/public/fonts/' . $filename;
          if (is_readable($builtinPath)) {
             return $builtinPath;
          }
