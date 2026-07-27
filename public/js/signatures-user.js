@@ -26,9 +26,11 @@
          if (!chk) return;
          const val = chk.checked ? '1' : '';
          const dl  = document.getElementById('qr_download');
+         const mdl = document.getElementById('qr_preview_download');
          const sn  = document.getElementById('qr_send');
          const btn = document.getElementById('btn-preview-sig');
          if (dl)  dl.value          = val;
+         if (mdl) mdl.value         = val;
          if (sn)  sn.value          = val;
          if (btn) btn.dataset.qrval = val;
       });

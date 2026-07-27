@@ -521,3 +521,33 @@ msgstr ""
 
 msgid "Username only, no URL"
 msgstr ""
+
+msgid "Plugin version"
+msgstr ""
+
+msgid "Installed version"
+msgstr ""
+
+msgid "Latest version on GitHub"
+msgstr ""
+
+msgid "You are using the latest available version."
+msgstr ""
+
+msgid "The latest release is checked automatically and cached for 6 hours."
+msgstr ""
+
+msgid "Not available"
+msgstr ""
+
+msgid "A new version is available on GitHub: %s"
+msgstr ""
+
+msgid "Could not check the latest version on GitHub."
+msgstr ""
+
+msgid "Open releases page"
+msgstr ""
+
+msgid "Close"
+msgstr ""

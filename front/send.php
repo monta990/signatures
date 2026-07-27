@@ -40,11 +40,11 @@ if ($isTest) {
             false,
             ERROR
         );
-        Html::redirect(($CFG_GLPI['root_doc'] ?? '') . '/plugins/signatures/front/config.form.php');
+        Html::redirect(PluginSignaturesPaths::configUrl());
     }
 
     // URL de retorno: config page (venimos de ahí)
-    $backUrl = ($CFG_GLPI['root_doc'] ?? '') . '/plugins/signatures/front/config.form.php';
+    $backUrl = PluginSignaturesPaths::configUrl();
 
     // Para la prueba: el correo va al admin actual, el QR
     // se decide según si el admin tiene celular — consistente
@@ -112,7 +112,7 @@ try {
 try {
     $file = PluginSignaturesSignature::generatePNG($user, $include_qr);
 } catch (\Throwable $e) {
-    Toolbox::logError('signatures plugin - generatePNG: ' . $e->getMessage());
+    Toolbox::logInFile('php-errors', 'signatures plugin - generatePNG: ' . $e->getMessage(), true, false);
     Session::addMessageAfterRedirect(
         __('Could not generate the signature. Check the GLPI log for details.', 'signatures'),
         false,
@@ -146,12 +146,17 @@ try {
     }
     // ─────────────────────────────────────────────────────────────────────────
 
-    $mail->AddAddress($payload['toAddress'], $user->getFriendlyName());
-    $mail->Subject = $payload['subject'];
-    $mail->isHTML(true);
-    $mail->Body    = $payload['bodyHtml'];
-    $mail->AddAttachment($file, $payload['attachName'], 'base64', 'image/png');
-    $sent = $mail->Send();
+    // Use GLPI 11's native Symfony Mime API instead of the deprecated
+    // PHPMailer compatibility methods/properties exposed by GLPIMailer.
+    $email = $mail->getEmail();
+    $email->to(new \Symfony\Component\Mime\Address(
+        $payload['toAddress'],
+        $user->getFriendlyName()
+    ));
+    $email->subject($payload['subject']);
+    $email->html($payload['bodyHtml']);
+    $email->attachFromPath($file, $payload['attachName'], 'image/png');
+    $sent = $mail->send();
 } catch (\Throwable $e) {
     Toolbox::logInFile('mail', 'signatures plugin ERROR to ' . ($payload['toAddress'] ?? '?') . ': ' . $e->getMessage());
     $sent = false;
@@ -172,7 +177,8 @@ if ($sent) {
         ? sprintf(__('Test email sent to %s.', 'signatures'), $payload['toAddress'])
         : sprintf(__('Signature successfully sent to %s.', 'signatures'), $payload['toAddress']);
     Session::addMessageAfterRedirect($successMsg, false, INFO);
-    Toolbox::logInFile('mail', 'signatures plugin: ' . ($isTest ? '[TEST] ' : '') . 'sent to ' . $payload['toAddress'] . ' (user: ' . $user->getFriendlyName() . ') subject: ' . $payload['subject']);
+    Toolbox::logInFile('mail', sprintf("signatures plugin: signature email event (user ID: %d)
+", $userid));
 } else {
     $errorMsg = $isTest
         ? __('Could not send the test email. Check the outgoing mail configuration in GLPI.', 'signatures')

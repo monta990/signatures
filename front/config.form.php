@@ -9,7 +9,7 @@ Session::checkRight('config', UPDATE);
 
 global $CFG_GLPI;
 
-$self = ($CFG_GLPI['root_doc'] ?? '') . '/plugins/signatures/front/config.form.php';
+$self = PluginSignaturesPaths::configUrl();
 
 $_sigRedirect = static function (string $url): never {
    while (ob_get_level() > 0) {
@@ -135,7 +135,15 @@ if (isset($_POST['save'])) {
          Session::addMessageAfterRedirect(__('Invalid format, only PNG files are allowed', 'signatures'), false, ERROR);
          $_sigRedirect($self . '?error=1');
       }
-      move_uploaded_file($tmp, $dest);
+      $image = @imagecreatefrompng($tmp);
+      if ($image === false || !@imagepng($image, $dest)) {
+         if ($image !== false) {
+            imagedestroy($image);
+         }
+         Session::addMessageAfterRedirect(__('Could not process the PNG image', 'signatures'), false, ERROR);
+         $_sigRedirect($self . '?error=1');
+      }
+      imagedestroy($image);
       chmod($dest, 0644);
    }
 
@@ -163,7 +171,7 @@ if (isset($_POST['save'])) {
          Session::addMessageAfterRedirect(__('Invalid font file. Only TTF and OTF files are accepted.', 'signatures'), false, ERROR);
          $_sigRedirect($self . '?error=1&tab=fonts#tab-fonts');
       }
-      if (!PluginSignaturesSignature::validateFontFile($tmp)) {
+      if (!PluginSignaturesSignature::validateFontFile($tmp, pathinfo($safeName, PATHINFO_EXTENSION))) {
          Session::addMessageAfterRedirect(__('Invalid font file. Only TTF and OTF files are accepted.', 'signatures'), false, ERROR);
          $_sigRedirect($self . '?error=1&tab=fonts#tab-fonts');
       }
@@ -219,6 +227,9 @@ if (isset($_POST['save'])) {
 /* ========================== DATA ========================== */
 
 $config        = PluginSignaturesConfig::getAll();
+$currentPluginVersion = plugin_version_signatures()['version'] ?? '1.7.6';
+$latestReleaseVersion = PluginSignaturesConfig::getLatestReleaseVersion();
+$updateAvailable = $latestReleaseVersion !== null && version_compare($latestReleaseVersion, $currentPluginVersion, '>');
 $facebookPage  = $config['facebook_page']       ?? '';
 $xPage         = $config['x_page']              ?? '';
 $linkedinPage  = $config['linkedin_page']        ?? '';
@@ -231,7 +242,7 @@ $emailBody     = $config['email_body']           ?? '';
 $emailFooter   = $config['email_footer']         ?? '';
 
 // Test email button state
-$_testUrl   = ($CFG_GLPI['root_doc'] ?? '') . '/plugins/signatures/front/send.php';
+$_testUrl   = PluginSignaturesPaths::sendUrl();
 $_coreCfg   = Config::getConfigurationValues('core');
 $_mailOk    = ($_coreCfg['use_notifications']    ?? 0) == 1
            && ($_coreCfg['notifications_mailing'] ?? 0) == 1;
@@ -286,7 +297,7 @@ elseif ($_uPhone !== '') { $_extraLabel = __('Ext: ', 'signatures');    $_extraP
 if (empty($_extraPhone)) { $_extraLabel = __('Ext: ', 'signatures');    $_extraPhone = '123'; }
 
 // Font URLs for editor @font-face
-$_pluginWebDir     = ($CFG_GLPI['root_doc'] ?? '') . '/plugins/signatures';
+$_pluginWebDir     = PluginSignaturesPaths::webDir();
 $_fontNameFile     = trim($config['font_name'] ?? '');
 $_fontBodyFile     = trim($config['font_body'] ?? '');
 
@@ -428,6 +439,10 @@ PluginSignaturesRenderer::display(
       'csrf_token'       => Session::getNewCSRFToken(),
       'test_csrf_token'  => $_testCsrfToken,
       'test_url'         => $_testUrl,
+      'current_plugin_version' => $currentPluginVersion,
+      'latest_release_version' => $latestReleaseVersion,
+      'update_available'       => $updateAvailable,
+      'releases_url'           => 'https://github.com/monta990/signatures/releases',
 
       // Social
       'facebook_page'    => $facebookPage,

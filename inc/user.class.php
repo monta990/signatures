@@ -61,10 +61,9 @@ class PluginSignaturesUser extends CommonGLPI {
       $emailErrors = PluginSignaturesSignature::checkEmailConfig();
       $hasEmail    = empty($emailErrors);
 
-      global $CFG_GLPI;
-      $pluginBase  = ($CFG_GLPI['root_doc'] ?? '') . '/plugins/signatures';
-      $downloadUrl = $pluginBase . '/front/download.php';
-      $sendUrl     = $pluginBase . '/front/send.php';
+      $pluginBase  = PluginSignaturesPaths::webDir();
+      $downloadUrl = PluginSignaturesPaths::downloadUrl();
+      $sendUrl     = PluginSignaturesPaths::sendUrl();
 
       Html::displayMessageAfterRedirect();
 

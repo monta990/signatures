@@ -284,18 +284,14 @@ class PluginSignaturesSignature {
          $barcode = new TCPDF2DBarcode($wa_url, 'QRCODE,M');
          $qr_png  = $barcode->getBarcodePngData($qr_module, $qr_module, [0, 0, 0]);
 
-         $qr_tmp = GLPI_TMP_DIR . '/signature_qr_' . $user->getID() . '.png';
-         file_put_contents($qr_tmp, $qr_png);
-
-         if (is_readable($qr_tmp)) {
-            $qr = imagecreatefrompng($qr_tmp);
-            unlink($qr_tmp);
-            if ($qr !== false) {
-               $qr_w = imagesx($qr);
-               $qr_h = imagesy($qr);
-               imagecopy($img, $qr, $p('qr_x', 560), $p('qr_y', 130), 0, 0, $qr_w, $qr_h);
-               unset($qr);
-            }
+         // Decode directly from memory. Avoids a predictable temporary filename
+         // and prevents concurrent requests for the same user from racing.
+         $qr = @imagecreatefromstring($qr_png);
+         if ($qr !== false) {
+            $qr_w = imagesx($qr);
+            $qr_h = imagesy($qr);
+            imagecopy($img, $qr, $p('qr_x', 560), $p('qr_y', 130), 0, 0, $qr_w, $qr_h);
+            imagedestroy($qr);
          }
       }
 
@@ -325,30 +321,69 @@ class PluginSignaturesSignature {
     * @param string $path Ruta al archivo temporal subido.
     * @return bool True si el archivo es un font válido.
     */
-   public static function validateFontFile(string $path): bool {
-      if (!is_readable($path)) {
+   public static function validateFontFile(string $path, ?string $expectedExtension = null): bool {
+      if (!is_file($path) || !is_readable($path)) {
          return false;
       }
 
-      $handle = fopen($path, 'rb');
+      // Defense in depth: uploaded fonts are intentionally small. The upload
+      // handler also enforces this limit before calling this method.
+      $size = filesize($path);
+      if ($size === false || $size < 12 || $size > (2 * 1024 * 1024)) {
+         return false;
+      }
+
+      if ($expectedExtension !== null
+          && !in_array(strtolower($expectedExtension), ['ttf', 'otf'], true)) {
+         return false;
+      }
+
+      // MIME is advisory and varies between OS/fileinfo databases, so accept
+      // the known font MIME values and use the sfnt header as the decisive check.
+      $finfo = new finfo(FILEINFO_MIME_TYPE);
+      $mime  = $finfo->file($path);
+      $allowedMime = [
+         'font/ttf',
+         'font/otf',
+         'font/sfnt',
+         'application/font-sfnt',
+         'application/x-font-ttf',
+         'application/x-font-otf',
+         'application/vnd.ms-opentype',
+         'application/octet-stream',
+      ];
+      if (!is_string($mime) || !in_array(strtolower($mime), $allowedMime, true)) {
+         return false;
+      }
+
+      $handle = @fopen($path, 'rb');
       if ($handle === false) {
          return false;
       }
 
-      $magic = fread($handle, 4);
-      fclose($handle);
+      try {
+         $header = fread($handle, 12);
+      } finally {
+         fclose($handle);
+      }
 
-      if ($magic === false || strlen($magic) < 4) {
+      if ($header === false || strlen($header) < 12) {
          return false;
       }
 
-      $signatures = [
-         "\x00\x01\x00\x00",  // TrueType
-         "true",               // Apple TrueType
-         "OTTO",               // OpenType CFF
-      ];
+      $magic = substr($header, 0, 4);
+      if (!in_array($magic, ["\x00\x01\x00\x00", 'true', 'OTTO'], true)) {
+         return false;
+      }
 
-      return in_array($magic, $signatures, true);
+      // Minimal sfnt structural validation: numTables must be plausible and
+      // its directory (12 + 16 bytes per table) must fit inside the file.
+      $numTables = unpack('n', substr($header, 4, 2))[1] ?? 0;
+      if ($numTables < 1 || $numTables > 4096) {
+         return false;
+      }
+
+      return (12 + ($numTables * 16)) <= $size;
    }
 
    /**

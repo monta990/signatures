@@ -560,3 +560,39 @@ msgstr "Ex : acmecorp"
 
 msgid "Username only, no URL"
 msgstr "Nom d'utilisateur uniquement, sans URL"
+
+msgid "Plugin version"
+msgstr "Version du plugin"
+
+msgid "Installed version"
+msgstr "Version installée"
+
+msgid "Latest version on GitHub"
+msgstr "Dernière version sur GitHub"
+
+msgid "You are using the latest available version."
+msgstr "Vous utilisez la dernière version disponible."
+
+msgid "The latest release is checked automatically and cached for 6 hours."
+msgstr "La dernière version est vérifiée automatiquement et mise en cache pendant 6 heures."
+
+msgid "Not available"
+msgstr "Non disponible"
+
+msgid "A new version is available on GitHub: %s"
+msgstr "Une nouvelle version est disponible sur GitHub : %s"
+
+msgid "Could not check the latest version on GitHub."
+msgstr "Impossible de vérifier la dernière version sur GitHub."
+
+msgid "Open releases page"
+msgstr "Ouvrir la page des versions"
+
+msgid "Close"
+msgstr "Fermer"
+
+msgid "Could not process the PNG image"
+msgstr "Impossible de traiter l’image PNG"
+
+msgid "Could not write signature file: %s"
+msgstr "Impossible d’écrire le fichier de signature : %s"

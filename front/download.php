@@ -56,7 +56,7 @@ if (!empty($errors)) {
 try {
    $file = PluginSignaturesSignature::generatePNG($user, $include_qr);
 } catch (\Throwable $e) {
-   Toolbox::logError('signatures plugin - generatePNG: ' . $e->getMessage());
+   Toolbox::logInFile('php-errors', 'signatures plugin - generatePNG: ' . $e->getMessage(), true, false);
    Session::addMessageAfterRedirect(
       __('Could not generate the signature. Check the GLPI log for details.', 'signatures'),
       false,

@@ -429,6 +429,40 @@
 
           </div>
         </div>{# /card email options #}
+
+        {# ── Compact plugin version status ── #}
+        <div class="d-flex flex-wrap align-items-center gap-2 border-top mt-3 pt-3 px-1 small">
+          <span class="text-muted">
+            <i class="ti ti-brand-github me-1"></i>
+            {{ __('Plugin version', 'signatures') }}
+          </span>
+
+          <span class="text-muted">{{ __('Installed version', 'signatures') }}</span>
+          <span class="badge bg-blue-lt text-blue">v{{ current_plugin_version }}</span>
+
+          <span class="text-muted ms-1">{{ __('Latest version on GitHub', 'signatures') }}</span>
+          {% if latest_release_version %}
+            <span class="badge {{ update_available ? 'bg-yellow-lt text-yellow' : 'bg-green-lt text-green' }}">
+              v{{ latest_release_version }}
+            </span>
+          {% else %}
+            <span class="badge bg-secondary-lt">{{ __('Not available', 'signatures') }}</span>
+          {% endif %}
+
+          {% if update_available %}
+            <span class="text-warning ms-1">
+              <i class="ti ti-alert-triangle me-1"></i>
+              {{ __('A new version is available on GitHub: %s', 'signatures')|format(latest_release_version) }}
+            </span>
+          {% endif %}
+
+          <a class="btn btn-sm btn-ghost-secondary ms-auto"
+             href="{{ releases_url }}" target="_blank" rel="noopener noreferrer"
+             title="{{ __('Open releases page', 'signatures') }}">
+            <i class="ti ti-external-link me-1"></i>{{ __('Open releases page', 'signatures') }}
+          </a>
+        </div>
+
       </div>{# /tab-general #}
 
       {# ══════════════════════════════════════════════════════════════════════

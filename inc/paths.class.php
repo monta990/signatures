@@ -26,6 +26,38 @@ class PluginSignaturesPaths {
 
 
    /**
+    * Directorio web del plugin, compatible con instalaciones en /plugins
+    * y /marketplace. No depende de una ruta hardcodeada.
+    */
+   public static function webDir(): string {
+      global $CFG_GLPI;
+
+      $parent = basename(dirname(self::pluginDir()));
+      if (!in_array($parent, ['plugins', 'marketplace'], true)) {
+         $parent = 'plugins';
+      }
+
+      return rtrim((string)($CFG_GLPI['root_doc'] ?? ''), '/') . '/' . $parent . '/signatures';
+   }
+
+   public static function configUrl(): string {
+      return self::webDir() . '/front/config.form.php';
+   }
+
+   public static function downloadUrl(): string {
+      return self::webDir() . '/front/download.php';
+   }
+
+   public static function sendUrl(): string {
+      return self::webDir() . '/front/send.php';
+   }
+
+   public static function resourceUrl(string $resource, array $query = []): string {
+      $params = array_merge(['resource' => $resource], $query);
+      return self::webDir() . '/front/resource.send.php?' . http_build_query($params, '', '&', PHP_QUERY_RFC3986);
+   }
+
+   /**
     * Directorio físico de plantillas PNG (files/)
     */
    public static function filesDir(): string {
@@ -160,21 +192,17 @@ class PluginSignaturesPaths {
    // ── URLs públicas ──────────────────────────────────────────────────────────
 
    public static function base1Url(): string {
-      global $CFG_GLPI;
-      return ($CFG_GLPI['root_doc'] ?? '') . '/plugins/signatures/front/resource.send.php?resource=base1';
+      return self::resourceUrl('base1');
    }
 
    public static function base2Url(): string {
-      global $CFG_GLPI;
-      return ($CFG_GLPI['root_doc'] ?? '') . '/plugins/signatures/front/resource.send.php?resource=base2';
+      return self::resourceUrl('base2');
    }
 
    /**
     * URL pública para servir una fuente de usuario al browser (para @font-face).
     */
    public static function userFontUrl(string $filename): string {
-      global $CFG_GLPI;
-      return ($CFG_GLPI['root_doc'] ?? '') . '/plugins/signatures/front/resource.send.php?resource=font&name='
-         . rawurlencode($filename);
+      return self::resourceUrl('font', ['name' => $filename]);
    }
 }

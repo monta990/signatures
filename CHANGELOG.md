@@ -6,6 +6,35 @@ Versioning follows [Semantic Versioning](https://semver.org/).
 
 ---
 
+## [1.7.6] — 2026-07-27
+
+- Completed missing Spanish (Mexico) and French translations used by the plugin.
+- Reduced personal information written to mail logs; signature mail events now use the user ID instead of recipient/name/subject details.
+- Added the missing localized **Close** label in the signature preview modal.
+- Integrated the GitHub version status into the General tab using a compact, non-intrusive layout.
+- Added missing Spanish (Mexico) and French translations for the GitHub version checker.
+- Added a **Download signature** action inside the user signature preview modal, synchronized with the WhatsApp QR option.
+
+### Security
+- Harden custom font uploads with maximum size, allowed extension, MIME validation and minimal sfnt header/directory validation.
+- Uploaded PNG templates are decoded and re-encoded with GD before being persisted.
+
+### Fixed
+- QR images are decoded directly from memory, eliminating the predictable per-user temporary QR filename and its concurrent-request race condition.
+- Plugin web URLs are centralized in `PluginSignaturesPaths` and resolve correctly from either `/plugins` or `/marketplace`.
+
+### Added
+- GitHub stable-release checker for `monta990/signatures`, cached for 6 hours with stale-cache fallback.
+
+### Compatibility
+- Audited plugin API usage against the current GLPI `11.0/bugfixes` branch.
+- Replaced deprecated PHPMailer-compatible `GLPIMailer` calls/properties with the native Symfony Mime `Email` API exposed by GLPI 11.
+- Replaced `Toolbox::logError()` exception-path calls with `Toolbox::logInFile()`.
+- Confirmed `Dropdown::getDropdownName()` is not using its deprecated `$withcomment` parameter.
+- Kept the current GLPI tab integration and plugin registration APIs because they remain in active use by GLPI 11 core.
+
+---
+
 ## [1.7.5] — 2026-05-23
 
 ### Fixed

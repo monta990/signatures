@@ -107,6 +107,19 @@
         <img id="sig-preview-img" src="" alt="signature preview"
              style="max-width:100%;display:none;border:1px solid #dee2e6;">
       </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
+          {{ __('Close', 'signatures') }}
+        </button>
+        <form method="get" action="{{ download_url }}" id="form-preview-download" class="m-0">
+          <input type="hidden" name="userid" value="{{ user_id }}">
+          <input type="hidden" name="include_qr" id="qr_preview_download" value="{{ has_mobile ? '1' : '' }}">
+          <button type="submit" class="btn btn-primary" {% if not has_base %}disabled{% endif %}>
+            <i class="ti ti-download me-2"></i>
+            {{ __('Download signature', 'signatures') }}
+          </button>
+        </form>
+      </div>
     </div>
   </div>
 </div>
