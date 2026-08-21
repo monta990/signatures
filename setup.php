@@ -4,15 +4,21 @@ if (!defined('GLPI_ROOT')) {
    die('Direct access not allowed');
 }
 
+use Glpi\Plugin\Hooks;
+use GlpiPlugin\Signatures\UserTab;
+
+define('PLUGIN_SIGNATURES_VERSION', '1.8.0');
+define('PLUGIN_SIGNATURES_MIN_GLPI', '11.0');
+define('PLUGIN_SIGNATURES_MAX_GLPI', '12.99');
+
 function plugin_init_signatures(): void {
    global $PLUGIN_HOOKS;
 
-   $PLUGIN_HOOKS['csrf_compliant']['signatures'] = true;
-   $PLUGIN_HOOKS['config_page']['signatures']    = 'front/config.form.php';
+   $PLUGIN_HOOKS[Hooks::CONFIG_PAGE]['signatures'] = 'config';
    $PLUGIN_HOOKS['add_javascript']['signatures'] = ['js/signatures-user.js', 'js/signatures-config.js'];
 
    Plugin::registerClass(
-      'PluginSignaturesUser',
+      UserTab::class,
       ['addtabon' => ['User']]
    );
 }
@@ -20,12 +26,16 @@ function plugin_init_signatures(): void {
 function plugin_version_signatures(): array {
    return [
       'name'         => 'Email Signatures',
-      'version'      => '1.7.6',
+      'version'      => PLUGIN_SIGNATURES_VERSION,
       'author'       => 'Edwin Elias Alvarez',
       'license'      => 'GPLv3+',
       'homepage'     => 'https://github.com/monta990/signatures',
+      'minphpversion' => '8.2',
       'requirements' => [
-         'glpi' => ['min' => '11.0']
+         'glpi' => [
+            'min' => PLUGIN_SIGNATURES_MIN_GLPI,
+            'max' => PLUGIN_SIGNATURES_MAX_GLPI,
+         ],
       ]
    ];
 }
@@ -95,54 +105,109 @@ function plugin_signatures_getDefaults(): array {
    ];
 }
 
+
+/**
+ * Solicita a GLPI la limpieza de sus cachés regenerables después de instalar
+ * o actualizar el plugin.
+ *
+ * La limpieza se difiere al final de la petición actual. Esto es importante
+ * porque el contenedor Symfony/Twig de GLPI puede estar siendo utilizado
+ * durante la misma petición de instalación/actualización.
+ */
+function plugin_signatures_clear_cache(): void {
+   register_shutdown_function(static function (): void {
+         if (!class_exists(\Glpi\Cache\CacheManager::class)) {
+            return;
+         }
+
+         try {
+            (new \Glpi\Cache\CacheManager())->resetAllCaches();
+         } catch (\Throwable $e) {
+            // Never make plugin installation/update fail because cache cleanup
+            // could not be completed.
+            if (method_exists('Toolbox', 'logInFile')) {
+               \Toolbox::logInFile(
+                  'php-errors',
+                  sprintf(
+                     "Signatures: unable to reset GLPI cache after installation/update: %s\n",
+                     $e->getMessage()
+                  )
+               );
+            }
+         }
+      });
+}
+
 function plugin_signatures_install(): bool {
-   // Directorio de plantillas PNG
+   // GLPI calls this hook both for a first installation and for an upgrade.
+   // It must therefore be idempotent: create only missing configuration keys
+   // and never overwrite values already configured by the administrator.
    $dir = GLPI_PLUGIN_DOC_DIR . '/signatures/templates';
    if (!is_dir($dir)) {
       mkdir($dir, 0755, true);
    }
 
-   // Directorio de fuentes de usuario
    $fontsDir = GLPI_PLUGIN_DOC_DIR . '/signatures/fonts';
    if (!is_dir($fontsDir)) {
       mkdir($fontsDir, 0755, true);
    }
 
-   // Solo aplicar defaults para claves que aún no existen
-   $existing = Config::getConfigurationValues('plugin_signatures');
-   $defaults  = plugin_signatures_getDefaults();
-   $toSet     = array_diff_key($defaults, $existing);
-   if (!empty($toSet)) {
-      Config::setConfigurationValues('plugin_signatures', $toSet);
+   $existing = \Config::getConfigurationValues('plugin_signatures');
+   $defaults = plugin_signatures_getDefaults();
+
+   // Check key existence, not truthiness: an existing "0" must remain "0".
+   $missing = array_diff_key($defaults, $existing);
+
+   if (!empty($missing)) {
+      \Config::setConfigurationValues('plugin_signatures', $missing);
    }
+
+   plugin_signatures_clear_cache();
 
    return true;
 }
 
 function plugin_signatures_uninstall(): bool {
-   Config::deleteConfigurationValues(
+   \Config::deleteConfigurationValues(
       'plugin_signatures',
       array_keys(plugin_signatures_getDefaults())
    );
-   return true;
-}
 
-/**
- * Migración al actualizar desde versiones anteriores.
- * Reutiliza install() que aplica defaults solo para claves inexistentes.
- * Garantiza que instalaciones existentes reciban las nuevas claves de config.
- *
- * @param string $fromVersion Versión de origen (provista por GLPI)
- */
-function plugin_signatures_update(string $fromVersion): bool {
-   return plugin_signatures_install();
+   // Remove only the plugin-owned persistent data directory.
+   $dataDir = rtrim((string)GLPI_PLUGIN_DOC_DIR, '/\\') . '/signatures';
+   $docRoot = rtrim((string)GLPI_PLUGIN_DOC_DIR, '/\\');
+
+   if ($dataDir !== $docRoot . '/signatures' || !is_dir($dataDir) || is_link($dataDir)) {
+      return true;
+   }
+
+   $iterator = new \RecursiveIteratorIterator(
+      new \RecursiveDirectoryIterator($dataDir, \FilesystemIterator::SKIP_DOTS),
+      \RecursiveIteratorIterator::CHILD_FIRST
+   );
+
+   foreach ($iterator as $item) {
+      try {
+         if ($item->isLink() || $item->isFile()) {
+            @unlink($item->getPathname());
+         } elseif ($item->isDir()) {
+            @rmdir($item->getPathname());
+         }
+      } catch (\Throwable $e) {
+         // Uninstall must not fail because a stale file cannot be removed.
+      }
+   }
+
+   @rmdir($dataDir);
+
+   return true;
 }
 
 function plugin_signatures_check_prerequisites(): bool {
 
-   if (version_compare(PHP_VERSION, '8.1', '<')) {
+   if (version_compare(PHP_VERSION, '8.2', '<')) {
       Session::addMessageAfterRedirect(
-         __('PHP 8.1 or higher is required to install this plugin.', 'signatures'),
+         __('PHP 8.2 or higher is required to install this plugin.', 'signatures'),
          false,
          ERROR
       );
