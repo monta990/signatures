@@ -49,8 +49,8 @@ Each signature is rendered dynamically over a configurable PNG template using PH
 | **Custom fonts** | Upload TTF or OTF font files from the Fonts tab. The plugin reads each file's internal `name` table to display its real name. Built-in Avenir Black and Avenir Roman are always available. |
 | **Per-role font selection** | Choose **Name font** (used for the signature name) and **Body font** (used for all other fields) independently. Both built-in and uploaded fonts are available for either role. |
 | **Per-field visibility toggle** | Checkbox next to each field in the position editor enables or disables that field independently per template. Hidden fields are skipped during PNG generation — no blank space left. |
-| **GLPI mail log integration** — Write tagged entries to `files/_log/mail.log`, through `Toolbox::logInFile()`. |
-| **Multilanguage** | es_MX · fr_FR · Default languague: English |
+| **GLPI mail log integration** | Write tagged entries to `files/_log/mail.log`, through `Toolbox::logInFile()`. |
+| **Multilanguage** | es_MX · fr_FR · Default language: English |
 
 ---
 
@@ -58,7 +58,7 @@ Each signature is rendered dynamically over a configurable PNG template using PH
 
 | Requirement | Minimum |
 |---|---|
-| GLPI | ≥ 11.0. |
+| GLPI | 11.x and 12.x. |
 | PHP | ≥ 8.2 |
 | PHP ext: **GD** | Required — image generation |
 | PHP ext: **fileinfo** | Required — MIME validation on template upload |
@@ -291,7 +291,7 @@ Upload and manage custom fonts for signature rendering.
 ## Using the signature — user side
 
 Every GLPI user profile shows an **Email Signature** tab registered by
-`PluginSignaturesUser`. The tab is visible to the owner and to administrators.
+`GlpiPlugin\Signatures\UserTab`. The tab is visible to the owner and to administrators.
 
 > An orange `!` badge on the tab means the relevant template has not been uploaded
 > yet, or the outgoing email configuration is incomplete. Buttons are shown but
@@ -327,7 +327,7 @@ in the user's GLPI profile (`glpi_useremails`, `is_default = 1`).
   substituted at send time.
 - A success flash message shows the destination address.
 - Errors (no email, mail server not configured, generation failure) show descriptive
-  flash messages and are logged via `Toolbox::logError()`.
+  flash messages and are logged through GLPI's `Toolbox::logInFile()`.
 
 ### Preview
 
@@ -369,7 +369,7 @@ Fields marked **b1 only** appear in the With-mobile template; all others appear 
 | Instagram | `plugin_signatures.instagram_page` config | 11 px | both |
 | Snapchat | `plugin_signatures.snapchat_page` config | 11 px | both |
 | TikTok | `plugin_signatures.tiktok_page` config | 11 px | both |
-| QR code | TCPDF2DBarcode → imagecopyresampled | 100×100 px | b1 only |
+| QR code | TCPDF2DBarcode → `imagecopyfromstring()` + `imagecopy()` | module-size dependent | b1 only |
 
 ### Font resolution
 
@@ -392,11 +392,12 @@ This guarantees short names like "Ana" render at full size while long names like
 ### WhatsApp QR code
 
 1. Build `https://wa.me/{countryCode}{mobile}` (non-numeric characters stripped from `mobile`).
-2. `TCPDF2DBarcode` generates a QR image into a temp file.
-3. Load the QR with `imagecreatefrompng()`.
-4. Composite onto the signature with `imagecopyresampled()` using `imagesx()` /
-   `imagesy()` for actual dimensions — not a hardcoded 100 px, preventing cropping.
-5. Temp file deleted immediately after compositing.
+2. `TCPDF2DBarcode` generates the QR image in memory.
+3. Decode the PNG bytes with `imagecreatefromstring()`.
+4. Composite it onto the signature at its native module-derived dimensions, avoiding
+   hardcoded or resampled QR sizes.
+5. The QR buffer is released immediately after compositing; no predictable per-user
+   QR temp file is created.
 
 ---
 
@@ -413,7 +414,7 @@ This guarantees short names like "Ana" render at full size while long names like
 | Send test email | `config UPDATE` right |
 
 Access checks use `Session::haveRight('config', UPDATE)` and
-`Session::checkRight()`. Unauthorized requests redirect silently to the GLPI root.
+`Session::checkRight()`. Unauthorized requests are rejected by GLPI's access-control checks.
 
 ---
 
@@ -445,12 +446,10 @@ msgfmt locales/de_DE.po -o locales/de_DE.mo
 
 ```
 signatures/
-├── front/
 │   ├── config.form.php          Plugin configuration UI (5-tab page)
 │   ├── download.php             Generates and streams the PNG download
 │   ├── resource.send.php        Serves template PNGs to the browser
 │   └── send.php                 Sends signature by email (normal + test mode via is_test=1)
-├── inc/
 │   ├── config.class.php         glpi_configs read/write wrapper (request-cached)
 │   ├── paths.class.php          Centralizes all file paths and public URLs
 │   ├── renderer.class.php       Standalone Twig renderer (rooted at plugin /templates/)

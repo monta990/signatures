@@ -6,27 +6,78 @@ Versioning follows [Semantic Versioning](https://semver.org/).
 
 ---
 
+## [1.8.0] — 2026-08-21
+
+- Corrected the GLPI update lifecycle to use an idempotent install hook that preserves existing configuration values, including field visibility states.
+- Hardened update persistence so GLPI plugin lifecycle operations cannot reset saved field visibility and configuration.
+- Fixed persistence of field visibility and positions so saving another configuration tab no longer resets checkbox states.
+
+### Security and hardening
+
+- Restricted the configuration controller and configuration service to users with `config UPDATE` rights.
+- Removed the obsolete `csrf_compliant` plugin hook; GLPI 11/12 controller CSRF protection is handled by the core request listener.
+- Added PNG dimension limits (maximum 4096×2048 px) before GD decodes uploaded templates.
+- Hardened TTF/OTF validation by checking every sfnt table offset and length against the uploaded file size and requiring a valid sfnt magic header for the allowed TTF/OTF extensions.
+- Checked the result of custom-font `move_uploaded_file()` and cleaned partial PNG output files on write failure.
+- Plugin uninstall now removes only its own persistent data directory under `GLPI_PLUGIN_DOC_DIR/signatures`.
+- Fixed the deferred cache-cleanup logger check to use `method_exists()` for the static `Toolbox::logInFile()` method.
+
+### Compatibility and maintenance
+
+- Updated the installation prerequisite message to PHP 8.2, matching the declared minimum PHP version.
+- Completed the translation catalog with the PNG processing and generated-file error messages.
+- Updated plugin metadata to explicitly describe GLPI 11 and GLPI 12 compatibility.
+- Removed a duplicate `Signature::checkRequirements()` call from the email-send controller.
+- Fixed QR generation under namespaced PHP classes by resolving TCPDF2DBarcode from the global namespace.
+- Fixed persistence of field enabled/disabled states by submitting an explicit 0/1 value for every position field.
+- Removed remaining English JavaScript UI fallbacks so confirmation, PNG validation, and preview errors use the plugin translation catalog.
+- Localized the delete confirmation dialog and removed its English fallback.
+- Completed the PSR-4 namespace audit for PHP built-in classes and fixed the `finfo` MIME detection reference.
+- Improved the General settings layout with a responsive two-column grid for social networks and WhatsApp configuration.
+- Aligned the user-tab configuration indicator with GLPI's standard badge styling and kept the GitHub releases link alongside the version information.
+- Completed namespace audit for PSR-4 classes and imported remaining global GLPI classes explicitly.
+- Fixed the GLPI `Session` class import in the namespaced configuration service.
+- Fixed namespace resolution for the GLPI `TemplateRenderer` service.
+- Fixed namespace resolution for plugin and GLPI configuration classes in the configuration service.
+- Replaced direct cache-directory deletion with GLPI's native cache manager and deferred cleanup until request shutdown.
+- Clears GLPI's regenerable cache on installation/update so stale compiled Twig templates from previous plugin versions are not reused.
+- Modernized the plugin architecture for GLPI 11 and GLPI 12 using PSR-4 classes under `src/`.
+- Replaced plugin `front/` HTTP endpoints with Symfony controllers under `src/Controller/`.
+- Centralized plugin URLs and filesystem paths in the namespaced `Paths` service.
+- Added the GitHub release update checker as a namespaced service with six-hour caching and safe fallback.
+- Preserved the existing signature generation, configuration, preview, download, QR and email workflows.
+
+---
+
 ## [1.7.6] — 2026-07-27
 
 - Completed missing Spanish (Mexico) and French translations used by the plugin.
+- Removed `.code-review-graph` development artifacts from the distribution package.
 - Reduced personal information written to mail logs; signature mail events now use the user ID instead of recipient/name/subject details.
+
 - Added the missing localized **Close** label in the signature preview modal.
+
 - Integrated the GitHub version status into the General tab using a compact, non-intrusive layout.
+
 - Added missing Spanish (Mexico) and French translations for the GitHub version checker.
 - Added a **Download signature** action inside the user signature preview modal, synchronized with the WhatsApp QR option.
 
 ### Security
+
 - Harden custom font uploads with maximum size, allowed extension, MIME validation and minimal sfnt header/directory validation.
 - Uploaded PNG templates are decoded and re-encoded with GD before being persisted.
 
 ### Fixed
+
 - QR images are decoded directly from memory, eliminating the predictable per-user temporary QR filename and its concurrent-request race condition.
 - Plugin web URLs are centralized in `PluginSignaturesPaths` and resolve correctly from either `/plugins` or `/marketplace`.
 
 ### Added
+
 - GitHub stable-release checker for `monta990/signatures`, cached for 6 hours with stale-cache fallback.
 
 ### Compatibility
+
 - Audited plugin API usage against the current GLPI `11.0/bugfixes` branch.
 - Replaced deprecated PHPMailer-compatible `GLPIMailer` calls/properties with the native Symfony Mime `Email` API exposed by GLPI 11.
 - Replaced `Toolbox::logError()` exception-path calls with `Toolbox::logInFile()`.
@@ -38,6 +89,7 @@ Versioning follows [Semantic Versioning](https://semver.org/).
 ## [1.7.5] — 2026-05-23
 
 ### Fixed
+
 - QR temp file is now always deleted even when `imagecreatefrompng()` returns `false`, preventing temp file leaks.
 - `imagecreatefrompng()` return value is now checked before use; avoids `TypeError` on corrupted QR data.
 - `imagepng()` failure now throws a `RuntimeException` instead of silently returning a missing file path.
@@ -49,6 +101,7 @@ Versioning follows [Semantic Versioning](https://semver.org/).
 ## [1.7.4] — 2026-05-22
 
 ### Fixed
+
 - All form fields in the config form now have `id` attributes; all `<label>` elements have matching `for` attributes. Resolves 25 "no id or name" and 16 "label not associated" browser accessibility warnings with no functional changes.
 
 ---
@@ -56,6 +109,7 @@ Versioning follows [Semantic Versioning](https://semver.org/).
 ## [1.7.3] — 2026-05-13
 
 ### Added
+
 - **Configurable QR module size** — new `QR module size` field (1–10 px/module, default 3) in General settings. Controls the physical size of the WhatsApp QR code in the generated signature. The QR is rendered at native resolution (no resampling), so each value produces a crisp, pixel-perfect result. The position editor placeholder updates to match on save.
 
 ---
@@ -63,6 +117,7 @@ Versioning follows [Semantic Versioning](https://semver.org/).
 ## [1.7.2] — 2026-05-08
 
 ### Changed
+
 - Replace deprecated `finfo_open()` / `finfo_close()` with OOP `new finfo()` for better GLPI 11/12 and PHP compatibility.
 
 ---
@@ -70,6 +125,7 @@ Versioning follows [Semantic Versioning](https://semver.org/).
 ## [1.7.1] — 2026-05-02
 
 ### Changed
+
 - Changed imagedestroy() to unset() for future PHP 8.6+ proof.
 
 ## [1.7.0] — 2026-04-26
@@ -79,6 +135,7 @@ Versioning follows [Semantic Versioning](https://semver.org/).
 - **GLPI mail log integration** — successful deliveries now write tagged entries to `files/_log/mail.log`, through `Toolbox::logInFile()`.
 
 ### Changed
+
 - **Twig templates.** HTML output migrated from inline PHP `echo` strings to Twig templates. All business logic, POST handlers, and redirects remain in PHP — only the HTML layer moved to Twig.
 - **`inc/renderer.class.php`** (`PluginPhonebgRenderer`): helper class that resolves template paths relative to `GLPI_ROOT` (handles both `plugins/` and `marketplace/` installation locations) and wraps `TemplateRenderer::getInstance()`.
 - **GLPI 11.0+ compatibility.** Plugin now works with GLPI 11.x, and is ready for 12+. `TemplateRenderer` (used internally by this plugin since this version).
@@ -86,6 +143,7 @@ Versioning follows [Semantic Versioning](https://semver.org/).
 - Minimum PHP version is from `8.2` (actual minimum imposed by `mixed` return type and `GdImage` type hint).
 
 ### Upgrade notes
+
 - **Safe to upgrade from any previous version.** No database changes. No data migration needed. All existing configuration, uploaded templates, and uploaded fonts are preserved.
 
 ---
@@ -93,6 +151,7 @@ Versioning follows [Semantic Versioning](https://semver.org/).
 ## [1.6.2] — 2026-04-18
 
 ### Added
+
 - **TikTok field**: new configurable text field in the **General** settings tab.
   Value is rendered on the PNG signature as plain text, positioned independently
   per template via the drag-and-drop editor.
@@ -109,6 +168,7 @@ Versioning follows [Semantic Versioning](https://semver.org/).
 ## [1.6.1] — 2026-04-17
 
 ### Added
+
 - **Social media fields — X (Twitter), LinkedIn, Instagram, Snapchat**: four new
   configurable text fields available in the plugin's **General** settings tab.
   Each value is rendered on the PNG signature as plain text, positioned independently
@@ -131,6 +191,7 @@ Versioning follows [Semantic Versioning](https://semver.org/).
 ## [1.6.0] — 2026-04-12
 
 ### Added
+
 - **Per-field visibility toggle**: each field in the position editor table now has a
   checkbox (**Show / hide**) that controls whether that field is rendered in the
   generated PNG. When unchecked, the overlay is hidden in the drag-and-drop editor
@@ -147,6 +208,7 @@ Versioning follows [Semantic Versioning](https://semver.org/).
 ## [1.5.1] — 2026-04-09
 
 ### Fixed
+
 - **Incorrect CSS in labels**: fixed in correct type of CSS in user text for user.class.
 
 ---
@@ -154,6 +216,7 @@ Versioning follows [Semantic Versioning](https://semver.org/).
 ## [1.5.0] — 2026-03-22
 
 ### Added
+
 - **Custom font upload**: administrators can now upload TTF and OTF font files (max. 2 MB)
   from the new **Fonts** tab in the plugin configuration page. Uploaded fonts are stored in
   `GLPI_PLUGIN_DOC_DIR/signatures/fonts/` and survive plugin updates.
@@ -179,6 +242,7 @@ Versioning follows [Semantic Versioning](https://semver.org/).
 ## [1.4.0] — 2026-03-22
 
 ### Changed
+
 - **Base language changed from Spanish to English**: the plugin's `msgid` strings are now
   English. Previously all `__()` calls used Spanish as the source string, meaning a GLPI
   instance without any of the bundled locales would display Spanish. Now the fallback
@@ -198,6 +262,7 @@ Versioning follows [Semantic Versioning](https://semver.org/).
 ## [1.3.4] — 2026-03-22
 
 ### Fixed
+
 - **`inc/paths.class.php` — missing `GLPI_ROOT` guard**: added the standard
   `if (!defined('GLPI_ROOT')) die(...)` guard. It was the only file in `inc/` without
   it, leaving the class directly accessible via HTTP.
@@ -228,6 +293,7 @@ Versioning follows [Semantic Versioning](https://semver.org/).
   `[1 => ...]`.
 
 ### Changed
+
 - **Upload validation simplified**: removed the non-blocking dimension warning that
   fired when a template's width or height fell outside the 400–2000 × 100–800 px
   range. The only hard server-side limit is now **file size (300 KB)**. MIME type
@@ -242,6 +308,7 @@ Versioning follows [Semantic Versioning](https://semver.org/).
 ## [1.3.3] — 2026-03-14
 
 ### Changed
+
 - **Upload validation simplified**: removed the non-blocking dimension warning that
   fired when a template's width or height fell outside the 400–2000 × 100–800 px
   range. The only hard server-side limit is now **file size (300 KB)**. MIME type
@@ -256,6 +323,7 @@ Versioning follows [Semantic Versioning](https://semver.org/).
 ## [1.3.2] — 2026-03-13
 
 ### Added
+
 - **Inline text formatting in email fields**: the email body and footer now support
   a lightweight markdown-style syntax rendered as inline CSS styles (Outlook/Gmail
   compatible):
@@ -280,6 +348,7 @@ Versioning follows [Semantic Versioning](https://semver.org/).
   directories, zip files, and the `templates/` directory.
 
 ### Fixed
+
 - **Drag boundary clamping**: fields can no longer be dragged outside the template
   image. `onMove()` now computes the maximum allowed CSS position as
   `img.clientWidth - el.offsetWidth` (and the Y equivalent), so the limit accounts
@@ -319,6 +388,7 @@ Versioning follows [Semantic Versioning](https://semver.org/).
 ## [1.3.1] — 2026-03-13
 
 ### Added
+
 - **Touch support in the position editor**: drag-and-drop field handles now respond
   to `touchstart` / `touchmove` / `touchend` events, enabling the editor on tablets
   and touch-screen desktops.
@@ -371,18 +441,21 @@ Versioning follows [Semantic Versioning](https://semver.org/).
   `\Symfony\Component\Mime\Address`.
 
 ### Fixed
+
 - `Content-Disposition` header in `download.php` now includes `filename*=UTF-8''`
   (RFC 6266) for correct handling of non-ASCII file names.
 - `catch (Throwable)` blocks in `send.php` and `download.php` now call
   `Toolbox::logError()` so errors appear in the GLPI log.
 
 ### Removed
+
 - **`fonts/AvenirBook.ttf`**: never referenced in any code path; removed to reduce
   package size.
 - **`front/send_test.php`**: merged into `send.php`. Test-email mode is now triggered
   by posting `is_test=1`.
 
 ### Changed
+
 - Button classes updated to native Bootstrap/Tabler tokens for full theme
   compatibility (light and dark): Descargar firma and Enviar por correo use
   `btn-primary`, Vista previa / Enviar correo de prueba / Reset posiciones use
@@ -398,6 +471,7 @@ Versioning follows [Semantic Versioning](https://semver.org/).
 ## [1.3.0] — 2026-03-08
 
 ### Added
+
 - **Signature preview**: new "Preview" button on the user profile tab opens the
   final rendered PNG in a modal before downloading or sending. Uses
   `download.php?preview=1` for inline display.
@@ -416,6 +490,7 @@ Versioning follows [Semantic Versioning](https://semver.org/).
   the button is disabled on click to prevent double submission.
 
 ### Fixed
+
 - `Content-Disposition` header in `download.php` now includes `filename*=UTF-8''...`
   (RFC 6266) for correct handling of non-ASCII file names on all clients.
 - `catch (Throwable)` blocks in `send.php`, `send_test.php`, and `download.php` now
@@ -423,6 +498,7 @@ Versioning follows [Semantic Versioning](https://semver.org/).
   silently discarded.
 
 ### Changed
+
 - All `Config::getConfigurationValues('plugin_signatures')` calls across the plugin
   now go through `PluginSignaturesConfig::getAll()` / `::get()`.
 - `plugin.xml` descriptions updated to reflect v1.3 features in all four languages.
@@ -432,6 +508,7 @@ Versioning follows [Semantic Versioning](https://semver.org/).
 ## [1.2.0] — 2025-03-08
 
 ### Added
+
 - **Visual position editor** (Positions tab in plugin config): drag-and-drop each
   signature field over the actual PNG template at 1:1 pixel scale, using the real
   Avenir TTF fonts rendered via `@font-face`. Positions and font sizes are stored in
@@ -453,6 +530,7 @@ Versioning follows [Semantic Versioning](https://semver.org/).
   flag for the test-email warning banner.
 
 ### Fixed
+
 - **`hasBase` logic** in `user.class.php`: previously required *both* templates to
   enable the download/send buttons for any user. Now checks only the template
   relevant to the user (`base1` if they have a mobile number, `base2` otherwise).
@@ -470,6 +548,7 @@ Versioning follows [Semantic Versioning](https://semver.org/).
 - Minor: inconsistent indentation of `'version'` key in `plugin_version_signatures()`.
 
 ### Changed
+
 - `plugin_signatures_uninstall()` derives the key list from `getDefaults()` instead
   of a hardcoded array.
 - `plugin.xml` updated to include the `1.2.0` release entry.
@@ -482,6 +561,7 @@ Versioning follows [Semantic Versioning](https://semver.org/).
 ## [1.1.0] — 2025-03-07
 
 ### Added
+
 - **Email delivery**: new "Send by email" button on the user profile tab sends the
   generated PNG as an attachment via GLPI's outgoing mail system (`GLPIMailer`).
 - **Email configuration** (new section in the General tab):
@@ -502,6 +582,7 @@ Versioning follows [Semantic Versioning](https://semver.org/).
   `fr_FR`). All `.po`/`.mo` files regenerated.
 
 ### Fixed
+
 - Logo PNGs (`logo.png`, `logo_small.png`) regenerated with proper RGBA transparent
   background matching GLPI's official plugin style (white card + gold flap on
   transparent backing).
@@ -509,6 +590,7 @@ Versioning follows [Semantic Versioning](https://semver.org/).
   for visual consistency.
 
 ### Changed
+
 - Plugin folder renamed from `signatures_v2` to `signatures`.
 - `PluginSignaturesSignature::buildEmailHtml()` uses inline `<span>` style for bold
   instead of `<strong>` for compatibility with Outlook and legacy mail clients.
@@ -518,6 +600,7 @@ Versioning follows [Semantic Versioning](https://semver.org/).
 ## [1.0.0] — 2025-02-26
 
 ### Added
+
 - Initial release.
 - Generates personalized PNG email signatures per GLPI user from a configured
   background template, overlaying text with PHP GD and Avenir TTF fonts.
