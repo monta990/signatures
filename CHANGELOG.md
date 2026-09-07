@@ -6,6 +6,15 @@ Versioning follows [Semantic Versioning](https://semver.org/).
 
 ---
 
+## [1.8.1] — 2026-09-07
+
+### Fixed
+
+- Fixed persistence of template label and QR positions by marking all position-editor changes as position changes before saving.
+- Position visibility, coordinates, font sizes and QR size are now written only when the Positions editor was modified.
+
+---
+
 ## [1.8.0] — 2026-08-21
 
 - Corrected the GLPI update lifecycle to use an idempotent install hook that preserves existing configuration values, including field visibility states.

@@ -152,7 +152,7 @@
             dragging.style.left = newL + 'px';
             dragging.style.top  = newT + 'px';
             syncInputs(dragging, newL, newT);
-            markDirty();
+            markPositionsDirty();
          }
 
          function onEnd() {
@@ -190,8 +190,7 @@
          if (inpS) inpS.value = size;
 
          syncInputs(el, el.offsetLeft, el.offsetTop);
-         markDirty();
-      });
+         markPositionsDirty();});
 
       // ── X/Y position inputs → canvas update ───────────────────────────────
       document.addEventListener('input', e => {
@@ -241,8 +240,7 @@
          el.style.left = cssL + 'px';
          el.style.top  = cssT + 'px';
 
-         markDirty();
-      });
+         markPositionsDirty();});
 
       // ── Reset to defaults ──────────────────────────────────────────────────
       document.addEventListener('click', e => {
@@ -287,9 +285,9 @@
                if (sizeInput) sizeInput.value = size;
             }
             syncInputs(el, cssL, cssT);
+         markPositionsDirty();
          });
-         markDirty();
-      });
+         markPositionsDirty();});
 
       // ── Enable / disable field checkbox ───────────────────────────────────
       document.addEventListener('change', e => {
@@ -297,8 +295,7 @@
          if (!cb) return;
          const el = document.getElementById('field-' + cb.dataset.base + '-' + cb.dataset.field);
          if (el) el.style.opacity = cb.checked ? '1' : '0.25';
-         markDirty();
-      });
+         markPositionsDirty();});
 
       // ── QR module size select → live resize of QR placeholder ─────────────
       document.addEventListener('change', e => {
@@ -315,8 +312,7 @@
          el.style.height = px + 'px';
          const icon = el.querySelector('i');
          if (icon) icon.style.fontSize = Math.round(px * 0.45) + 'px';
-         markDirty();
-      });
+         markPositionsDirty();});
 
       // ── Format toolbar (B / I / U) ────────────────────────────────────────
       document.addEventListener('click', e => {
