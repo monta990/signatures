@@ -6,6 +6,21 @@ Versioning follows [Semantic Versioning](https://semver.org/).
 
 ---
 
+## [1.8.2] — 2026-10-07
+
+### Fixed
+
+- Fixed WhatsApp QR generation on GLPI 12, where the legacy `TCPDF2DBarcode` helper file is no longer present in the bundled TCPDF 7 package.
+- Replaced the removed TCPDF internal barcode-file include with GLPI's bundled `tecnickcom/tc-lib-barcode` API, which is available on both GLPI 11 and GLPI 12.
+- Preserved the existing QR module-size configuration and in-memory PNG workflow.
+- Corrected the plugin author metadata key in `setup.php`.
+
+### Compatibility
+
+- Verified QR barcode API availability against GLPI 11 `bugfixes` (`tc-lib-barcode` 2.4.x) and GLPI 12 `bugfixes` / official 12.0.0-rc3 (`tc-lib-barcode` 2.12/2.13.x).
+
+---
+
 ## [1.8.1] — 2026-09-07
 
 ### Fixed

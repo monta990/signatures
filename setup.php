@@ -7,7 +7,7 @@ if (!defined('GLPI_ROOT')) {
 use Glpi\Plugin\Hooks;
 use GlpiPlugin\Signatures\UserTab;
 
-define('PLUGIN_SIGNATURES_VERSION', '1.8.1');
+define('PLUGIN_SIGNATURES_VERSION', '1.8.2');
 define('PLUGIN_SIGNATURES_MIN_GLPI', '11.0');
 define('PLUGIN_SIGNATURES_MAX_GLPI', '12.99');
 
@@ -27,7 +27,7 @@ function plugin_version_signatures(): array {
    return [
       'name'         => 'Email Signatures',
       'version'      => PLUGIN_SIGNATURES_VERSION,
-      '1.8.1'       => 'Edwin Elias Alvarez',
+      'author'       => 'Edwin Elias Alvarez',
       'license'      => 'GPLv3+',
       'homepage'     => 'https://github.com/monta990/signatures',
       'minphpversion' => '8.2',
