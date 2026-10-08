@@ -9,6 +9,7 @@ use UserEmail;
 use Dropdown;
 use GLPIMailer;
 use Symfony\Component\Mime\Address;
+use Com\Tecnick\Barcode\Barcode;
 
 class Signature {
 
@@ -283,15 +284,23 @@ class Signature {
        * ============================ */
       if ($include_qr && $hasMobile && $en('qr')) {
 
-         require_once GLPI_ROOT . '/vendor/tecnickcom/tcpdf/tcpdf_barcodes_2d.php';
-
          $mobile_clean = preg_replace('/\D+/', '', $mobile);
          $wa_url       = 'https://wa.me/' . trim($configsig['whatsapp_country_code'] ?? '') . $mobile_clean;
 
          $qr_module = max(1, min(10, (int)(($configsig['sig_b1_qr_size'] ?? '') !== '' ? $configsig['sig_b1_qr_size'] : 3)));
 
-         $barcode = new \TCPDF2DBarcode($wa_url, 'QRCODE,M');
-         $qr_png  = $barcode->getBarcodePngData($qr_module, $qr_module, [0, 0, 0]);
+         // GLPI 11 and GLPI 12 both provide tc-lib-barcode. GLPI 12 removed the
+         // legacy TCPDF barcode helper file, so use the shared barcode library
+         // directly instead of requiring a TCPDF internal file. Negative width
+         // and height values preserve the existing module-size behavior.
+         $barcode = new Barcode();
+         $qr_png  = $barcode->getBarcodeObj(
+            'QRCODE,M',
+            $wa_url,
+            -$qr_module,
+            -$qr_module,
+            'black'
+         )->getPngData(false);
 
          // Decode directly from memory. Avoids a predictable temporary filename
          // and prevents concurrent requests for the same user from racing.
