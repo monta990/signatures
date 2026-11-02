@@ -1,0 +1,74 @@
+name: Signatures Contract Tests
+
+on:
+  push:
+    branches:
+      - main
+      - "ci/**"
+      - "test/**"
+      - "feature/**"
+  pull_request:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: signatures-tests-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  contracts:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    name: Plugin contracts, translations and frontend syntax
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Set up PHP
+        uses: shivammathur/setup-php@eb7c497e18156a6bbabfef1d3a82760b9eda3962 # v2
+        with:
+          php-version: "8.2"
+          extensions: fileinfo, gd, mbstring, dom, json, simplexml, xml, xmlwriter, zip
+          coverage: none
+
+      - name: Install translation validation tools
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y gettext
+
+      - name: Validate production metadata, resources and GLPI compatibility
+        run: php .github/scripts/validate-plugin.php
+
+      - name: Validate PSR-4 namespace and class/file mapping
+        run: php .github/scripts/check-psr4.php src 'GlpiPlugin\Signatures'
+
+      - name: Check first-party JavaScript syntax
+        run: |
+          set -euo pipefail
+          node --version
+          while IFS= read -r -d '' file; do
+            echo "Checking $file"
+            node --check "$file"
+          done < <(find public -type f -name '*.js' ! -name '*.min.js' -print0)
+
+      - name: Validate gettext source catalogs
+        run: |
+          set -euo pipefail
+          for po in locales/*.po; do
+            msgfmt --check --check-format -o "$RUNNER_TEMP/$(basename "$po" .po).mo" "$po"
+          done
+          msgfmt --check --check-format -o /dev/null locales/signatures.pot
+
+      - name: Validate compiled gettext catalogs
+        run: |
+          set -euo pipefail
+          for mo in locales/*.mo; do
+            msgunfmt -o /dev/null "$mo"
+          done
