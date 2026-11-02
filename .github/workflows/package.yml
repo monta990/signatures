@@ -1,0 +1,75 @@
+name: Signatures Package Validation
+
+on:
+  push:
+    branches:
+      - main
+      - "ci/**"
+      - "test/**"
+      - "feature/**"
+  pull_request:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: signatures-package-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  package:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    name: Build and inspect the GLPI installation ZIP
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Install ZIP tools
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y zip unzip
+
+      - name: Build production installation package
+        run: bash .github/scripts/package.sh "$RUNNER_TEMP/signatures-dist"
+
+      - name: Validate archive root and required runtime files
+        run: |
+          set -euo pipefail
+          archive="$(find "$RUNNER_TEMP/signatures-dist" -maxdepth 1 -type f -name 'signatures-*.zip' -print -quit)"
+          test -n "$archive"
+          unzip -t "$archive"
+
+          if unzip -Z1 "$archive" | grep -Evq '^signatures(/|$)'; then
+            echo "The archive contains a path outside the signatures/ installation root." >&2
+            exit 1
+          fi
+
+          if unzip -Z1 "$archive" | grep -Eq '^signatures/(\.git|\.github|tests|vendor|node_modules)(/|$)'; then
+            echo "Development-only files leaked into the installation ZIP." >&2
+            exit 1
+          fi
+
+          unzip -Z1 "$archive" | grep -qx 'signatures/setup.php'
+          unzip -Z1 "$archive" | grep -qx 'signatures/plugin.xml'
+          unzip -Z1 "$archive" | grep -qx 'signatures/src/Signature.php'
+          unzip -Z1 "$archive" | grep -qx 'signatures/templates/config_form.html.twig'
+          unzip -Z1 "$archive" | grep -qx 'signatures/public/js/signatures-config.js'
+          unzip -Z1 "$archive" | grep -qx 'signatures/locales/es_MX.mo'
+          unzip -Z1 "$archive" | grep -qx 'signatures/public/fonts/AvenirBlack.ttf'
+
+      - name: Upload validated installation ZIP
+        # Only trusted pushes to main publish a reusable CI artifact.
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: signatures-installation-package
+          path: ${{ runner.temp }}/signatures-dist/signatures-*.zip
+          if-no-files-found: error
+          retention-days: 14
