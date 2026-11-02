@@ -1,0 +1,65 @@
+name: Signatures CI
+
+on:
+  push:
+    branches:
+      - main
+      - "ci/**"
+      - "test/**"
+      - "feature/**"
+  pull_request:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: signatures-ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  php:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - php: "8.2"
+            experimental: false
+          - php: "8.3"
+            experimental: false
+          - php: "8.4"
+            experimental: false
+          - php: "8.5"
+            experimental: false
+          - php: "8.6"
+            experimental: true
+    continue-on-error: ${{ matrix.experimental }}
+    name: PHP ${{ matrix.php }} syntax and runtime checks${{ matrix.experimental && ' (experimental)' || '' }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Set up PHP
+        uses: shivammathur/setup-php@eb7c497e18156a6bbabfef1d3a82760b9eda3962 # v2
+        with:
+          php-version: ${{ matrix.php }}
+          extensions: fileinfo, gd, mbstring, dom, json, simplexml, xml, xmlwriter, zip
+          coverage: none
+
+      - name: Show runtime
+        run: php --version
+
+      - name: Validate required PHP extensions
+        run: |
+          php -r '$required = ["fileinfo", "gd", "mbstring", "dom", "json", "simplexml", "xml", "xmlwriter", "zip"]; foreach ($required as $extension) { if (!extension_loaded($extension)) { fwrite(STDERR, "Missing PHP extension: {$extension}" . PHP_EOL); exit(1); } }'
+
+      - name: PHP syntax
+        run: |
+          find . -type f -name '*.php' ! -path './.git/*' ! -path './glpi/*' -print0             | sort -z             | xargs -0 -r -n1 php -l
